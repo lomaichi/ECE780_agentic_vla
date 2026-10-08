@@ -1,0 +1,218 @@
+{
+ "task_id": 22,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "close the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "goal fixture 'white_cabinet_1_bottom_region' never engaged (closest EEF approach 0.213 m, joint unmoved); goal ['close', 'white_cabinet_1_bottom_region']"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level",
+    "focus_fixture": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 322,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.0142, closest EEF approach 0.133 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 557,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.0785, closest EEF approach 0.133 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 811,
+ "native_budget_success": false,
+ "wall_s": 34.2,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.006,
+    -0.035,
+    0.96
+   ],
+   "held": null
+  },
+  {
+   "t": 322,
+   "kind": "stall",
+   "extent_m": 0.0297,
+   "eef": [
+    -0.011,
+    0.032,
+    0.961
+   ],
+   "held": null
+  },
+  {
+   "t": 362,
+   "kind": "finish_articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "q_before": -0.1264,
+   "q_after": -0.062,
+   "target": 0.0025
+  },
+  {
+   "t": 362,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.14
+   ]
+  },
+  {
+   "t": 557,
+   "kind": "no_progress",
+   "since": 397,
+   "eef": [
+    -0.014,
+    -0.037,
+    0.927
+   ],
+   "held": null
+  },
+  {
+   "t": 673,
+   "kind": "finish_articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "q_before": -0.0621,
+   "q_after": -0.0377,
+   "target": 0.0025
+  },
+  {
+   "t": 673,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.033,
+    0.147
+   ]
+  },
+  {
+   "t": 811,
+   "kind": "stall",
+   "extent_m": 0.0127,
+   "eef": [
+    0.031,
+    -0.182,
+    1.165
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 29.5,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "white_cabinet_1_bottom_region": 0.133
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_bottom_level": 0.1016
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.239,
+   "wine_bottle_1": 0.018
+  }
+ }
+}

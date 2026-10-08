@@ -1,0 +1,82 @@
+{
+ "task_id": 13,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the black bowl at the front on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.144 m); goal ['on', 'akita_black_bowl_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl at the front on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl at the front",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.8,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.03,
+    0.158,
+    0.966
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 21.4,
+  "min_place_dist": {
+   "0": 0.177
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.144,
+   "plate_1": 0.165
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.024,
+   "akita_black_bowl_3": 0.004,
+   "plate_1": 0.0
+  }
+ }
+}

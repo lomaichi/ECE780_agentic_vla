@@ -1,0 +1,186 @@
+{
+ "task_id": 39,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "turn off the stove",
+ "goal": [
+  [
+   "turnoff",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "goal fixture 'flat_stove_1' never engaged (closest EEF approach 0.314 m, joint unmoved); goal ['turnoff', 'flat_stove_1']"
+   ],
+   "slots": {
+    "instruction": "turn off the stove",
+    "verb": "turn off",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button",
+    "focus_fixture": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "flat_stove_1_button"
+    },
+    {
+     "do": "pi0",
+     "prompt": "turn off the stove",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "timeout",
+   "t": 497,
+   "evidence": [
+    "goal ['turnoff', 'flat_stove_1'] unsatisfied; goal joint moved 0.5531, closest EEF approach 0.040 m"
+   ],
+   "slots": {
+    "instruction": "turn off the stove",
+    "verb": "turn off",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "flat_stove_1_button"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "turn off the stove",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 706,
+   "evidence": [
+    "goal ['turnoff', 'flat_stove_1'] unsatisfied; goal joint moved 0.5531, closest EEF approach 0.040 m"
+   ],
+   "slots": {
+    "instruction": "turn off the stove",
+    "verb": "turn off",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "flat_stove_1_button"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "turn off the stove",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 900,
+ "native_budget_success": false,
+ "wall_s": 46.6,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.052,
+    -0.021,
+    1.004
+   ],
+   "held": null
+  },
+  {
+   "t": 371,
+   "kind": "articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": true,
+   "start": 1.5485,
+   "now": 1.7499
+  },
+  {
+   "t": 497,
+   "kind": "primitive_skipped",
+   "primitive": "finish_articulation",
+   "joint": "flat_stove_1_button",
+   "reason": "joint type hinge"
+  },
+  {
+   "t": 706,
+   "kind": "no_progress",
+   "since": 546,
+   "eef": [
+    -0.375,
+    0.292,
+    0.914
+   ],
+   "held": null
+  },
+  {
+   "t": 706,
+   "kind": "primitive_skipped",
+   "primitive": "finish_articulation",
+   "joint": "flat_stove_1_button",
+   "reason": "joint type hinge"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 54.6,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.04
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.5531
+  },
+  "obj_disp": {
+   "moka_pot_1": 0.0,
+   "moka_pot_2": 0.0
+  }
+ }
+}

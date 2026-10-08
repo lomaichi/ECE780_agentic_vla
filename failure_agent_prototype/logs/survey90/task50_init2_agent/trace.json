@@ -1,0 +1,115 @@
+{
+ "task_id": 50,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the alphabet soup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 77,
+   "evidence": [
+    "target 'alphabet_soup_1' never approached (closest EEF approach 0.182 m); goal ['in', 'alphabet_soup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the basket",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "alphabet_soup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the alphabet soup and place it in the basket",
+     "until": {
+      "grasp": "alphabet_soup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "alphabet_soup_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 208,
+ "steps": 208,
+ "native_budget_success": true,
+ "wall_s": 7.5,
+ "events": [
+  {
+   "t": 77,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 45.9,
+   "is_target": false
+  },
+  {
+   "t": 166,
+   "kind": "grasp",
+   "obj": "alphabet_soup_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 7.0,
+  "min_place_dist": {
+   "0": 0.403
+  },
+  "held": null,
+  "ever_grasped": {
+   "alphabet_soup_1": 166
+  },
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.015,
+   "basket_1_contain_region": 0.307
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.404,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.096,
+   "milk_1": 0.0,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

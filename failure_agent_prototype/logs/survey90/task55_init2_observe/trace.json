@@ -1,0 +1,111 @@
+{
+ "task_id": 55,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the alphabet soup and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'cream_cheese_1' but the pending goal targets are ['alphabet_soup_1']",
+    "'cream_cheese_1' displaced 0.416 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the tray",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "cream cheese"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 100,
+   "kind": "grasp",
+   "obj": "cream_cheese_1",
+   "is_target": false
+  },
+  {
+   "t": 100,
+   "kind": "wrong_grasp",
+   "obj": "cream_cheese_1",
+   "targets": [
+    "alphabet_soup_1"
+   ]
+  },
+  {
+   "t": 203,
+   "kind": "release",
+   "obj": "cream_cheese_1",
+   "pos": [
+    0.03,
+    0.239,
+    0.465
+   ]
+  },
+  {
+   "t": 263,
+   "kind": "stall",
+   "extent_m": 0.0168,
+   "eef": [
+    -0.005,
+    0.223,
+    0.467
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 10.9,
+  "min_place_dist": {
+   "0": 0.42
+  },
+  "held": null,
+  "ever_grasped": {
+   "cream_cheese_1": 100
+  },
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.206,
+   "wooden_tray_1_contain_region": 0.028
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.416,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.021
+  }
+ }
+}

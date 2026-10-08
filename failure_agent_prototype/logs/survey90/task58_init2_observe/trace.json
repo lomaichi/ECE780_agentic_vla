@@ -1,0 +1,111 @@
+{
+ "task_id": 58,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the ketchup and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "grasped 'alphabet_soup_1' but the pending goal targets are ['ketchup_1']",
+    "'alphabet_soup_1' displaced 0.402 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the tray",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "alphabet soup"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.6,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.086,
+    -0.141,
+    0.497
+   ],
+   "held": null
+  },
+  {
+   "t": 170,
+   "kind": "grasp",
+   "obj": "alphabet_soup_1",
+   "is_target": false
+  },
+  {
+   "t": 170,
+   "kind": "wrong_grasp",
+   "obj": "alphabet_soup_1",
+   "targets": [
+    "ketchup_1"
+   ]
+  },
+  {
+   "t": 235,
+   "kind": "release",
+   "obj": "alphabet_soup_1",
+   "pos": [
+    -0.028,
+    0.272,
+    0.493
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 23.3,
+  "min_place_dist": {
+   "0": 0.498
+  },
+  "held": null,
+  "ever_grasped": {
+   "alphabet_soup_1": 170
+  },
+  "min_eef_dist": {
+   "ketchup_1": 0.176,
+   "wooden_tray_1_contain_region": 0.037
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.402,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.065,
+   "ketchup_1": 0.0,
+   "butter_1": 0.024,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

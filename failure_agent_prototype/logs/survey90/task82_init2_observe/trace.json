@@ -1,0 +1,94 @@
+{
+ "task_id": 82,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the left compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_left_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "target 'black_book_1' never approached (closest EEF approach 0.232 m); goal ['in', 'black_book_1', 'desk_caddy_1_left_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.5,
+ "events": [
+  {
+   "t": 156,
+   "kind": "disturbance",
+   "obj": "porcelain_mug_1",
+   "how": "topple",
+   "tilt_change": 45.7,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.176,
+    0.094,
+    0.951
+   ],
+   "held": null
+  },
+  {
+   "t": 357,
+   "kind": "wrist_windup",
+   "angle_deg": 82.7
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 93.7,
+  "min_place_dist": {
+   "0": 0.223
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "black_book_1": 0.232,
+   "desk_caddy_1_left_contain_region": 0.287
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.023
+  }
+ }
+}

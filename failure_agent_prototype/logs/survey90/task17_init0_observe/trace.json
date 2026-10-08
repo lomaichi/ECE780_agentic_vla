@@ -1,0 +1,101 @@
+{
+ "task_id": 17,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "stack the middle black bowl on the back black bowl",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_2",
+   "akita_black_bowl_3"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'akita_black_bowl_2' approached but never grasped (closest EEF approach 0.078 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']"
+   ],
+   "slots": {
+    "instruction": "stack the black bowl in the middle on the black bowl at the front",
+    "target_obj": "akita_black_bowl_2",
+    "target": "black bowl",
+    "target_desc": "black bowl in the middle",
+    "dest_obj": "akita_black_bowl_3",
+    "dest": "the black bowl",
+    "place": "on the black bowl at the back",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.101,
+    0.157,
+    0.929
+   ],
+   "held": null
+  },
+  {
+   "t": 237,
+   "kind": "stall",
+   "extent_m": 0.024,
+   "eef": [
+    -0.073,
+    0.167,
+    0.935
+   ],
+   "held": null
+  },
+  {
+   "t": 375,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_2",
+   "how": "topple",
+   "tilt_change": 45.9,
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 20.0,
+  "min_place_dist": {
+   "0": 0.22
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_2": 0.078,
+   "akita_black_bowl_3": 0.134
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.003,
+   "akita_black_bowl_2": 0.02,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.004
+  }
+ }
+}

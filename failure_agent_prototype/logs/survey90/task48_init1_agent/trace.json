@@ -1,0 +1,220 @@
+{
+ "task_id": 48,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "pick up the ketchup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'ketchup_1' never approached (closest EEF approach 0.185 m); goal ['in', 'ketchup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the basket",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the basket",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 260,
+   "evidence": [
+    "target 'ketchup_1' approached but never grasped (closest EEF approach 0.040 m); goal ['in', 'ketchup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the basket",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 593,
+   "evidence": [
+    "target 'ketchup_1' approached but never grasped (closest EEF approach 0.012 m); goal ['in', 'ketchup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the basket",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the basket",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 671,
+ "native_budget_success": false,
+ "wall_s": 24.8,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.006,
+    -0.15,
+    0.513
+   ],
+   "held": null
+  },
+  {
+   "t": 260,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "topple",
+   "tilt_change": 45.1,
+   "is_target": true
+  },
+  {
+   "t": 593,
+   "kind": "primitive_incomplete",
+   "primitive": "carry_to",
+   "residual_m": [
+    0.031
+   ]
+  },
+  {
+   "t": 671,
+   "kind": "out_of_view",
+   "eef": [
+    0.021,
+    0.295,
+    0.673
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 20.4,
+  "min_place_dist": {
+   "0": 0.024
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "ketchup_1": 0.012,
+   "basket_1_contain_region": 0.159
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.005,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.001,
+   "ketchup_1": 0.465,
+   "basket_1": 0.0
+  }
+ }
+}

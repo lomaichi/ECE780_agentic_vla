@@ -1,0 +1,89 @@
+{
+ "task_id": 30,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the black bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.1587 -> -0.1365; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.8,
+ "events": [
+  {
+   "t": 94,
+   "kind": "stall",
+   "extent_m": 0.0236,
+   "eef": [
+    0.019,
+    -0.037,
+    1.055
+   ],
+   "held": null
+  },
+  {
+   "t": 192,
+   "kind": "unplanned_articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": false,
+   "start": -0.1587,
+   "now": -0.1365
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 62.3,
+  "min_place_dist": {
+   "0": 0.209
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.16,
+   "plate_1": 0.279
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "plate_1": 0.0,
+   "ketchup_1": 0.054
+  }
+ }
+}

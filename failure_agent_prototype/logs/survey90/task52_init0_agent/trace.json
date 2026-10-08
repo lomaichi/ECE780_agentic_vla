@@ -1,0 +1,233 @@
+{
+ "task_id": 52,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the milk and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "milk_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "milk_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 93,
+   "evidence": [
+    "target 'milk_1' approached but never grasped (closest EEF approach 0.120 m); goal ['in', 'milk_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the milk and put it in the basket",
+    "target_obj": "milk_1",
+    "target": "milk",
+    "target_desc": "milk",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "milk_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the milk and place it in the basket",
+     "until": {
+      "grasp": "milk_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "milk_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "timeout",
+   "t": 249,
+   "evidence": [
+    "'milk_1' was grasped; 0.125 m from 'basket_1_contain_region' (xy) but ['in', 'milk_1', 'basket_1_contain_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the milk and put it in the basket",
+    "target_obj": "milk_1",
+    "target": "milk",
+    "target_desc": "milk",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "milk_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the milk and place it in the basket",
+     "until": {
+      "grasp": "milk_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "milk_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "stall",
+   "t": 432,
+   "evidence": [
+    "'milk_1' was grasped; 0.130 m from 'basket_1_contain_region' (xy) but ['in', 'milk_1', 'basket_1_contain_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the milk and put it in the basket",
+    "target_obj": "milk_1",
+    "target": "milk",
+    "target_desc": "milk",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "milk_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the milk",
+     "until": {
+      "grasp": "milk_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "milk_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 568,
+ "native_budget_success": false,
+ "wall_s": 21.1,
+ "events": [
+  {
+   "t": 93,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 45.0,
+   "is_target": false
+  },
+  {
+   "t": 183,
+   "kind": "grasp",
+   "obj": "milk_1",
+   "is_target": true
+  },
+  {
+   "t": 249,
+   "kind": "release",
+   "obj": "milk_1",
+   "pos": [
+    -0.034,
+    0.246,
+    0.507
+   ]
+  },
+  {
+   "t": 432,
+   "kind": "stall",
+   "extent_m": 0.0128,
+   "eef": [
+    -0.028,
+    0.248,
+    0.576
+   ],
+   "held": null
+  },
+  {
+   "t": 568,
+   "kind": "stall",
+   "extent_m": 0.0194,
+   "eef": [
+    -0.029,
+    0.272,
+    0.58
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 8.6,
+  "min_place_dist": {
+   "0": 0.124
+  },
+  "held": null,
+  "ever_grasped": {
+   "milk_1": 183
+  },
+  "min_eef_dist": {
+   "milk_1": 0.032,
+   "basket_1_contain_region": 0.13
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.087,
+   "milk_1": 0.355,
+   "butter_1": 0.0,
+   "basket_1": 0.111
+  }
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "task_id": 20,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "turn on the stove",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal ['turnon', 'flat_stove_1'] unsatisfied; goal joint moved 0.0059, closest EEF approach 0.080 m"
+   ],
+   "slots": {
+    "instruction": "turn on the stove",
+    "verb": "turn on",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.7,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.307,
+    0.157,
+    0.912
+   ],
+   "held": null
+  },
+  {
+   "t": 272,
+   "kind": "wrist_windup",
+   "angle_deg": 119.6
+  },
+  {
+   "t": 349,
+   "kind": "out_of_view",
+   "eef": [
+    -0.608,
+    0.498,
+    1.225
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 179.0,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.08
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0059
+  },
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.0,
+   "moka_pot_1": 0.0
+  }
+ }
+}

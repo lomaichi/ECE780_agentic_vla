@@ -1,0 +1,70 @@
+{
+ "task_id": 42,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the frying pan under the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_bottom_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "S3_out_of_view",
+   "trigger": "out_of_view",
+   "t": 400,
+   "evidence": [
+    "out_of_view: {'eef': [-0.485, 0.506, 1.27]}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "put the frying pan under the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest": "the cabinet shelf",
+    "place": "under the cabinet shelf"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.3,
+ "events": [
+  {
+   "t": 385,
+   "kind": "out_of_view",
+   "eef": [
+    -0.485,
+    0.506,
+    1.27
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.091,
+   "wooden_two_layer_shelf_1_bottom_region": 0.281
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.0,
+   "chefmate_8_frypan_1": 0.004
+  }
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "task_id": 25,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the black bowl on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_side"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'white_cabinet_1_top_side' (closest it got: 0.326 m); now held 0.618 m away"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on top of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 25.1,
+ "events": [
+  {
+   "t": 86,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 218,
+   "kind": "stall",
+   "extent_m": 0.0299,
+   "eef": [
+    0.048,
+    -0.273,
+    1.137
+   ],
+   "held": "akita_black_bowl_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 25.8,
+  "min_place_dist": {
+   "0": 0.326
+  },
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 86
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.05,
+   "white_cabinet_1_top_side": 0.266
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.26,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

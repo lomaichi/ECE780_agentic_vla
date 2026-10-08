@@ -1,0 +1,199 @@
+{
+ "task_id": 11,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "open the top drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 226,
+   "evidence": [
+    "goal ['open', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.1250, closest EEF approach 0.193 m"
+   ],
+   "slots": {
+    "instruction": "open the top drawer of the cabinet",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the top drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 679,
+   "evidence": [
+    "goal ['open', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.1250, closest EEF approach 0.082 m"
+   ],
+   "slots": {
+    "instruction": "open the top drawer of the cabinet",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the top drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "budget_exhausted": true,
+ "success": false,
+ "success_t": null,
+ "steps": 900,
+ "native_budget_success": false,
+ "wall_s": 27.0,
+ "events": [
+  {
+   "t": 66,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": 0.0,
+   "now": -0.0213
+  },
+  {
+   "t": 226,
+   "kind": "no_progress",
+   "since": 66,
+   "eef": [
+    0.013,
+    -0.002,
+    1.048
+   ],
+   "held": null
+  },
+  {
+   "t": 315,
+   "kind": "finish_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "q_before": -0.1136,
+   "q_after": -0.1126,
+   "target": -0.15
+  },
+  {
+   "t": 315,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.051,
+    0.072
+   ]
+  },
+  {
+   "t": 540,
+   "kind": "joint_home",
+   "residual_rad": 0.013
+  },
+  {
+   "t": 540,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.24,
+    0.137,
+    0.137
+   ]
+  },
+  {
+   "t": 585,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1126,
+   "now": -0.0923
+  },
+  {
+   "t": 679,
+   "kind": "stall",
+   "extent_m": 0.0101,
+   "eef": [
+    -0.041,
+    -0.175,
+    1.096
+   ],
+   "held": null
+  },
+  {
+   "t": 759,
+   "kind": "finish_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "q_before": -0.0592,
+   "q_after": -0.0868,
+   "target": -0.15
+  },
+  {
+   "t": 759,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.051,
+    0.089
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 16.5,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.082
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.125
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.0,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.0
+  }
+ }
+}

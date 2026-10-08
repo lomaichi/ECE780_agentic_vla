@@ -1,0 +1,108 @@
+{
+ "task_id": 86,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the book in the middle and place it on the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "wooden_two_layer_shelf_1_top_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'yellow_book_1' but the pending goal targets are ['black_book_1']",
+    "'yellow_book_1' displaced 0.198 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book in the middle and place it on the cabinet shelf",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book at the front",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "wrong_obj": "book"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.4,
+ "events": [
+  {
+   "t": 85,
+   "kind": "grasp",
+   "obj": "yellow_book_1",
+   "is_target": false
+  },
+  {
+   "t": 85,
+   "kind": "wrong_grasp",
+   "obj": "yellow_book_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 232,
+   "kind": "release",
+   "obj": "yellow_book_1",
+   "pos": [
+    -0.241,
+    -0.197,
+    0.884
+   ]
+  },
+  {
+   "t": 392,
+   "kind": "no_progress",
+   "since": 232,
+   "eef": [
+    -0.197,
+    -0.213,
+    1.097
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 16.8,
+  "min_place_dist": {
+   "0": 0.467
+  },
+  "held": null,
+  "ever_grasped": {
+   "yellow_book_1": 85
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.156,
+   "wooden_two_layer_shelf_1_top_region": 0.311
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.023,
+   "yellow_book_1": 0.198,
+   "yellow_book_2": 0.0
+  }
+ }
+}

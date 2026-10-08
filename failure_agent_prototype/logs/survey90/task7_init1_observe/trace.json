@@ -1,0 +1,83 @@
+{
+ "task_id": 7,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "open the top drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "goal ['open', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0500, closest EEF approach 0.179 m"
+   ],
+   "slots": {
+    "instruction": "open the top drawer of the cabinet",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 22.1,
+ "events": [
+  {
+   "t": 121,
+   "kind": "stall",
+   "extent_m": 0.0265,
+   "eef": [
+    0.012,
+    -0.137,
+    1.053
+   ],
+   "held": null
+  },
+  {
+   "t": 170,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": 0.0,
+   "now": -0.0201
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 21.7,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.179
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.05
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "plate_1": 0.0
+  }
+ }
+}

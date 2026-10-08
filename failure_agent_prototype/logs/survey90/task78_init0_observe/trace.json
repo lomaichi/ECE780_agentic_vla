@@ -1,0 +1,93 @@
+{
+ "task_id": 78,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the front compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_front_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'black_book_1' was grasped but is not at 'desk_caddy_1_front_contain_region' (closest it got: 0.093 m); now held 0.292 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the front compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_front_contain_region",
+    "dest": "the front compartment of the caddy",
+    "place": "in the front compartment of the caddy",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.9,
+ "events": [
+  {
+   "t": 93,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 223,
+   "kind": "stall",
+   "extent_m": 0.0298,
+   "eef": [
+    -0.341,
+    -0.141,
+    1.083
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 375,
+   "kind": "wrist_windup",
+   "angle_deg": 78.8
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 87.8,
+  "min_place_dist": {
+   "0": 0.093
+  },
+  "held": "black_book_1",
+  "ever_grasped": {
+   "black_book_1": 93
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.123,
+   "desk_caddy_1_front_contain_region": 0.147
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.464,
+   "red_coffee_mug_1": 0.0
+  }
+ }
+}

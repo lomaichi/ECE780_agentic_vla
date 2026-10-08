@@ -1,0 +1,119 @@
+{
+ "task_id": 62,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the salad dressing and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "new_salad_dressing_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "new_salad_dressing_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'chocolate_pudding_1' but the goal targets are ['new_salad_dressing_1']",
+    "'chocolate_pudding_1' displaced 0.501 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the salad dressing and put it in the tray",
+    "target_obj": "new_salad_dressing_1",
+    "target": "salad dressing",
+    "target_desc": "salad dressing",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "chocolate pudding"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.1,
+ "events": [
+  {
+   "t": 127,
+   "kind": "disturbance",
+   "obj": "chocolate_pudding_1",
+   "how": "topple",
+   "tilt_change": 59.1,
+   "is_target": false
+  },
+  {
+   "t": 140,
+   "kind": "grasp",
+   "obj": "chocolate_pudding_1",
+   "is_target": false
+  },
+  {
+   "t": 140,
+   "kind": "wrong_grasp",
+   "obj": "chocolate_pudding_1",
+   "targets": [
+    "new_salad_dressing_1"
+   ]
+  },
+  {
+   "t": 216,
+   "kind": "out_of_view",
+   "eef": [
+    0.02,
+    0.271,
+    0.615
+   ]
+  },
+  {
+   "t": 255,
+   "kind": "release",
+   "obj": "chocolate_pudding_1",
+   "pos": [
+    0.021,
+    0.256,
+    0.473
+   ]
+  },
+  {
+   "t": 322,
+   "kind": "stall",
+   "extent_m": 0.0165,
+   "eef": [
+    0.025,
+    0.275,
+    0.462
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "chocolate_pudding_1": 140
+  },
+  "min_eef_dist": {
+   "new_salad_dressing_1": 0.306,
+   "wooden_tray_1_contain_region": 0.017
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.0,
+   "new_salad_dressing_1": 0.0,
+   "chocolate_pudding_1": 0.501,
+   "wooden_tray_1": 0.001
+  }
+ }
+}

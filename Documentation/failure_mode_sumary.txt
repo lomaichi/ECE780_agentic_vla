@@ -1,0 +1,331 @@
+NATIVE PI0 ON LIBERO_90: FAILURE MODE SUMMARY (ALL 90 TASKS)
+=============================================================
+Written 2026-10-08. Replaces the earlier 19-rollout version.
+Source: Documentation/native_pi0_libero90/ (90 rollouts, one per task, init
+state 0; 12 successes, 78 failures; 224x224 agentview video at 10 fps).
+Checkpoint: pi0_libero, seed 7, replan_steps=5, max_steps=400, i.e. the loop
+of openpi's examples/libero/main.py (collected with
+failure_agent_prototype/tools/collect_native.py; results.json in the same
+folder lists success and steps per task).
+Per-task labels and descriptions: native_pi0_libero90_survey_labels.md.
+
+Context: libero_90 was NOT in pi0_libero's fine-tuning data (libero_10, goal,
+object and spatial were), so every rollout here is pi0 on a task it has not
+seen. libero_10 does share 9 of libero_90's 20 scenes (section 3).
+
+Method: every failed rollout was viewed as a 24-frame timestamped contact
+sheet, with enlarged frames where needed, by six parallel reviewers (13 tasks
+each), against the taxonomy below; reviewers could propose new labels.
+Per-episode pixel motion: tools/video_motion_stats.py (appendix A).
+
+
+---------------------------------------------------
+1. HEADLINE FINDINGS
+---------------------------------------------------
+
+- Native success 12/90 (13%): tasks 10, 19, 24, 33, 38, 47, 57, 60, 67, 68,
+  70, 79. All 5 successes of the earlier 19-rollout sample (24, 60, 68, 70, 79)
+  succeeded again. Successful episodes take 10-36 s.
+- Every failure runs to the 400-step cap. pi0 never stops on its own.
+- The dominant failure is not motor skill but WHAT pi0 does: in 56 of 78
+  failures the primary label is wrong object (R1, 32) or scene habit (R2, 24).
+  pi0 typically runs a clean, confident version of a task it was trained on
+  in a similar scene (the libero_10 task of the same scene, "close the drawer",
+  "put the bowl on the plate", "put the cream cheese in the basket"), whatever
+  the instruction says.
+- Grasps are usually clean. Reviewers listed many clean pick-and-place
+  executions on the wrong object or into the wrong place. The binding of
+  instruction -> target and instruction -> destination is what fails.
+- Stalling in the old sense (motionless) is rare: median still% of failures
+  is 1%, only 6/78 have a still stretch >= 5 s. Most failures keep moving:
+  dithering, adjusting without releasing, hovering over an empty spot. A
+  frame-difference stall detector misses these.
+
+
+---------------------------------------------------
+2. FAILURE TAXONOMY (v2)
+---------------------------------------------------
+
+Two layers: ROOT CAUSES (decided after the fact) and SYMPTOMS (detectable
+online). Counts are over the 78 failed rollouts: primary label / any label
+(primary or secondary). R5-R7 and S4 are new; they merge the labels the
+reviewers proposed (see the companion file).
+
+ROOT CAUSES
+
+R1  Wrong object (motor execution fine, target wrong)               32 / 39
+    pi0 grasps a salient or habitual object: cream cheese and cans in the
+    basket/tray scenes (46, 49, 50, 51, 55, 56, 58), the white bowl instead of
+    the frying pan in KITCHEN_SCENE9 (40, 41, 42; 4/4 runs), the red/white
+    mug instead of the book (80, 83), the wrong bowl of three (12, 13, 15),
+    the wrong drawer (6, 11: "top"/"bottom" ignored). Often serial: after one
+    wrong pick-and-place it picks a second non-target object (46, 49, 50, 58).
+
+R2  Scene habit (runs a training task of a similar scene)            24 / 42
+    - KITCHEN_SCENE10 (0-5): pushes the top drawer shut whatever is asked.
+    - KITCHEN_SCENE4 (22, 23, 25, 26): bowl into the bottom drawer (libero_10).
+    - KITCHEN_SCENE5 (28, 30, 31): ketchup into / closing the top drawer.
+    - LIVING_ROOM_SCENE5/6 (65, 66, 69, 71, 72): the libero_10 two-mug or
+      mug + pudding routine.
+    - STUDY_SCENE1 (73-75): book into the BACK compartment (libero_10).
+    - KITCHEN_SCENE6 (34): yellow-white mug carried to the microwave (libero_10).
+    - Sub-steps out of order (4, 8): closes the drawer before the butter is in;
+      carries the bowl to a closed drawer.
+
+R3  Stopped short on an articulation                                  5 / 8
+    Drawer pushed most of the way (0, 5), stove knob missed or brushed but not
+    turned (20, 44, 45), microwave door swung ~15 deg then released (35).
+
+R4  Placement                                                         4 / 12
+    Right object at the destination but wrong compartment (78, 73-75 as
+    secondary), tipped while adjusting without releasing (74, 75, 55),
+    left on the plate rim (72), knocked the drawer shut while lowering (29).
+
+R5  Target never reached / never grasped (NEW)                        7 / 13
+    The goal object or fixture is never engaged:
+    - phantom target: hovers over an EMPTY spot where the object sits in a
+      sibling scene (81, 82: left of the caddy, as in STUDY_SCENE1/2);
+    - target in an unusual raised spot, never approached (36, 37: bowl on top
+      of the microwave);
+    - dithering between candidates, never closing the gripper (32, 53);
+    - grasp failure: reaches it but knocks it over and cannot re-grasp (27).
+
+R6  Destination missed (NEW)                                          3 / 11
+    The right object is grasped but taken somewhere unrelated to the goal
+    receptacle or dropped in transit: all four STUDY_SCENE4 shelf tasks run
+    the same "grasp the image-left book, carry it away from the shelf"
+    routine (86-89); bowl slips out of the gripper mid-carry (43).
+
+R7  Partial compound task (NEW)                                       3 / 5
+    Two-step instruction: one sub-goal done cleanly, the next never started
+    (63, 64: bottom bowl into the tray, never stacked; 1: drawer closed, bowl
+    never moved, then the drawer re-opened).
+
+SYMPTOMS (detectable online)
+
+S1  Stall / dithering without progress
+    Motionless stalls are rare (still% >= 20 in 11/78); much more common is
+    continuous small motion with no contact progress. Detect from the absence
+    of grasp / release / predicate / articulation events, not frame difference.
+
+S2  Knocking objects over / pushing them in clutter
+    Cartons and bottles in LIVING_ROOM_SCENE2 (51, 52, 53), the moka pot (18,
+    21, 39), mugs (69, 71), the plate flipped (14, 16).
+
+S3  Arm leaves the camera view
+    Holding a book (86, 87, 89, 83) or after missing the stove knob (39, 44, 45).
+
+S4  Wrist wind-up (NEW)
+    The wrist rolls into an inverted, contorted pose never seen in the demos;
+    afterwards the actions stop being purposeful (35, 36, 39, 43, 81).
+
+Other observations (not separate labels): regrasp fumbling that eats the
+time budget (22, 25); the correct action under way when the 400-step cap
+hits after a wrong-object detour (56, also 52, 54).
+
+
+---------------------------------------------------
+3. TRAINING-SCENE OVERLAP
+---------------------------------------------------
+
+libero_10 (in pi0_libero's training data) uses 9 libero_90 scenes:
+KITCHEN_SCENE3, 4, 6, 8, LIVING_ROOM_SCENE1, 2, 5, 6, STUDY_SCENE1.
+
+                              tasks   native success   primary R2 among failures
+  shared with libero_10         35      8 (23%)            13 / 27
+  other scenes                  55      4 ( 7%)            11 / 51
+
+pi0 does better where the scene is familiar, and where it fails there, it
+most often runs the familiar libero_10 task instead. In other scenes it fails
+more by grabbing the wrong object (R1 22/51) or never engaging the target.
+
+
+---------------------------------------------------
+4. MOTION-PRIMITIVE CANDIDATES (clean, repeatable executions)
+---------------------------------------------------
+
+- Push an open drawer shut: KITCHEN_SCENE10 tasks 0-4 (~9-15 s each), 30, 31.
+- Bowl into the open bottom drawer, then push it shut (23, 26; bowl in by
+  ~18 s, drawer shut by ~25 s).
+- Top-down grasp of a bowl and carry (8, 9, 15, 17, 40-43; ~5-10 s).
+- Object into a basket or tray: cream cheese (most repeatable; 46, 49, 50,
+  51, 55, 56), cans (49, 46, 58), butter (50), cartons (52, 54).
+- Mug onto a plate (65, 66, 69, 71, 72); the libero_10 two-mug routine (65).
+- Book into the back caddy compartment (73-75, 76, 78).
+- Turn the stove knob on (18, 21; ~10 s), when the scene is KITCHEN_SCENE3.
+Not reliable: the stove knob in KITCHEN_SCENE9 (44, 45), grasping in the
+tight carton cluster (51-53), grasping the frying pan (never once).
+pi0 also never lets go and backs away after placing in a caddy (76, 78, 80,
+85), so a scripted release-and-retract is worth having.
+
+
+---------------------------------------------------
+5. DISTILLING THIS INTO A SKILL LIBRARY
+---------------------------------------------------
+
+1. Split WHERE from HOW. pi0's grasps are good and its target/destination
+   binding is bad on unseen tasks. So the coordinator should supply the
+   target location (move the open gripper over the right object) and the
+   destination (carry the grasped object there), and leave the grasp itself
+   to pi0. This is the main design change in failure_agent_prototype v1.
+2. Keep the fixed vocabulary (R1-R7, S1-S4) so the coordinator can look up
+   entries reliably; "other" remains the way to propose additions.
+3. Label with simulator state, not only video (see section 7 of the previous
+   version: video at 224 px misreads which object is held in clutter).
+4. Detect "no progress" from task events, not pixel motion (section 1).
+5. Decompose multi-step instructions into single steps and verify each BDDL
+   predicate (R2 out-of-order, R7 partial).
+
+
+---------------------------------------------------
+6. CAVEATS
+---------------------------------------------------
+
+- One rollout per task, init 0; pi0 is stochastic, so a rerun of the same
+  task and init can fail differently.
+- Video only: object identity in clutter and the exact final placement are
+  best readings (confidence is recorded per task in the companion file).
+- Reviewers named the libero_10 task being imitated from the visual pattern;
+  the scene overlap itself was checked against the suite definitions.
+
+
+---------------------------------------------------
+APPENDIX A. PER-EPISODE MOTION STATISTICS
+---------------------------------------------------
+
+("still" = mean grey-level difference between frames 1 s apart < 1.0.)
+
+  task  result  length  still%  longest_still  motion_last10s
+  ----  ------  ------  ------  -------------  --------------
+     0  F        40.0 s     33%         2.8s            2.20
+     1  F        40.0 s     15%         2.2s            7.40
+     2  F        40.0 s     39%         4.4s            0.60
+     3  F        40.0 s      1%         0.1s            2.74
+     4  F        40.0 s     33%         3.7s            0.84
+     5  F        40.0 s      4%         0.6s            3.37
+     6  F        40.0 s      0%         0.0s            7.27
+     7  F        40.0 s      0%         0.0s            4.65
+     8  F        40.0 s     10%         1.1s            2.00
+     9  F        40.0 s      1%         0.1s            8.28
+    10  S        11.4 s      0%         0.0s            9.35
+    11  F        40.0 s      0%         0.0s           10.74
+    12  F        40.0 s      0%         0.0s            6.29
+    13  F        40.0 s      0%         0.0s            8.19
+    14  F        40.0 s      1%         0.2s            7.52
+    15  F        40.0 s      2%         0.7s            7.54
+    16  F        40.0 s      0%         0.0s            7.91
+    17  F        40.0 s      0%         0.0s            6.08
+    18  F        40.0 s      0%         0.0s            6.03
+    19  S        26.0 s      0%         0.0s           10.48
+    20  F        40.0 s     57%        10.4s            0.45
+    21  F        40.0 s      1%         0.3s            5.51
+    22  F        40.0 s      0%         0.0s            7.89
+    23  F        40.0 s      7%         1.7s            2.50
+    24  S        14.4 s      0%         0.0s            9.81
+    25  F        40.0 s      8%         1.9s            3.15
+    26  F        40.0 s      8%         1.0s            1.52
+    27  F        40.0 s      0%         0.0s            3.34
+    28  F        40.0 s      0%         0.0s            4.79
+    29  F        40.0 s      3%         0.4s            7.65
+    30  F        40.0 s      1%         0.3s            2.60
+    31  F        40.0 s      5%         1.5s            8.44
+    32  F        40.0 s      0%         0.0s            5.77
+    33  S        30.7 s      0%         0.0s            7.90
+    34  F        40.0 s      6%         1.5s            2.86
+    35  F        40.0 s      0%         0.0s            6.13
+    36  F        40.0 s      0%         0.0s            7.01
+    37  F        40.0 s      1%         0.3s            3.16
+    38  S        35.7 s      0%         0.0s           13.16
+    39  F        40.0 s     30%        11.4s            0.74
+    40  F        40.0 s      1%         0.3s            3.82
+    41  F        40.0 s      1%         0.4s            7.17
+    42  F        40.0 s      1%         0.2s            2.58
+    43  F        40.0 s      0%         0.0s            4.62
+    44  F        40.0 s     26%         8.8s            0.56
+    45  F        40.0 s      1%         0.3s            6.51
+    46  F        40.0 s      0%         0.0s            4.96
+    47  S        28.5 s      0%         0.0s            7.24
+    48  F        40.0 s      2%         0.5s            7.64
+    49  F        40.0 s      6%         1.6s            1.40
+    50  F        40.0 s      0%         0.1s            8.62
+    51  F        40.0 s      1%         0.2s            9.91
+    52  F        40.0 s      1%         0.5s           10.79
+    53  F        40.0 s      0%         0.0s            8.40
+    54  F        40.0 s      0%         0.0s            8.50
+    55  F        40.0 s      0%         0.0s            3.23
+    56  F        40.0 s      0%         0.0s           10.76
+    57  S        21.3 s      0%         0.0s            9.81
+    58  F        40.0 s      1%         0.3s            6.42
+    59  F        40.0 s     23%         2.0s            1.33
+    60  S        10.4 s      0%         0.0s            9.68
+    61  F        40.0 s     20%         3.2s            1.11
+    62  F        40.0 s      2%         0.3s            3.17
+    63  F        40.0 s      2%         0.3s            2.44
+    64  F        40.0 s      0%         0.0s            4.89
+    65  F        40.0 s     21%         8.3s            0.41
+    66  F        40.0 s      2%         0.3s            8.26
+    67  S        12.1 s      0%         0.0s            7.71
+    68  S        25.8 s      0%         0.0s            8.93
+    69  F        40.0 s      0%         0.0s           11.10
+    70  S        28.0 s      0%         0.0s            9.26
+    71  F        40.0 s      0%         0.0s            4.68
+    72  F        40.0 s      5%         0.7s            6.79
+    73  F        40.0 s     35%        12.4s            0.31
+    74  F        40.0 s      0%         0.1s            2.66
+    75  F        40.0 s     13%         3.6s            1.75
+    76  F        40.0 s     13%         2.5s            1.60
+    77  F        40.0 s      6%         1.5s            2.11
+    78  F        40.0 s     10%         1.5s            4.22
+    79  S        16.4 s      0%         0.0s            5.92
+    80  F        40.0 s     33%        10.1s            0.51
+    81  F        40.0 s      0%         0.0s            2.98
+    82  F        40.0 s     12%         1.0s            1.49
+    83  F        40.0 s      0%         0.0s            4.59
+    84  F        40.0 s      0%         0.0s            3.87
+    85  F        40.0 s     13%         3.3s            1.30
+    86  F        40.0 s      0%         0.0s            3.58
+    87  F        40.0 s      3%         1.1s            3.89
+    88  F        40.0 s      2%         0.3s            2.42
+    89  F        40.0 s      2%         0.8s            4.92
+
+
+---------------------------------------------------
+7. ADDENDUM (2026-10-08): SIM GROUND TRUTH AND RECOVERY RESULTS
+---------------------------------------------------
+
+The 78 failed tasks were re-run with failure_agent_prototype v1 at init
+states 0-2, once natively (observe mode, sim-ground-truth diagnosis at the
+end) and once with the agent (logs/survey90).
+
+Native pi0 on these 234 episodes: 5 successes (2%). Sim diagnoses of the 229
+native failures:
+  R1 wrong object 76, R5 target not reached 56, R6 destination missed 31,
+  R3 stopped short 22, R2 scene habit 21, R4 placement 15, R7 partial 8.
+Every failure got a root cause; none fell back to a symptom-only label.
+The sim label is one of the video-survey labels (primary or secondary) in
+162/229 episodes, the primary label in 123/229 (survey labels come from a
+single init-0 video, so other inits can genuinely fail differently).
+
+Where sim and video disagree:
+- R5 is far more common in sim (56) than as a video primary label (7). When
+  pi0 runs a sibling-scene routine that never touches anything (hovering at
+  the drawer, over an empty spot, at the caddy), video reviewers called it
+  R2 scene habit or R1; in sim nothing was grasped and no joint moved, so it
+  is "target never reached". The two are the same behaviour seen from
+  different sides: the habit is the cause, the unengaged target is what can
+  be detected.
+- R2 is detectable in sim only when a non-goal joint moves or a sub-step
+  happens out of order (21); habits that only move objects show up as R1.
+- R6 (31) is more common than on video (3 primary): in the shelf scene and
+  with bowls the right object is carried around without reaching the goal,
+  which the reviewers often folded into R1/R2.
+
+Agent results (details: failure_agent_prototype/README.md and
+prototyping_log.md): 102/234 successes (44%; 77 within the native 400-step
+budget), 42 of the 78 tasks solved at least once. On the 14 tasks of the
+earlier survey: 22/42 (previous prototype: 8/42). Most recoveries succeed
+through the "coordinator supplies where, pi0 supplies the grasp" recipe of
+section 5: 85 of the 102 successes ended with a plan that included the
+scripted carry to the destination, 11 with the scripted drawer push. Those
+primitives read object and handle positions from the simulator; on hardware
+a VLM coordinator would have to provide them.

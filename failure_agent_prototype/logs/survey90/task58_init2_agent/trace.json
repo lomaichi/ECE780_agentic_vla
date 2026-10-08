@@ -1,0 +1,216 @@
+{
+ "task_id": 58,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the ketchup and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'ketchup_1' never approached (closest EEF approach 0.181 m); goal ['in', 'ketchup_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the tray",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the tray",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 267,
+   "evidence": [
+    "target 'ketchup_1' approached but never grasped (closest EEF approach 0.038 m); goal ['in', 'ketchup_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the tray",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 493,
+   "evidence": [
+    "target 'ketchup_1' approached but never grasped (closest EEF approach 0.026 m); goal ['in', 'ketchup_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the tray",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the tray",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 720,
+ "native_budget_success": false,
+ "wall_s": 31.7,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.081,
+    -0.124,
+    0.5
+   ],
+   "held": null
+  },
+  {
+   "t": 267,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "topple",
+   "tilt_change": 45.4,
+   "is_target": true
+  },
+  {
+   "t": 493,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "ketchup_1 not held"
+  },
+  {
+   "t": 720,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "ketchup_1 not held"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 12.2,
+  "min_place_dist": {
+   "0": 0.494
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "ketchup_1": 0.026,
+   "wooden_tray_1_contain_region": 0.331
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.006,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.111,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

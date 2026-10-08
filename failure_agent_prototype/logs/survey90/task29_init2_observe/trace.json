@@ -1,0 +1,102 @@
+{
+ "task_id": 29,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'white_cabinet_1_top_region' (closest it got: 0.126 m); now held 0.459 m away"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.7,
+ "events": [
+  {
+   "t": 94,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 120,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.1446,
+   "now": -0.1232
+  },
+  {
+   "t": 232,
+   "kind": "stall",
+   "extent_m": 0.0288,
+   "eef": [
+    -0.048,
+    0.159,
+    1.126
+   ],
+   "held": "akita_black_bowl_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 54.1,
+  "min_place_dist": {
+   "0": 0.126
+  },
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 94
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.056,
+   "white_cabinet_1_top_region": 0.153
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.1462
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.117,
+   "plate_1": 0.0,
+   "ketchup_1": 0.0
+  }
+ }
+}

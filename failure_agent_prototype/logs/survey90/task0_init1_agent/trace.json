@@ -1,0 +1,107 @@
+{
+ "task_id": 0,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "close the top drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 156,
+   "evidence": [
+    "goal ['close', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.1273, closest EEF approach 0.126 m"
+   ],
+   "slots": {
+    "instruction": "close the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 186,
+ "steps": 186,
+ "native_budget_success": true,
+ "wall_s": 10.2,
+ "events": [
+  {
+   "t": 75,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1485,
+   "now": -0.1283
+  },
+  {
+   "t": 156,
+   "kind": "stall",
+   "extent_m": 0.0284,
+   "eef": [
+    -0.037,
+    -0.165,
+    1.119
+   ],
+   "held": null
+  },
+  {
+   "t": 186,
+   "kind": "finish_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "q_before": -0.0219,
+   "q_after": 0.0017,
+   "target": 0.0025
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 29.1,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.126
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1273
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

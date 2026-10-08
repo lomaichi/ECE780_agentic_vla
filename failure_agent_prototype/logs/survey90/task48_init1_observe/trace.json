@@ -1,0 +1,97 @@
+{
+ "task_id": 48,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the ketchup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "target 'ketchup_1' never approached (closest EEF approach 0.180 m); goal ['in', 'ketchup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the ketchup and put it in the basket",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 135,
+   "kind": "stall",
+   "extent_m": 0.0299,
+   "eef": [
+    0.04,
+    -0.198,
+    0.502
+   ],
+   "held": null
+  },
+  {
+   "t": 332,
+   "kind": "wrist_windup",
+   "angle_deg": 113.6
+  },
+  {
+   "t": 365,
+   "kind": "out_of_view",
+   "eef": [
+    0.018,
+    -0.284,
+    0.723
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 176.2,
+  "min_place_dist": {
+   "0": 0.441
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "ketchup_1": 0.18,
+   "basket_1_contain_region": 0.325
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.023,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.053,
+   "ketchup_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

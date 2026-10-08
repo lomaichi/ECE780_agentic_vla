@@ -1,0 +1,235 @@
+{
+ "task_id": 30,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the black bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 94,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.229 m); goal ['on', 'akita_black_bowl_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it on the plate",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 246,
+   "evidence": [
+    "joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.16 -> -0.1398; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it on the plate",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 386,
+   "evidence": [
+    "joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.1326 -> -0.1124; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it on the plate",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 617,
+ "steps": 617,
+ "native_budget_success": false,
+ "wall_s": 21.6,
+ "events": [
+  {
+   "t": 94,
+   "kind": "stall",
+   "extent_m": 0.0291,
+   "eef": [
+    0.055,
+    0.004,
+    1.12
+   ],
+   "held": null
+  },
+  {
+   "t": 188,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.097
+   ]
+  },
+  {
+   "t": 246,
+   "kind": "unplanned_articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": false,
+   "start": -0.16,
+   "now": -0.1398
+  },
+  {
+   "t": 386,
+   "kind": "unplanned_articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": false,
+   "start": -0.1326,
+   "now": -0.1124
+  },
+  {
+   "t": 580,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 617,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.029,
+    -0.275,
+    0.911
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 17.6,
+  "min_place_dist": {
+   "0": 0.213
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 580
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.058,
+   "plate_1": 0.233
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.232,
+   "plate_1": 0.0,
+   "ketchup_1": 0.0
+  }
+ }
+}

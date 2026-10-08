@@ -1,0 +1,125 @@
+{
+ "task_id": 66,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the red mug on the right plate",
+ "goal": [
+  [
+   "on",
+   "red_coffee_mug_1",
+   "plate_2"
+  ]
+ ],
+ "targets": [
+  "red_coffee_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the goal targets are ['red_coffee_mug_1']",
+    "'porcelain_mug_1' displaced 0.190 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the right plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest": "the plate",
+    "place": "on the plate on the right",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.0,
+ "events": [
+  {
+   "t": 70,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 70,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 119,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.037,
+    -0.288,
+    0.454
+   ]
+  },
+  {
+   "t": 224,
+   "kind": "grasp",
+   "obj": "white_yellow_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 224,
+   "kind": "wrong_grasp",
+   "obj": "white_yellow_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 259,
+   "kind": "out_of_view",
+   "eef": [
+    0.027,
+    0.347,
+    0.586
+   ]
+  },
+  {
+   "t": 267,
+   "kind": "release",
+   "obj": "white_yellow_mug_1",
+   "pos": [
+    0.015,
+    0.306,
+    0.456
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 70,
+   "white_yellow_mug_1": 224
+  },
+  "min_eef_dist": {
+   "red_coffee_mug_1": 0.166,
+   "plate_2": 0.093
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.19,
+   "red_coffee_mug_1": 0.0,
+   "white_yellow_mug_1": 0.25,
+   "plate_1": 0.0,
+   "plate_2": 0.0
+  }
+ }
+}

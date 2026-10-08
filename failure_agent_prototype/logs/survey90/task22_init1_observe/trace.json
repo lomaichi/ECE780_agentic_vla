@@ -1,0 +1,91 @@
+{
+ "task_id": 22,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "close the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.0478, closest EEF approach 0.143 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.8,
+ "events": [
+  {
+   "t": 144,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 196,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.1405,
+   "now": -0.1181
+  },
+  {
+   "t": 256,
+   "kind": "stall",
+   "extent_m": 0.0195,
+   "eef": [
+    -0.066,
+    0.108,
+    1.036
+   ],
+   "held": "akita_black_bowl_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 55.7,
+  "min_place_dist": {},
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 144
+  },
+  "min_eef_dist": {
+   "white_cabinet_1_bottom_region": 0.143
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_bottom_level": 0.0478
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.196,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

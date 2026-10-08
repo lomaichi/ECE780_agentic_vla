@@ -1,0 +1,111 @@
+{
+ "task_id": 52,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the milk and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "milk_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "milk_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'cream_cheese_1' but the goal targets are ['milk_1']",
+    "'cream_cheese_1' displaced 0.481 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the milk and put it in the basket",
+    "target_obj": "milk_1",
+    "target": "milk",
+    "target_desc": "milk",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "cream cheese"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 19.9,
+ "events": [
+  {
+   "t": 98,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 45.0,
+   "is_target": false
+  },
+  {
+   "t": 147,
+   "kind": "grasp",
+   "obj": "cream_cheese_1",
+   "is_target": false
+  },
+  {
+   "t": 147,
+   "kind": "wrong_grasp",
+   "obj": "cream_cheese_1",
+   "targets": [
+    "milk_1"
+   ]
+  },
+  {
+   "t": 221,
+   "kind": "out_of_view",
+   "eef": [
+    0.039,
+    0.264,
+    0.6
+   ]
+  },
+  {
+   "t": 229,
+   "kind": "release",
+   "obj": "cream_cheese_1",
+   "pos": [
+    0.02,
+    0.263,
+    0.58
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "cream_cheese_1": 147
+  },
+  "min_eef_dist": {
+   "milk_1": 0.097,
+   "basket_1_contain_region": 0.099
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.481,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.04,
+   "milk_1": 0.068,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

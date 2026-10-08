@@ -1,0 +1,94 @@
+{
+ "task_id": 6,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "open the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 400,
+   "evidence": [
+    "joint 'wooden_cabinet_1_middle_level' of 'wooden_cabinet_1' moved 0.0 -> -0.0206; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "open the bottom drawer of the cabinet",
+    "verb": "open",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_bottom_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.7,
+ "events": [
+  {
+   "t": 149,
+   "kind": "unplanned_articulation",
+   "joint": "wooden_cabinet_1_middle_level",
+   "owner": "wooden_cabinet_1",
+   "planned": false,
+   "start": 0.0,
+   "now": -0.0206
+  },
+  {
+   "t": 309,
+   "kind": "no_progress",
+   "since": 149,
+   "eef": [
+    -0.01,
+    -0.16,
+    1.091
+   ],
+   "held": null
+  },
+  {
+   "t": 325,
+   "kind": "stall",
+   "extent_m": 0.012,
+   "eef": [
+    -0.01,
+    -0.159,
+    1.095
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 51.4,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_bottom_region": 0.174
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_bottom_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.023,
+   "plate_1": 0.0
+  }
+ }
+}

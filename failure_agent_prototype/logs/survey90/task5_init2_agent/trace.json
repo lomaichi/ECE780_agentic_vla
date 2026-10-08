@@ -1,0 +1,364 @@
+{
+ "task_id": 5,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+ "goal": [
+  [
+   "in",
+   "chocolate_pudding_1",
+   "wooden_cabinet_1_top_region"
+  ],
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "premature_goal",
+   "t": 118,
+   "evidence": [
+    "worked on ['close', 'wooden_cabinet_1_top_region'] (joint moved 0.0211) while ['in', 'chocolate_pudding_1', 'wooden_cabinet_1_top_region'] is still false: sub-steps out of order"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chocolate_pudding_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the chocolate pudding and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "chocolate_pudding_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chocolate_pudding_1",
+     "dest": "wooden_cabinet_1_top_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": {
+      "predicate": [
+       "close",
+       "wooden_cabinet_1_top_region"
+      ]
+     },
+     "budget": 250
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 462,
+   "evidence": [
+    "goal ['close', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0284, closest EEF approach 0.057 m"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R2_scene_habit",
+   "trigger": "premature_goal",
+   "t": 574,
+   "evidence": [
+    "worked on ['close', 'wooden_cabinet_1_top_region'] (joint moved 0.0206) while ['in', 'chocolate_pudding_1', 'wooden_cabinet_1_top_region'] is still false: sub-steps out of order"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the top drawer of the cabinet",
+     "until": {
+      "predicate": [
+       "open",
+       "wooden_cabinet_1_top_region"
+      ]
+     },
+     "budget": 250
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "approach",
+     "obj": "chocolate_pudding_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the chocolate pudding and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "chocolate_pudding_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chocolate_pudding_1",
+     "dest": "wooden_cabinet_1_top_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": {
+      "predicate": [
+       "close",
+       "wooden_cabinet_1_top_region"
+      ]
+     },
+     "budget": 250
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 690,
+ "native_budget_success": false,
+ "wall_s": 29.9,
+ "events": [
+  {
+   "t": 118,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.151,
+   "now": -0.1299
+  },
+  {
+   "t": 118,
+   "kind": "premature_goal",
+   "satisfied": [
+    "close",
+    "wooden_cabinet_1_top_region"
+   ],
+   "pending": [
+    "in",
+    "chocolate_pudding_1",
+    "wooden_cabinet_1_top_region"
+   ],
+   "joint": "wooden_cabinet_1_top_level",
+   "moved": 0.0211
+  },
+  {
+   "t": 343,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chocolate_pudding_1 not held"
+  },
+  {
+   "t": 402,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.125,
+   "now": -0.1486
+  },
+  {
+   "t": 462,
+   "kind": "stall",
+   "extent_m": 0.0107,
+   "eef": [
+    -0.007,
+    -0.057,
+    1.091
+   ],
+   "held": null
+  },
+  {
+   "t": 514,
+   "kind": "finish_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "q_before": -0.1604,
+   "q_after": -0.0396,
+   "target": 0.0025
+  },
+  {
+   "t": 514,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.107
+   ]
+  },
+  {
+   "t": 574,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.0396,
+   "now": -0.019
+  },
+  {
+   "t": 574,
+   "kind": "premature_goal",
+   "satisfied": [
+    "close",
+    "wooden_cabinet_1_top_region"
+   ],
+   "pending": [
+    "in",
+    "chocolate_pudding_1",
+    "wooden_cabinet_1_top_region"
+   ],
+   "joint": "wooden_cabinet_1_top_level",
+   "moved": 0.0206
+  },
+  {
+   "t": 690,
+   "kind": "stall",
+   "extent_m": 0.0249,
+   "eef": [
+    0.003,
+    -0.181,
+    1.131
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 29.2,
+  "min_place_dist": {
+   "0": 0.201
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.04,
+   "wooden_cabinet_1_top_region": 0.057
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1371
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.011,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.013
+  }
+ }
+}

@@ -1,0 +1,133 @@
+{
+ "task_id": 66,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the red mug on the right plate",
+ "goal": [
+  [
+   "on",
+   "red_coffee_mug_1",
+   "plate_2"
+  ]
+ ],
+ "targets": [
+  "red_coffee_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']",
+    "'porcelain_mug_1' displaced 0.175 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the right plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "plate_2",
+    "dest": "the plate",
+    "place": "on the plate on the right",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.6,
+ "events": [
+  {
+   "t": 90,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 90,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 133,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.022,
+    -0.285,
+    0.451
+   ]
+  },
+  {
+   "t": 232,
+   "kind": "grasp",
+   "obj": "white_yellow_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 232,
+   "kind": "wrong_grasp",
+   "obj": "white_yellow_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 264,
+   "kind": "out_of_view",
+   "eef": [
+    0.042,
+    0.34,
+    0.597
+   ]
+  },
+  {
+   "t": 276,
+   "kind": "release",
+   "obj": "white_yellow_mug_1",
+   "pos": [
+    0.03,
+    0.29,
+    0.454
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 7.9,
+  "min_place_dist": {
+   "0": 0.386
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 90,
+   "white_yellow_mug_1": 232
+  },
+  "min_eef_dist": {
+   "red_coffee_mug_1": 0.146,
+   "plate_2": 0.089
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.175,
+   "red_coffee_mug_1": 0.007,
+   "white_yellow_mug_1": 0.237,
+   "plate_1": 0.0,
+   "plate_2": 0.0
+  }
+ }
+}

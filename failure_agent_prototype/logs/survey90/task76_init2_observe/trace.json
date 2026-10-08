@@ -1,0 +1,108 @@
+{
+ "task_id": 76,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the yellow and white mug and place it to the right of the caddy",
+ "goal": [
+  [
+   "on",
+   "white_yellow_mug_1",
+   "study_table_desk_caddy_right_region"
+  ]
+ ],
+ "targets": [
+  "white_yellow_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'black_book_1' but the pending goal targets are ['white_yellow_mug_1']",
+    "'black_book_1' displaced 0.410 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the yellow and white mug and place it to the right of the caddy",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "wrong_obj": "book"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.0,
+ "events": [
+  {
+   "t": 75,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": false
+  },
+  {
+   "t": 75,
+   "kind": "wrong_grasp",
+   "obj": "black_book_1",
+   "targets": [
+    "white_yellow_mug_1"
+   ]
+  },
+  {
+   "t": 235,
+   "kind": "no_progress",
+   "since": 75,
+   "eef": [
+    -0.421,
+    -0.155,
+    1.006
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 242,
+   "kind": "stall",
+   "extent_m": 0.0295,
+   "eef": [
+    -0.421,
+    -0.154,
+    1.007
+   ],
+   "held": "black_book_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 44.0,
+  "min_place_dist": {
+   "0": 0.354
+  },
+  "held": "black_book_1",
+  "ever_grasped": {
+   "black_book_1": 75
+  },
+  "min_eef_dist": {
+   "white_yellow_mug_1": 0.244,
+   "study_table_desk_caddy_right_region": 0.21
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.41,
+   "white_yellow_mug_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,282 @@
+{
+ "task_id": 34,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "put the yellow and white mug to the front of the white mug",
+ "goal": [
+  [
+   "on",
+   "white_yellow_mug_1",
+   "kitchen_table_porcelain_mug_front_region"
+  ]
+ ],
+ "targets": [
+  "white_yellow_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 278,
+   "evidence": [
+    "joint 'microwave_1_microjoint' of 'microwave_1' moved -1.655 -> -1.4375; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the yellow and white mug to the front of the white mug",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "kitchen_table_porcelain_mug_front_region",
+    "dest": "the front of the white mug",
+    "place": "to the front of the white mug"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_yellow_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the yellow and white mug and place it to the front of the white mug",
+     "until": {
+      "grasp": "white_yellow_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_yellow_mug_1",
+     "dest": "kitchen_table_porcelain_mug_front_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "out_of_view",
+   "t": 408,
+   "evidence": [
+    "'white_yellow_mug_1' was grasped but is not at 'kitchen_table_porcelain_mug_front_region' (closest it got: 0.244 m); now dropped 0.537 m away"
+   ],
+   "slots": {
+    "instruction": "put the yellow and white mug to the front of the white mug",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "kitchen_table_porcelain_mug_front_region",
+    "dest": "the front of the white mug",
+    "place": "to the front of the white mug",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "white_yellow_mug_1",
+     "dest": "kitchen_table_porcelain_mug_front_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_yellow_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the yellow and white mug and place it to the front of the white mug",
+     "until": {
+      "grasp": "white_yellow_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_yellow_mug_1",
+     "dest": "kitchen_table_porcelain_mug_front_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 573,
+   "evidence": [
+    "'white_yellow_mug_1' was grasped but is not at 'kitchen_table_porcelain_mug_front_region' (closest it got: 0.244 m); now dropped 0.535 m away"
+   ],
+   "slots": {
+    "instruction": "put the yellow and white mug to the front of the white mug",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "kitchen_table_porcelain_mug_front_region",
+    "dest": "the front of the white mug",
+    "place": "to the front of the white mug",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "white_yellow_mug_1",
+     "dest": "kitchen_table_porcelain_mug_front_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_yellow_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the yellow and white mug",
+     "until": {
+      "grasp": "white_yellow_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_yellow_mug_1",
+     "dest": "kitchen_table_porcelain_mug_front_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 737,
+ "native_budget_success": false,
+ "wall_s": 32.0,
+ "events": [
+  {
+   "t": 126,
+   "kind": "grasp",
+   "obj": "white_yellow_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 208,
+   "kind": "release",
+   "obj": "white_yellow_mug_1",
+   "pos": [
+    0.011,
+    0.284,
+    0.96
+   ]
+  },
+  {
+   "t": 278,
+   "kind": "unplanned_articulation",
+   "joint": "microwave_1_microjoint",
+   "owner": "microwave_1",
+   "planned": false,
+   "start": -1.655,
+   "now": -1.4375
+  },
+  {
+   "t": 371,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.098
+   ]
+  },
+  {
+   "t": 408,
+   "kind": "out_of_view",
+   "eef": [
+    0.015,
+    0.321,
+    1.116
+   ]
+  },
+  {
+   "t": 408,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "white_yellow_mug_1 not held"
+  },
+  {
+   "t": 501,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.098
+   ]
+  },
+  {
+   "t": 573,
+   "kind": "stall",
+   "extent_m": 0.0287,
+   "eef": [
+    -0.003,
+    0.297,
+    1.113
+   ],
+   "held": null
+  },
+  {
+   "t": 573,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "white_yellow_mug_1 not held"
+  },
+  {
+   "t": 666,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.098
+   ]
+  },
+  {
+   "t": 737,
+   "kind": "out_of_view",
+   "eef": [
+    -0.02,
+    0.341,
+    1.114
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 32.3,
+  "min_place_dist": {
+   "0": 0.244
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_yellow_mug_1": 126
+  },
+  "min_eef_dist": {
+   "white_yellow_mug_1": 0.077,
+   "kitchen_table_porcelain_mug_front_region": 0.216
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.0,
+   "white_yellow_mug_1": 0.291
+  }
+ }
+}

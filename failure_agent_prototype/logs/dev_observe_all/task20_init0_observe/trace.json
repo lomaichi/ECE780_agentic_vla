@@ -1,0 +1,69 @@
+{
+ "task_id": 20,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn on the stove",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "S1_stall",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "stall: {'extent_m': 0.0291, 'eef': [-0.555, 0.178, 0.853], 'held': None}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "turn on the stove",
+    "verb": "turn on",
+    "region": "the stove"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 196,
+   "kind": "stall",
+   "extent_m": 0.0291,
+   "eef": [
+    -0.555,
+    0.178,
+    0.853
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.215
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0
+  },
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.0,
+   "moka_pot_1": 0.0
+  }
+ }
+}

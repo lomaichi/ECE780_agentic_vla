@@ -1,0 +1,122 @@
+{
+ "task_id": 83,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the pending goal targets are ['black_book_1']",
+    "'porcelain_mug_1' displaced 0.390 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.2,
+ "events": [
+  {
+   "t": 105,
+   "kind": "disturbance",
+   "obj": "porcelain_mug_1",
+   "how": "push",
+   "dist": 0.085,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.339,
+    -0.206,
+    1.175
+   ],
+   "held": null
+  },
+  {
+   "t": 177,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 177,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 252,
+   "kind": "stall",
+   "extent_m": 0.0298,
+   "eef": [
+    -0.379,
+    -0.247,
+    1.096
+   ],
+   "held": "porcelain_mug_1"
+  },
+  {
+   "t": 339,
+   "kind": "wrist_windup",
+   "angle_deg": 84.3
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 124.8,
+  "min_place_dist": {
+   "0": 0.142
+  },
+  "held": "porcelain_mug_1",
+  "ever_grasped": {
+   "porcelain_mug_1": 177
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.19,
+   "desk_caddy_1_right_contain_region": 0.189
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.116,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.39
+  }
+ }
+}

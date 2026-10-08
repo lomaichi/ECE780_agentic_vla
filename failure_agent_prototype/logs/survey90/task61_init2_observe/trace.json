@@ -1,0 +1,135 @@
+{
+ "task_id": 61,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the chocolate pudding and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "chocolate_pudding_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_1' but the pending goal targets are ['chocolate_pudding_1']",
+    "'akita_black_bowl_1' displaced 0.526 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the chocolate pudding and put it in the tray",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.8,
+ "events": [
+  {
+   "t": 74,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "topple",
+   "tilt_change": 45.1,
+   "is_target": false
+  },
+  {
+   "t": 79,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 79,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_1",
+   "targets": [
+    "chocolate_pudding_1"
+   ]
+  },
+  {
+   "t": 95,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.144,
+    -0.171,
+    0.45
+   ]
+  },
+  {
+   "t": 158,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 318,
+   "kind": "no_progress",
+   "since": 158,
+   "eef": [
+    0.015,
+    0.267,
+    0.473
+   ],
+   "held": "akita_black_bowl_1"
+  },
+  {
+   "t": 351,
+   "kind": "stall",
+   "extent_m": 0.0299,
+   "eef": [
+    0.026,
+    0.267,
+    0.475
+   ],
+   "held": "akita_black_bowl_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 15.1,
+  "min_place_dist": {
+   "0": 0.495
+  },
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 79
+  },
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.156,
+   "wooden_tray_1_contain_region": 0.01
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.526,
+   "akita_black_bowl_2": 0.0,
+   "new_salad_dressing_1": 0.003,
+   "chocolate_pudding_1": 0.0,
+   "wooden_tray_1": 0.021
+  }
+ }
+}

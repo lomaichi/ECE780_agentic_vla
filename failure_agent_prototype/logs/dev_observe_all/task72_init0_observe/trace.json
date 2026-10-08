@@ -1,0 +1,91 @@
+{
+ "task_id": 72,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the white mug on the plate",
+ "goal": [
+  [
+   "on",
+   "porcelain_mug_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "porcelain_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R4_placement",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'porcelain_mug_1' was grasped; 0.032 m from 'plate_1' (xy) but ['on', 'porcelain_mug_1', 'plate_1'] is false"
+   ],
+   "slots": {
+    "instruction": "put the white mug on the plate",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest": "the plate",
+    "place": "on the plate"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 19.4,
+ "events": [
+  {
+   "t": 75,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 140,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.141,
+    0.044,
+    0.449
+   ]
+  },
+  {
+   "t": 200,
+   "kind": "stall",
+   "extent_m": 0.0192,
+   "eef": [
+    0.132,
+    0.064,
+    0.523
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 75
+  },
+  "min_eef_dist": {
+   "porcelain_mug_1": 0.081,
+   "plate_1": 0.098
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.314,
+   "red_coffee_mug_1": 0.0,
+   "plate_1": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

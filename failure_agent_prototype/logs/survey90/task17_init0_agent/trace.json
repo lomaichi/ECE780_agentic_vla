@@ -1,0 +1,161 @@
+{
+ "task_id": 17,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "stack the middle black bowl on the back black bowl",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_2",
+   "akita_black_bowl_3"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 67,
+   "evidence": [
+    "target 'akita_black_bowl_2' never approached (closest EEF approach 0.159 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']"
+   ],
+   "slots": {
+    "instruction": "stack the black bowl in the middle on the black bowl at the front",
+    "target_obj": "akita_black_bowl_2",
+    "target": "black bowl",
+    "target_desc": "black bowl in the middle",
+    "dest_obj": "akita_black_bowl_3",
+    "dest": "the black bowl",
+    "place": "on the black bowl at the back",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_2"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl in the middle and place it on the black bowl at the back",
+     "until": {
+      "grasp": "akita_black_bowl_2"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_2",
+     "dest": "akita_black_bowl_3"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 308,
+   "evidence": [
+    "target 'akita_black_bowl_2' approached but never grasped (closest EEF approach 0.056 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']"
+   ],
+   "slots": {
+    "instruction": "stack the black bowl in the middle on the black bowl at the front",
+    "target_obj": "akita_black_bowl_2",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "akita_black_bowl_3",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the left",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_2"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl on the right",
+     "until": {
+      "grasp": "akita_black_bowl_2"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_2",
+     "dest": "akita_black_bowl_3"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 506,
+ "steps": 506,
+ "native_budget_success": false,
+ "wall_s": 20.2,
+ "events": [
+  {
+   "t": 67,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "topple",
+   "tilt_change": 48.9,
+   "is_target": false
+  },
+  {
+   "t": 308,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_2 not held"
+  },
+  {
+   "t": 478,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 10.4,
+  "min_place_dist": {
+   "0": 0.217
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_2": 478
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_2": 0.053,
+   "akita_black_bowl_3": 0.167
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.166,
+   "akita_black_bowl_2": 0.23,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.002
+  }
+ }
+}

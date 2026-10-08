@@ -1,0 +1,126 @@
+{
+ "task_id": 72,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the white mug on the plate",
+ "goal": [
+  [
+   "on",
+   "porcelain_mug_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "porcelain_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "grasped 'chocolate_pudding_1' but the pending goal targets are ['porcelain_mug_1']",
+    "'chocolate_pudding_1' displaced 0.147 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the white mug on the plate",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "wrong_obj": "chocolate pudding"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.6,
+ "events": [
+  {
+   "t": 74,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 128,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.103,
+    0.047,
+    0.453
+   ]
+  },
+  {
+   "t": 188,
+   "kind": "stall",
+   "extent_m": 0.0221,
+   "eef": [
+    0.124,
+    0.071,
+    0.539
+   ],
+   "held": null
+  },
+  {
+   "t": 278,
+   "kind": "grasp",
+   "obj": "chocolate_pudding_1",
+   "is_target": false
+  },
+  {
+   "t": 278,
+   "kind": "wrong_grasp",
+   "obj": "chocolate_pudding_1",
+   "targets": [
+    "porcelain_mug_1"
+   ]
+  },
+  {
+   "t": 320,
+   "kind": "release",
+   "obj": "chocolate_pudding_1",
+   "pos": [
+    0.107,
+    0.104,
+    0.47
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 15.2,
+  "min_place_dist": {
+   "0": 0.023
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 74,
+   "chocolate_pudding_1": 278
+  },
+  "min_eef_dist": {
+   "porcelain_mug_1": 0.066,
+   "plate_1": 0.109
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.333,
+   "red_coffee_mug_1": 0.0,
+   "plate_1": 0.021,
+   "chocolate_pudding_1": 0.147
+  }
+ }
+}

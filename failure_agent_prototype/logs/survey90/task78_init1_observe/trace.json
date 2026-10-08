@@ -1,0 +1,80 @@
+{
+ "task_id": 78,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the front compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_front_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'black_book_1' never approached (closest EEF approach 0.227 m); goal ['in', 'black_book_1', 'desk_caddy_1_front_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the front compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_front_contain_region",
+    "dest": "the front compartment of the caddy",
+    "place": "in the front compartment of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.2,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.19,
+    0.145,
+    1.047
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 18.7,
+  "min_place_dist": {
+   "0": 0.2
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "black_book_1": 0.227,
+   "desk_caddy_1_front_contain_region": 0.313
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.001
+  }
+ }
+}

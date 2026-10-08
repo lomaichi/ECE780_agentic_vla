@@ -1,0 +1,120 @@
+{
+ "task_id": 23,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "close the bottom drawer of the cabinet and open the top drawer",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_bottom_region"
+  ],
+  [
+   "open",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level",
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R7_partial_task",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "sub-goals [['close', 'white_cabinet_1_bottom_region']] hold but [['open', 'white_cabinet_1_top_region']] were never completed"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet and open the top drawer",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.9,
+ "events": [
+  {
+   "t": 92,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 203,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.006,
+    0.139,
+    0.924
+   ]
+  },
+  {
+   "t": 238,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.1407,
+   "now": -0.1162
+  },
+  {
+   "t": 254,
+   "kind": "predicate",
+   "index": 0,
+   "predicate": [
+    "close",
+    "white_cabinet_1_bottom_region"
+   ],
+   "value": true
+  },
+  {
+   "t": 351,
+   "kind": "stall",
+   "extent_m": 0.0102,
+   "eef": [
+    0.047,
+    0.216,
+    0.914
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   true,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 69.6,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 92
+  },
+  "min_eef_dist": {
+   "white_cabinet_1_bottom_region": 0.058,
+   "white_cabinet_1_top_region": 0.188
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0017,
+   "white_cabinet_1_bottom_level": 0.1425
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.328,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

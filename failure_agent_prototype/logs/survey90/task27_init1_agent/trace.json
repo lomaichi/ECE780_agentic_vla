@@ -1,0 +1,270 @@
+{
+ "task_id": 27,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the wine bottle on the wine rack",
+ "goal": [
+  [
+   "on",
+   "wine_bottle_1",
+   "wine_rack_1_top_region"
+  ]
+ ],
+ "targets": [
+  "wine_bottle_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 307,
+   "evidence": [
+    "'wine_bottle_1' was grasped but is not at 'wine_rack_1_top_region' (closest it got: 0.069 m); now held 0.312 m away"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "wine_rack_1_top_region",
+    "dest": "the wine rack",
+    "place": "on the wine rack",
+    "target_held": "yes"
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "wine_bottle_1",
+     "dest": "wine_rack_1_top_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "wine_bottle_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the wine bottle and place it on the wine rack",
+     "until": {
+      "grasp": "wine_bottle_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "wine_bottle_1",
+     "dest": "wine_rack_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "stall",
+   "t": 534,
+   "evidence": [
+    "'wine_bottle_1' was grasped; 0.092 m from 'wine_rack_1_top_region' (xy) but ['on', 'wine_bottle_1', 'wine_rack_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "wine_rack_1_top_region",
+    "dest": "the wine rack",
+    "place": "on the wine rack"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "wine_bottle_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the wine bottle and place it on the wine rack",
+     "until": {
+      "grasp": "wine_bottle_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "wine_bottle_1",
+     "dest": "wine_rack_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "stall",
+   "t": 676,
+   "evidence": [
+    "'wine_bottle_1' was grasped; 0.092 m from 'wine_rack_1_top_region' (xy) but ['on', 'wine_bottle_1', 'wine_rack_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "wine_rack_1_top_region",
+    "dest": "the wine rack",
+    "place": "on the wine rack"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "wine_bottle_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the wine bottle",
+     "until": {
+      "grasp": "wine_bottle_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "wine_bottle_1",
+     "dest": "wine_rack_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 818,
+ "native_budget_success": false,
+ "wall_s": 32.2,
+ "events": [
+  {
+   "t": 147,
+   "kind": "grasp",
+   "obj": "wine_bottle_1",
+   "is_target": true
+  },
+  {
+   "t": 307,
+   "kind": "no_progress",
+   "since": 147,
+   "eef": [
+    0.076,
+    -0.072,
+    1.243
+   ],
+   "held": "wine_bottle_1"
+  },
+  {
+   "t": 389,
+   "kind": "release",
+   "obj": "wine_bottle_1",
+   "pos": [
+    -0.055,
+    -0.134,
+    0.922
+   ]
+  },
+  {
+   "t": 474,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.125
+   ]
+  },
+  {
+   "t": 534,
+   "kind": "stall",
+   "extent_m": 0.014,
+   "eef": [
+    -0.042,
+    -0.144,
+    1.105
+   ],
+   "held": null
+  },
+  {
+   "t": 616,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.125
+   ]
+  },
+  {
+   "t": 676,
+   "kind": "stall",
+   "extent_m": 0.015,
+   "eef": [
+    -0.043,
+    -0.145,
+    1.104
+   ],
+   "held": null
+  },
+  {
+   "t": 758,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.125
+   ]
+  },
+  {
+   "t": 818,
+   "kind": "stall",
+   "extent_m": 0.0222,
+   "eef": [
+    -0.048,
+    -0.148,
+    1.098
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 54.2,
+  "min_place_dist": {
+   "0": 0.069
+  },
+  "held": null,
+  "ever_grasped": {
+   "wine_bottle_1": 147
+  },
+  "min_eef_dist": {
+   "wine_bottle_1": 0.092,
+   "wine_rack_1_top_region": 0.06
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "wine_bottle_1": 0.214
+  }
+ }
+}

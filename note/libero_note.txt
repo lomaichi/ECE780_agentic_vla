@@ -1,0 +1,161 @@
+LIBERO NOTES (in the context of openpi / pi0)
+=============================================
+Written 2026-10-07. File paths are relative to /opt/openpi. (this is the location where we call the libero client)
+
+---------------------------------------------------
+0. WHAT LIBERO IS (AND HOW IT RELATES TO ROBOSUITE)
+---------------------------------------------------
+
+- robosuite = the underlying MuJoCo simulation framework (robots, controllers,
+  objects, rendering). It does NOT have a notion of language instructions.
+- LIBERO = a lifelong-learning benchmark built ON TOP of robosuite. It adds:
+    * a task description language (BDDL files) that defines the scene,
+      the objects, their initial placement, the goal and a natural-language
+      instruction,
+    * fixed task suites (benchmarks) with saved initial states,
+    * human demonstration datasets for each task.
+- So the language instruction comes from LIBERO, not robosuite. Each BDDL file
+  has a line like:
+      (:language Put the bowl on the plate)
+- Source code lives in the git submodule: third_party/libero/
+
+---------------------------------------------------                                                                                                                                                                                                                             
+1. ARE THE TASKS PROVIDED BY LIBERO?
+------------------------------------
+Yes. Everything about the task comes from LIBERO:
+  - Scene / objects / goal  -> BDDL file, e.g.
+      third_party/libero/libero/libero/bddl_files/libero_goal/put_the_bowl_on_the_plate.bddl
+  - Initial states          -> third_party/libero/libero/libero/init_files/<suite>/<task>.pruned_init
+  - Instruction text        -> the (:language ...) line in the BDDL (task.language)
+  - Success check           -> the (:goal ...) predicates in the BDDL, e.g.
+                                 (On akita_black_bowl_1 plate_1)
+
+How openpi uses it (examples/libero/main.py):
+  task_suite = benchmark.get_benchmark_dict()[args.task_suite_name]()
+  task = task_suite.get_task(task_id)
+  initial_states = task_suite.get_task_init_states(task_id)
+  env = OffScreenRenderEnv(bddl_file_name=..., ...)   # LIBERO env
+  prompt = task.language                              # sent to pi0
+  done = env.step(action)[2]                          # True when BDDL goal satisfied
+
+openpi only provides the policy server + the client loop; LIBERO provides the
+simulator, the tasks and the success signal.
+
+
+2. OTHER LIBERO TASKS, AND CAN PI0 RUN THEM?
+--------------------------------------------
+LIBERO ships 5 suites (130 tasks total):
+
+  Suite            #tasks  What varies                              In pi0_libero training data?
+  ---------------  ------  ---------------------------------------  ----------------------------
+  libero_spatial   10      same objects, different layouts         YES
+  libero_object    10      different target objects                 YES
+  libero_goal      10      same scene, different goals              YES
+  libero_10        10      long-horizon, multi-step tasks           YES
+  libero_90        90      many short tasks across many scenes      NO
+  (libero_100 = libero_10 + libero_90)
+
+Running a different suite is just a client flag; no server change needed:
+
+  Docker:
+    export CLIENT_ARGS="--args.task-suite-name libero_10"
+  Without Docker:
+    python examples/libero/main.py --args.task-suite-name libero_goal
+
+Valid names in main.py: libero_spatial, libero_object, libero_goal,
+libero_10, libero_90 (main.py has a max_steps value hard-coded per suite).
+
+Other useful client flags (examples/libero/main.py, Args):
+  --args.num-trials-per-task N   (default 50, max 50: one per saved init state)
+  --args.replan-steps N          (default 5; how many actions of each chunk to execute)
+  --args.video-out-path PATH     (default data/libero/videos)
+  --args.seed N
+
+Expectations:
+  - The openpi LIBERO checkpoints (pi0_libero, pi0_fast_libero, pi05_libero)
+    were fine-tuned on the "physical-intelligence/libero" LeRobot dataset, which
+    is converted from libero_10 / libero_goal / libero_object / libero_spatial
+    demos (see examples/libero/convert_libero_data_to_lerobot.py,
+    RAW_DATASET_NAMES). These four suites should give high success rates.
+  - libero_90 runs fine technically, but those tasks were NOT in the fine-tuning
+    data, so treat it as a generalization test; expect lower success.
+  - You can also swap the checkpoint on the server side, e.g.
+      SERVER_ARGS="--env LIBERO policy:checkpoint --policy.config pi05_libero --policy.dir <ckpt>"
+
+
+3. CAN I CUSTOMIZE THE TASK?
+----------------------------
+Yes, at three levels of effort:
+
+(a) Just change the language prompt (easiest, quick experiment)
+    In main.py the prompt sent to pi0 is:
+        "prompt": str(task_description)
+    You can replace it with any string, e.g. in a libero_goal scene ask
+    "put the cream cheese in the bowl" instead of the original instruction.
+    !! Caveat: the language is ONLY an input to the policy. The simulator's
+       success flag (done) is still computed from the ORIGINAL BDDL (:goal).
+       So with a changed prompt, judge success by watching the saved video
+       (or check the new goal yourself), not by the reported success rate.
+    libero_goal is the best suite for this: one scene, 10 different goals,
+    so the model has actually learned to condition on the instruction there.
+    (In libero_spatial / libero_object the scene alone often determines the
+    task, so the model may partly ignore the text.)
+
+(b) Write a new task (new BDDL file)
+    A BDDL file defines: fixtures, objects, regions where objects spawn,
+    initial predicates, goal predicates and the (:language ...) instruction.
+    Two ways to make one:
+      - Copy an existing .bddl and edit it (change objects, regions, the
+        :goal and the :language line). Simplest.
+      - Use LIBERO's Python generator, see
+          third_party/libero/scripts/create_libero_task_example.py
+        It defines a scene with @register_mu(...) (objects, fixtures, regions,
+        initial states), registers tasks with register_task_info(language,
+        scene_name, objects_of_interest, goal_states) and writes BDDL files via
+        generate_bddl_from_task_info().
+    Available building blocks:
+      - objects/fixtures: third_party/libero/libero/libero/assets/
+        (stable_scanned_objects, stable_hope_objects, turbosquid_objects,
+         articulated_objects, ...)
+      - goal predicates: third_party/libero/libero/libero/envs/predicates/
+        (On, In, Open, Close, TurnOn, TurnOff, ...)
+      - scene types: kitchen, living room, study, floor, coffee table
+        (third_party/libero/libero/libero/envs/problems/)
+    Running it with pi0: main.py iterates over a benchmark suite, so for a
+    custom task write a small variant that:
+      - builds the env directly: OffScreenRenderEnv(bddl_file_name=<your.bddl>,
+        camera_heights=256, camera_widths=256)
+      - uses env.reset() for the initial state (custom tasks have no
+        .pruned_init file, so skip env.set_init_state(...); object positions
+        are then sampled from the BDDL regions)
+      - sets its own max_steps
+      - keeps the exact same observation preprocessing (180-degree image
+        rotation, resize_with_pad to 224, state = eef_pos + axis-angle + gripper)
+        so the inputs match what pi0 was trained on.
+
+(c) Make pi0 actually good at your custom task (fine-tuning)
+    pi0_libero has only seen LIBERO's own scenes/objects. On a genuinely new
+    scene or object it will probably do poorly; recombinations of seen objects
+    and scenes (e.g. a new goal in the libero_goal kitchen) have a better chance.
+    To really solve a new task:
+      1. collect demos: third_party/libero/scripts/collect_demonstration.py
+         (teleoperation with keyboard/SpaceMouse), then create_dataset.py
+      2. convert to LeRobot format (adapt
+         examples/libero/convert_libero_data_to_lerobot.py)
+      3. fine-tune with an openpi config (copy pi0_libero in
+         src/openpi/training/config.py and point repo_id to your dataset),
+         compute norm stats, train, then serve the new checkpoint.
+
+
+4. QUICK SUMMARY
+----------------
+1) Yes - the task (scene, objects, initial states, instruction, success check)
+   all come from LIBERO's BDDL files and init files; openpi only supplies the
+   policy and the eval loop.
+2) Yes - LIBERO has 5 suites / 130 tasks. Switch with
+   --args.task-suite-name. spatial/object/goal/10 were in pi0_libero's
+   fine-tuning data; libero_90 was not (expect lower success).
+3) Yes - the language instruction is a LIBERO feature (robosuite has none).
+   You can (a) change the prompt only (success flag still follows the original
+   goal), (b) write a new BDDL task, or (c) collect demos and fine-tune for
+   reliable performance on a new task.

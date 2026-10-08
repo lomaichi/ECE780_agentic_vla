@@ -1,0 +1,96 @@
+{
+ "task_id": 0,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "close the top drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal ['close', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.1438, closest EEF approach 0.129 m"
+   ],
+   "slots": {
+    "instruction": "close the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.5,
+ "events": [
+  {
+   "t": 84,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1463,
+   "now": -0.1259
+  },
+  {
+   "t": 244,
+   "kind": "no_progress",
+   "since": 84,
+   "eef": [
+    -0.041,
+    -0.16,
+    1.074
+   ],
+   "held": null
+  },
+  {
+   "t": 287,
+   "kind": "stall",
+   "extent_m": 0.03,
+   "eef": [
+    -0.054,
+    -0.17,
+    1.072
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 46.3,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.129
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1438
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

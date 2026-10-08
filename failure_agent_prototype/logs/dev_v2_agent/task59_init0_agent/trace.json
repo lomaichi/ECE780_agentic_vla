@@ -1,0 +1,262 @@
+{
+ "task_id": 59,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the tomato sauce and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "tomato_sauce_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "tomato_sauce_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 112,
+   "evidence": [
+    "target 'tomato_sauce_1' never approached (closest EEF approach 0.222 m); goal ['in', 'tomato_sauce_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the tray",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "tomato_sauce_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the tomato sauce and place it in the tray",
+     "until": {
+      "grasp": "tomato_sauce_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "tomato_sauce_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 220,
+   "evidence": [
+    "grasped 'butter_1' but the pending goal targets are ['tomato_sauce_1']",
+    "'butter_1' displaced 0.013 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the tray",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "butter"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "tomato_sauce_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the tomato sauce and place it in the tray",
+     "until": {
+      "grasp": "tomato_sauce_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "tomato_sauce_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 330,
+   "evidence": [
+    "grasped 'butter_1' but the pending goal targets are ['tomato_sauce_1']",
+    "'butter_1' displaced 0.020 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the tray",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "butter"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "tomato_sauce_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the tomato sauce",
+     "until": {
+      "grasp": "tomato_sauce_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "tomato_sauce_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 475,
+ "native_budget_success": false,
+ "wall_s": 20.2,
+ "events": [
+  {
+   "t": 112,
+   "kind": "stall",
+   "extent_m": 0.0277,
+   "eef": [
+    0.068,
+    -0.151,
+    0.455
+   ],
+   "held": null
+  },
+  {
+   "t": 220,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": false
+  },
+  {
+   "t": 220,
+   "kind": "wrong_grasp",
+   "obj": "butter_1",
+   "targets": [
+    "tomato_sauce_1"
+   ]
+  },
+  {
+   "t": 235,
+   "kind": "release",
+   "obj": "butter_1",
+   "pos": [
+    0.071,
+    0.032,
+    0.445
+   ]
+  },
+  {
+   "t": 330,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": false
+  },
+  {
+   "t": 330,
+   "kind": "wrong_grasp",
+   "obj": "butter_1",
+   "targets": [
+    "tomato_sauce_1"
+   ]
+  },
+  {
+   "t": 345,
+   "kind": "release",
+   "obj": "butter_1",
+   "pos": [
+    0.072,
+    0.026,
+    0.445
+   ]
+  },
+  {
+   "t": 475,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": false
+  },
+  {
+   "t": 475,
+   "kind": "wrong_grasp",
+   "obj": "butter_1",
+   "targets": [
+    "tomato_sauce_1"
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 8.8,
+  "min_place_dist": {
+   "0": 0.208
+  },
+  "held": "butter_1",
+  "ever_grasped": {
+   "butter_1": 220
+  },
+  "min_eef_dist": {
+   "tomato_sauce_1": 0.121,
+   "wooden_tray_1_contain_region": 0.231
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.001,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "butter_1": 0.035,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

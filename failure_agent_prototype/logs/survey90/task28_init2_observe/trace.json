@@ -1,0 +1,99 @@
+{
+ "task_id": 28,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "close the top drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0087, closest EEF approach 0.247 m"
+   ],
+   "slots": {
+    "instruction": "close the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.8,
+ "events": [
+  {
+   "t": 72,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "topple",
+   "tilt_change": 47.0,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.053,
+    -0.154,
+    1.085
+   ],
+   "held": null
+  },
+  {
+   "t": 230,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "topple",
+   "tilt_change": 50.0,
+   "is_target": false
+  },
+  {
+   "t": 232,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "push",
+   "dist": 0.09,
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 57.1,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "white_cabinet_1_top_region": 0.247
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0087
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.026,
+   "plate_1": 0.0,
+   "ketchup_1": 0.089
+  }
+ }
+}

@@ -1,0 +1,249 @@
+{
+ "task_id": 2,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 93,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.213 m); goal ['in', 'akita_black_bowl_1', 'wooden_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "wooden_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 308,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.213 m); goal ['in', 'akita_black_bowl_1', 'wooden_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "wooden_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "timeout",
+   "t": 507,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped; 0.003 m from 'wooden_cabinet_1_top_region' (xy) but ['in', 'akita_black_bowl_1', 'wooden_cabinet_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "wooden_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 652,
+ "native_budget_success": false,
+ "wall_s": 27.8,
+ "events": [
+  {
+   "t": 93,
+   "kind": "stall",
+   "extent_m": 0.0275,
+   "eef": [
+    -0.025,
+    -0.057,
+    1.1
+   ],
+   "held": null
+  },
+  {
+   "t": 158,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.166
+   ]
+  },
+  {
+   "t": 185,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1566,
+   "now": -0.1362
+  },
+  {
+   "t": 308,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 446,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 507,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.003,
+    -0.288,
+    1.126
+   ]
+  },
+  {
+   "t": 652,
+   "kind": "stall",
+   "extent_m": 0.0286,
+   "eef": [
+    0.002,
+    -0.197,
+    1.136
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 20.3,
+  "min_place_dist": {
+   "0": 0.099
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 446
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.05,
+   "wooden_cabinet_1_top_region": 0.062
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1389
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.407,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

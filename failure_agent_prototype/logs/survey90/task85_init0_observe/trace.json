@@ -1,0 +1,89 @@
+{
+ "task_id": 85,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the white mug and place it to the right of the caddy",
+ "goal": [
+  [
+   "on",
+   "porcelain_mug_1",
+   "study_table_desk_caddy_right_region"
+  ]
+ ],
+ "targets": [
+  "porcelain_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'porcelain_mug_1' was grasped but is not at 'study_table_desk_caddy_right_region' (closest it got: 0.227 m); now held 0.400 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the white mug and place it to the right compartment of the caddy",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 22.5,
+ "events": [
+  {
+   "t": 102,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 262,
+   "kind": "no_progress",
+   "since": 102,
+   "eef": [
+    -0.202,
+    -0.165,
+    1.244
+   ],
+   "held": "porcelain_mug_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 76.9,
+  "min_place_dist": {
+   "0": 0.227
+  },
+  "held": "porcelain_mug_1",
+  "ever_grasped": {
+   "porcelain_mug_1": 102
+  },
+  "min_eef_dist": {
+   "porcelain_mug_1": 0.113,
+   "study_table_desk_caddy_right_region": 0.23
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.386
+  }
+ }
+}

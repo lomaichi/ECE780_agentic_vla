@@ -1,0 +1,109 @@
+{
+ "task_id": 74,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the left compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_left_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'black_book_1' was grasped but is not at 'desk_caddy_1_left_contain_region' (closest it got: 0.083 m); now dropped 0.461 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.7,
+ "events": [
+  {
+   "t": 55,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 215,
+   "kind": "no_progress",
+   "since": 55,
+   "eef": [
+    -0.387,
+    -0.129,
+    1.096
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 264,
+   "kind": "stall",
+   "extent_m": 0.0295,
+   "eef": [
+    -0.39,
+    -0.126,
+    1.089
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 397,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.856,
+    -0.276,
+    0.901
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 68.4,
+  "min_place_dist": {
+   "0": 0.083
+  },
+  "held": null,
+  "ever_grasped": {
+   "black_book_1": 55
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.103,
+   "desk_caddy_1_left_contain_region": 0.209
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.778,
+   "white_yellow_mug_1": 0.0
+  }
+ }
+}

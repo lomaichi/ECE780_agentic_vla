@@ -1,0 +1,93 @@
+{
+ "task_id": 34,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the yellow and white mug to the front of the white mug",
+ "goal": [
+  [
+   "on",
+   "white_yellow_mug_1",
+   "kitchen_table_porcelain_mug_front_region"
+  ]
+ ],
+ "targets": [
+  "white_yellow_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'white_yellow_mug_1' was grasped but is not at 'kitchen_table_porcelain_mug_front_region' (closest it got: 0.229 m); now held 0.585 m away"
+   ],
+   "slots": {
+    "instruction": "put the yellow and white mug to the front of the white mug",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "kitchen_table_porcelain_mug_front_region",
+    "dest": "the front of the white mug",
+    "place": "to the front of the white mug",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.8,
+ "events": [
+  {
+   "t": 114,
+   "kind": "grasp",
+   "obj": "white_yellow_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 206,
+   "kind": "stall",
+   "extent_m": 0.0295,
+   "eef": [
+    -0.013,
+    0.163,
+    1.05
+   ],
+   "held": "white_yellow_mug_1"
+  },
+  {
+   "t": 388,
+   "kind": "wrist_windup",
+   "angle_deg": 107.5
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 113.5,
+  "min_place_dist": {
+   "0": 0.229
+  },
+  "held": "white_yellow_mug_1",
+  "ever_grasped": {
+   "white_yellow_mug_1": 114
+  },
+  "min_eef_dist": {
+   "white_yellow_mug_1": 0.077,
+   "kitchen_table_porcelain_mug_front_region": 0.208
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.0,
+   "white_yellow_mug_1": 0.356
+  }
+ }
+}

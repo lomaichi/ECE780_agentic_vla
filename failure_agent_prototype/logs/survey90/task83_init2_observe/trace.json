@@ -1,0 +1,109 @@
+{
+ "task_id": 83,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the pending goal targets are ['black_book_1']",
+    "'porcelain_mug_1' displaced 0.320 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.8,
+ "events": [
+  {
+   "t": 108,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 108,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 268,
+   "kind": "no_progress",
+   "since": 108,
+   "eef": [
+    -0.365,
+    -0.152,
+    1.082
+   ],
+   "held": "porcelain_mug_1"
+  },
+  {
+   "t": 296,
+   "kind": "stall",
+   "extent_m": 0.0282,
+   "eef": [
+    -0.368,
+    -0.155,
+    1.08
+   ],
+   "held": "porcelain_mug_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 72.3,
+  "min_place_dist": {
+   "0": 0.259
+  },
+  "held": "porcelain_mug_1",
+  "ever_grasped": {
+   "porcelain_mug_1": 108
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.207,
+   "desk_caddy_1_right_contain_region": 0.164
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.003,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.32
+  }
+ }
+}

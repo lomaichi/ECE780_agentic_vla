@@ -1,0 +1,88 @@
+# Failure agent configuration.
+# Step counts are env steps (LIBERO runs at 20 Hz control; the replay videos
+# are written at 10 fps, so 10 env steps = 1 s of video).
+
+policy:
+  host: "0.0.0.0"
+  port: 8000
+  resize_size: 224
+  replan_steps: 5
+
+env:
+  suite: libero_90
+  resolution: 256           # render resolution used for pi0 training data
+  num_steps_wait: 10        # let objects settle before acting
+  seed: 7
+  max_steps: 400            # native pi0 budget for libero_90 (main.py)
+  max_total_steps: 900      # hard cap including recovery
+
+agent:
+  max_recoveries: 3         # diagnosis -> recovery cycles per episode
+  library: config/skill_library.yaml
+  # Online triggers that hand control to the diagnosis agent. Turning one
+  # off still records the event in the trace; it just won't interrupt pi0.
+  trigger_on:
+    stall: true               # S1
+    no_progress: true         # S1, dithering without contact progress
+    wrist_windup: true        # S4
+    disturbance: true         # S2
+    out_of_view: true         # S3
+    wrong_grasp: true         # R1, detected at grasp time
+    unplanned_articulation: true  # R2, detected when a non-goal joint moves
+    premature_goal: true      # R2, e.g. drawer closed before the object is in
+
+monitor:
+  # S1 stall: EEF stays inside a small box for a whole window, gripper does
+  # not toggle, and no goal predicate changes.
+  stall_window: 60          # env steps
+  stall_extent_m: 0.03      # max EEF bounding-box diagonal inside the window
+  stall_grace: 60           # ignore stalls in the first N acting steps of a phase
+  # S1 no_progress: no grasp/release/predicate/articulation event for this many
+  # steps (catches dithering wider than the stall box)
+  progress_window: 160
+  # S4 wrist wind-up: gripper approach axis tilted this far from home for N steps
+  windup_deg: 75
+  windup_steps: 15
+  # S2 disturbance
+  topple_deg: 45            # tilt change of a free object vs. its start pose
+  push_dist_m: 0.08         # non-grasped, non-target object displaced this far
+  # S3 out of view: EEF projects outside the agentview image (with margin)
+  view_margin_px: 8
+  out_of_view_steps: 15     # consecutive steps outside before triggering
+  # R1 wrong grasp: sustained grasp of a non-target movable object that has
+  # been lifted off the table
+  grasp_confirm_steps: 5
+  lift_confirm_m: 0.02
+  # keep a confirmed grasp while the object is lifted, within carry_dist_m of
+  # the EEF and the gripper is not fully open (finger gap < grip_open_w)
+  carry_dist_m: 0.15
+  grip_open_w: 0.07
+  # also count as held without the contact check: lifted carried_lift_m above its
+  # start, within carry_near_m of the EEF, gripper not open, for grasp_confirm_steps
+  carried_lift_m: 0.05
+  carry_near_m: 0.10
+  # diagnosis distances
+  reach_dist_m: 0.12        # EEF this close to a goal object/fixture counts as "reached"
+  place_near_m: 0.15        # object this close (xy) to its destination: placement (R4) not R6
+  # R2 articulation change thresholds (from the start value)
+  slide_change_m: 0.02
+  hinge_change_rad: 0.2
+
+recovery:
+  retract_tol_m: 0.015
+  retract_max_steps: 120
+  joint_home_trigger_m: 0.05  # Cartesian retract this far from home -> joint-space fallback
+  joint_home_max_steps: 150
+  joint_home_kp: 150          # JOINT_POSITION gains (robosuite default kp 50 is too soft to lift the arm)
+  joint_home_step_rad: 0.1
+  release_steps: 15
+  lift_dz_m: 0.10
+  approach_dz_m: 0.07        # hover height above the target's body origin (low, so the target fills the wrist view)
+  push_backoff_m: 0.04       # finish_slide: start this far behind the contact point
+  push_margin_m: 0.03        # finish_slide: push this far past the remaining distance
+  pi0_step_budget: 250      # default budget for a recovery pi0 sub-task
+  grasp_budget: 150         # pi0 "pick up the X" until the target is held
+  carry_lift_m: 0.12        # carry_to: object clears the destination point by this much in transit
+  carry_clear_m: 0.04       # carry_to: release with the object this far above the destination point
+  handle_dz_m: 0.08         # approach to a handle/knob: hover this far above it
+  min_open_fraction: 0.6    # decompose: open a destination drawer first if less open than this

@@ -1,0 +1,90 @@
+{
+ "task_id": 69,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the chocolate pudding to the left of the plate",
+ "goal": [
+  [
+   "on",
+   "chocolate_pudding_1",
+   "living_room_table_plate_left_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "target 'chocolate_pudding_1' never approached (closest EEF approach 0.183 m); goal ['on', 'chocolate_pudding_1', 'living_room_table_plate_left_region']"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding to the left of the plate",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "living_room_table_plate_left_region",
+    "dest": "the left of the plate",
+    "place": "to the left of the plate",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 93,
+   "kind": "disturbance",
+   "obj": "porcelain_mug_1",
+   "how": "topple",
+   "tilt_change": 48.4,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.099,
+    -0.15,
+    0.641
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 16.3,
+  "min_place_dist": {
+   "0": 0.278
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.183,
+   "living_room_table_plate_left_region": 0.238
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.034,
+   "red_coffee_mug_1": 0.004,
+   "plate_1": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

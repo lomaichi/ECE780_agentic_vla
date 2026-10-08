@@ -1,0 +1,265 @@
+{
+ "task_id": 82,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the book and place it in the left compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_left_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'black_book_1' never approached (closest EEF approach 0.178 m); goal ['in', 'black_book_1', 'desk_caddy_1_left_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the left compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_left_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 329,
+   "evidence": [
+    "target 'black_book_1' approached but never grasped (closest EEF approach 0.102 m); goal ['in', 'black_book_1', 'desk_caddy_1_left_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_left_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 485,
+   "evidence": [
+    "target 'black_book_1' approached but never grasped (closest EEF approach 0.102 m); goal ['in', 'black_book_1', 'desk_caddy_1_left_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the left compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_left_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 659,
+ "steps": 659,
+ "native_budget_success": false,
+ "wall_s": 22.2,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.181,
+    0.032,
+    0.976
+   ],
+   "held": null
+  },
+  {
+   "t": 258,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.039
+   ]
+  },
+  {
+   "t": 329,
+   "kind": "stall",
+   "extent_m": 0.0067,
+   "eef": [
+    -0.164,
+    -0.119,
+    0.995
+   ],
+   "held": null
+  },
+  {
+   "t": 420,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.042
+   ]
+  },
+  {
+   "t": 485,
+   "kind": "stall",
+   "extent_m": 0.0185,
+   "eef": [
+    -0.18,
+    -0.134,
+    0.993
+   ],
+   "held": null
+  },
+  {
+   "t": 575,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.041
+   ]
+  },
+  {
+   "t": 595,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 659,
+   "kind": "primitive_incomplete",
+   "primitive": "carry_to",
+   "residual_m": [
+    0.044
+   ]
+  },
+  {
+   "t": 659,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.362,
+    -0.284,
+    1.001
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 13.6,
+  "min_place_dist": {
+   "0": 0.226
+  },
+  "held": null,
+  "ever_grasped": {
+   "black_book_1": 595
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.102,
+   "desk_caddy_1_left_contain_region": 0.26
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.236,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.005
+  }
+ }
+}

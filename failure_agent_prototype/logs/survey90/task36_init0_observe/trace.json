@@ -1,0 +1,80 @@
+{
+ "task_id": 36,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the white bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "white_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "white_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'white_bowl_1' never approached (closest EEF approach 0.220 m); goal ['on', 'white_bowl_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.147,
+    -0.013,
+    1.043
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 46.2,
+  "min_place_dist": {
+   "0": 0.244
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "white_bowl_1": 0.22,
+   "plate_1": 0.077
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.001,
+   "plate_1": 0.0
+  }
+ }
+}

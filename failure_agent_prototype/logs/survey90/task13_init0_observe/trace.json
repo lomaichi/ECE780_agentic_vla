@@ -1,0 +1,115 @@
+{
+ "task_id": 13,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl at the front on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_2' but the pending goal targets are ['akita_black_bowl_1']",
+    "'akita_black_bowl_2' displaced 0.197 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the black bowl at the front on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl at the front",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.1,
+ "events": [
+  {
+   "t": 90,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": false
+  },
+  {
+   "t": 90,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_2",
+   "targets": [
+    "akita_black_bowl_1"
+   ]
+  },
+  {
+   "t": 148,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    0.011,
+    0.021,
+    0.912
+   ]
+  },
+  {
+   "t": 308,
+   "kind": "no_progress",
+   "since": 148,
+   "eef": [
+    -0.05,
+    0.036,
+    0.986
+   ],
+   "held": null
+  },
+  {
+   "t": 349,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 14.4,
+  "min_place_dist": {
+   "0": 0.195
+  },
+  "held": "akita_black_bowl_2",
+  "ever_grasped": {
+   "akita_black_bowl_2": 90
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.15,
+   "plate_1": 0.045
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.197,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.001
+  }
+ }
+}

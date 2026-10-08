@@ -1,0 +1,80 @@
+{
+ "task_id": 27,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the wine bottle on the wine rack",
+ "goal": [
+  [
+   "on",
+   "wine_bottle_1",
+   "wine_rack_1_top_region"
+  ]
+ ],
+ "targets": [
+  "wine_bottle_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'wine_bottle_1' approached but never grasped (closest EEF approach 0.109 m); goal ['on', 'wine_bottle_1', 'wine_rack_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "wine_rack_1_top_region",
+    "dest": "the wine rack",
+    "place": "on the wine rack",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 22.9,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.249,
+    -0.024,
+    0.972
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 60.7,
+  "min_place_dist": {
+   "0": 0.296
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wine_bottle_1": 0.109,
+   "wine_rack_1_top_region": 0.091
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

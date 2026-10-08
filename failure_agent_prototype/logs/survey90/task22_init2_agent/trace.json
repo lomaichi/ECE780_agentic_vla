@@ -1,0 +1,237 @@
+{
+ "task_id": 22,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "close the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 235,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.0052, closest EEF approach 0.099 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 567,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.1296, closest EEF approach 0.099 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "timeout",
+   "t": 900,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.1296, closest EEF approach 0.099 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "white_cabinet_1_bottom_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 900,
+ "native_budget_success": false,
+ "wall_s": 35.6,
+ "events": [
+  {
+   "t": 143,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 235,
+   "kind": "stall",
+   "extent_m": 0.0295,
+   "eef": [
+    -0.042,
+    0.111,
+    1.019
+   ],
+   "held": "akita_black_bowl_1"
+  },
+  {
+   "t": 321,
+   "kind": "finish_articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "q_before": -0.1469,
+   "q_after": -0.0776,
+   "target": 0.0025
+  },
+  {
+   "t": 321,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.063,
+    0.14
+   ]
+  },
+  {
+   "t": 321,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.046,
+    0.214,
+    0.925
+   ]
+  },
+  {
+   "t": 436,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.0777,
+   "now": -0.057
+  },
+  {
+   "t": 567,
+   "kind": "stall",
+   "extent_m": 0.0298,
+   "eef": [
+    -0.02,
+    0.169,
+    0.948
+   ],
+   "held": null
+  },
+  {
+   "t": 668,
+   "kind": "finish_articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "q_before": -0.0185,
+   "q_after": -0.031,
+   "target": 0.0025
+  },
+  {
+   "t": 668,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.103,
+    0.091,
+    0.165,
+    0.173
+   ]
+  },
+  {
+   "t": 822,
+   "kind": "joint_home",
+   "residual_rad": 0.014
+  },
+  {
+   "t": 822,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.243,
+    0.243,
+    0.243
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 34.6,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 143
+  },
+  "min_eef_dist": {
+   "white_cabinet_1_bottom_region": 0.099
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_bottom_level": 0.1296
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.304,
+   "wine_bottle_1": 0.02
+  }
+ }
+}

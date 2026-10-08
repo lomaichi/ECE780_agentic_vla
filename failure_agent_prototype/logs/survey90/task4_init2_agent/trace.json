@@ -1,0 +1,263 @@
+{
+ "task_id": 4,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "put the butter at the front in the top drawer of the cabinet and close it",
+ "goal": [
+  [
+   "in",
+   "butter_1",
+   "wooden_cabinet_1_top_region"
+  ],
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "butter_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "premature_goal",
+   "t": 86,
+   "evidence": [
+    "worked on ['close', 'wooden_cabinet_1_top_region'] (joint moved 0.0201) while ['in', 'butter_1', 'wooden_cabinet_1_top_region'] is still false: sub-steps out of order"
+   ],
+   "slots": {
+    "instruction": "put the butter at the front in the top drawer of the cabinet and close it",
+    "target_obj": "butter_1",
+    "target": "butter",
+    "target_desc": "butter at the front",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "butter_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the butter at the front and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "butter_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "butter_1",
+     "dest": "wooden_cabinet_1_top_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": {
+      "predicate": [
+       "close",
+       "wooden_cabinet_1_top_region"
+      ]
+     },
+     "budget": 250
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 366,
+   "evidence": [
+    "goal ['close', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0236, closest EEF approach 0.059 m"
+   ],
+   "slots": {
+    "instruction": "put the butter at the front in the top drawer of the cabinet and close it",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "wooden_cabinet_1_top_level"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "close the top drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 487,
+ "steps": 487,
+ "native_budget_success": false,
+ "wall_s": 18.0,
+ "events": [
+  {
+   "t": 86,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1569,
+   "now": -0.1369
+  },
+  {
+   "t": 86,
+   "kind": "premature_goal",
+   "satisfied": [
+    "close",
+    "wooden_cabinet_1_top_region"
+   ],
+   "pending": [
+    "in",
+    "butter_1",
+    "wooden_cabinet_1_top_region"
+   ],
+   "joint": "wooden_cabinet_1_top_level",
+   "moved": 0.0201
+  },
+  {
+   "t": 179,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": true
+  },
+  {
+   "t": 243,
+   "kind": "release",
+   "obj": "butter_1",
+   "pos": [
+    -0.006,
+    -0.146,
+    1.073
+   ]
+  },
+  {
+   "t": 276,
+   "kind": "predicate",
+   "index": 0,
+   "predicate": [
+    "in",
+    "butter_1",
+    "wooden_cabinet_1_top_region"
+   ],
+   "value": true
+  },
+  {
+   "t": 306,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1587,
+   "now": -0.1362
+  },
+  {
+   "t": 366,
+   "kind": "stall",
+   "extent_m": 0.0046,
+   "eef": [
+    0.002,
+    -0.113,
+    1.102
+   ],
+   "held": null
+  },
+  {
+   "t": 419,
+   "kind": "finish_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "q_before": -0.1342,
+   "q_after": -0.0394,
+   "target": 0.0025
+  },
+  {
+   "t": 419,
+   "kind": "primitive_incomplete",
+   "primitive": "finish_articulation",
+   "residual_m": [
+    0.107
+   ]
+  },
+  {
+   "t": 482,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.0394,
+   "now": -0.0186
+  }
+ ],
+ "final": {
+  "goal_status": [
+   true,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 30.6,
+  "min_place_dist": {
+   "0": 0.007
+  },
+  "held": null,
+  "ever_grasped": {
+   "butter_1": 179
+  },
+  "min_eef_dist": {
+   "butter_1": 0.038,
+   "wooden_cabinet_1_top_region": 0.059
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1532
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.001,
+   "butter_1": 0.51,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

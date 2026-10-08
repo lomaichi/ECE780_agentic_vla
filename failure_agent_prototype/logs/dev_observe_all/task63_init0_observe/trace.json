@@ -1,0 +1,144 @@
+{
+ "task_id": 63,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "stack the left bowl on the right bowl and place them in the tray",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "akita_black_bowl_2"
+  ],
+  [
+   "in",
+   "akita_black_bowl_2",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1",
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "S1_stall",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "stall: {'extent_m': 0.0267, 'eef': [0.044, 0.247, 0.61], 'held': None}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "stack the left bowl on the right bowl and place them in the tray",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl on the left",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the right"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.1,
+ "events": [
+  {
+   "t": 59,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": true
+  },
+  {
+   "t": 88,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    -0.005,
+    0.246,
+    0.624
+   ]
+  },
+  {
+   "t": 94,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": true
+  },
+  {
+   "t": 103,
+   "kind": "predicate",
+   "index": 1,
+   "predicate": [
+    "in",
+    "akita_black_bowl_2",
+    "wooden_tray_1_contain_region"
+   ],
+   "value": true
+  },
+  {
+   "t": 140,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    0.022,
+    0.321,
+    0.493
+   ]
+  },
+  {
+   "t": 147,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": true
+  },
+  {
+   "t": 155,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    0.054,
+    0.313,
+    0.494
+   ]
+  },
+  {
+   "t": 227,
+   "kind": "stall",
+   "extent_m": 0.0267,
+   "eef": [
+    0.044,
+    0.247,
+    0.61
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   true
+  ],
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_2": 59
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.143,
+   "akita_black_bowl_2": 0.051,
+   "wooden_tray_1_contain_region": 0.023
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.32,
+   "new_salad_dressing_1": 0.0,
+   "chocolate_pudding_1": 0.0,
+   "wooden_tray_1": 0.009
+  }
+ }
+}

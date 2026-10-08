@@ -1,0 +1,121 @@
+{
+ "task_id": 51,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the butter and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "butter_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "butter_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'cream_cheese_1' but the pending goal targets are ['butter_1']",
+    "'cream_cheese_1' displaced 0.371 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the butter and put it in the basket",
+    "target_obj": "butter_1",
+    "target": "butter",
+    "target_desc": "butter",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "cream cheese"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.1,
+ "events": [
+  {
+   "t": 61,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 45.3,
+   "is_target": false
+  },
+  {
+   "t": 80,
+   "kind": "grasp",
+   "obj": "cream_cheese_1",
+   "is_target": false
+  },
+  {
+   "t": 80,
+   "kind": "wrong_grasp",
+   "obj": "cream_cheese_1",
+   "targets": [
+    "butter_1"
+   ]
+  },
+  {
+   "t": 170,
+   "kind": "release",
+   "obj": "cream_cheese_1",
+   "pos": [
+    0.1,
+    0.182,
+    0.466
+   ]
+  },
+  {
+   "t": 269,
+   "kind": "stall",
+   "extent_m": 0.0264,
+   "eef": [
+    0.036,
+    0.061,
+    0.454
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 9.1,
+  "min_place_dist": {
+   "0": 0.23
+  },
+  "held": null,
+  "ever_grasped": {
+   "cream_cheese_1": 80
+  },
+  "min_eef_dist": {
+   "butter_1": 0.028,
+   "basket_1_contain_region": 0.1
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.371,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.072,
+   "milk_1": 0.014,
+   "butter_1": 0.004,
+   "basket_1": 0.013
+  }
+ }
+}

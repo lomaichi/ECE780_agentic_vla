@@ -1,0 +1,222 @@
+{
+ "task_id": 85,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the white mug and place it to the right of the caddy",
+ "goal": [
+  [
+   "on",
+   "porcelain_mug_1",
+   "study_table_desk_caddy_right_region"
+  ]
+ ],
+ "targets": [
+  "porcelain_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 375,
+   "evidence": [
+    "'porcelain_mug_1' was grasped but is not at 'study_table_desk_caddy_right_region' (closest it got: 0.229 m); now dropped 0.379 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the white mug and place it to the right compartment of the caddy",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "porcelain_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "porcelain_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white mug and place it to the right of the caddy",
+     "until": {
+      "grasp": "porcelain_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "porcelain_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "out_of_view",
+   "t": 749,
+   "evidence": [
+    "'porcelain_mug_1' was grasped but is not at 'study_table_desk_caddy_right_region' (closest it got: 0.229 m); now dropped 0.379 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the white mug and place it to the right compartment of the caddy",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "porcelain_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "porcelain_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white mug",
+     "until": {
+      "grasp": "porcelain_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "porcelain_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "budget_exhausted": true,
+ "success": false,
+ "success_t": null,
+ "steps": 900,
+ "native_budget_success": false,
+ "wall_s": 31.7,
+ "events": [
+  {
+   "t": 85,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 215,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.016,
+    0.198,
+    1.016
+   ]
+  },
+  {
+   "t": 375,
+   "kind": "no_progress",
+   "since": 215,
+   "eef": [
+    -0.173,
+    0.288,
+    0.961
+   ],
+   "held": null
+  },
+  {
+   "t": 375,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "porcelain_mug_1 not held"
+  },
+  {
+   "t": 592,
+   "kind": "joint_home",
+   "residual_rad": 0.015
+  },
+  {
+   "t": 592,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.259,
+    0.229,
+    0.229
+   ]
+  },
+  {
+   "t": 645,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.03
+   ]
+  },
+  {
+   "t": 749,
+   "kind": "out_of_view",
+   "eef": [
+    -0.163,
+    0.372,
+    0.909
+   ]
+  },
+  {
+   "t": 749,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "porcelain_mug_1 not held"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 36.0,
+  "min_place_dist": {
+   "0": 0.229
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 85
+  },
+  "min_eef_dist": {
+   "porcelain_mug_1": 0.078,
+   "study_table_desk_caddy_right_region": 0.238
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.024,
+   "porcelain_mug_1": 0.256
+  }
+ }
+}

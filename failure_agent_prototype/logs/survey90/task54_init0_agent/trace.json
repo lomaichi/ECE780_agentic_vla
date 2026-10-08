@@ -1,0 +1,115 @@
+{
+ "task_id": 54,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the tomato sauce and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "tomato_sauce_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "tomato_sauce_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 9,
+   "evidence": [
+    "target 'tomato_sauce_1' never approached (closest EEF approach 0.219 m); goal ['in', 'tomato_sauce_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the basket",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "tomato_sauce_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the tomato sauce and place it in the basket",
+     "until": {
+      "grasp": "tomato_sauce_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "tomato_sauce_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 90,
+ "steps": 90,
+ "native_budget_success": true,
+ "wall_s": 2.8,
+ "events": [
+  {
+   "t": 9,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 59.9,
+   "is_target": false
+  },
+  {
+   "t": 62,
+   "kind": "grasp",
+   "obj": "tomato_sauce_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 5.2,
+  "min_place_dist": {
+   "0": 0.212
+  },
+  "held": null,
+  "ever_grasped": {
+   "tomato_sauce_1": 62
+  },
+  "min_eef_dist": {
+   "tomato_sauce_1": 0.006,
+   "basket_1_contain_region": 0.21
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.225,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.068,
+   "milk_1": 0.0,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

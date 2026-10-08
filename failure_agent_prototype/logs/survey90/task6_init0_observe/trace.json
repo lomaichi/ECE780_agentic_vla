@@ -1,0 +1,88 @@
+{
+ "task_id": 6,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "open the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal fixture 'wooden_cabinet_1_bottom_region' never engaged (closest EEF approach 0.132 m, joint unmoved); goal ['open', 'wooden_cabinet_1_bottom_region']"
+   ],
+   "slots": {
+    "instruction": "open the bottom drawer of the cabinet",
+    "verb": "open",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_bottom_level",
+    "focus_fixture": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.9,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.053,
+    -0.148,
+    0.93
+   ],
+   "held": null
+  },
+  {
+   "t": 374,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "push",
+   "dist": 0.081,
+   "is_target": false
+  },
+  {
+   "t": 398,
+   "kind": "wrist_windup",
+   "angle_deg": 116.0
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 123.7,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_bottom_region": 0.132
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_bottom_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.207,
+   "plate_1": 0.001
+  }
+ }
+}

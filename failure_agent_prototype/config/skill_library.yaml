@@ -1,0 +1,278 @@
+# Failure-recovery skill library (v1, rebuilt from the native pi0 survey of
+# all 90 libero_90 tasks; see Documentation/failure_mode_sumary.txt).
+#
+# Lookup order used by the agent: root cause (R*) first, then symptom (S*).
+#
+# Design (from the survey): pi0's grasps are usually clean, but on libero_90
+# it binds to the wrong target or destination (it runs the training task of
+# the scene). So the coordinator supplies WHERE (approach the target, carry
+# to the destination) and pi0 supplies HOW (the grasp itself).
+#
+# Recovery step types:
+#   release        open the gripper in place
+#   lift           raise the EEF by recovery.lift_dz_m
+#   retract_home   lift, then return to the episode's start pose (in-distribution
+#                  for pi0, whose demos all start there)
+#   approach       hover the open gripper above the target object (default) or
+#                  above the handle/knob of the goal fixture (joint: artic), then
+#                  hand over to pi0. Sim ground truth here; VLM pointing + depth
+#                  on hardware
+#   carry_to       carry the held target over its destination and release it
+#                  (skipped if the target is not held)
+#   finish_articulation
+#                  scripted push of a drawer (slide joint) at its handle along
+#                  the slide axis, by the remaining distance; skipped for hinges
+#   pi0            run pi0 with a prompt until `until` holds or the budget ends
+#                    prompts: variants; attempt k uses variant k (wrapping), and
+#                             skips variants whose slots are unavailable
+#                    until:   goal | grasp_target (target held and lifted;
+#                             budget recovery.grasp_budget)
+#   decompose      expand the unsatisfied BDDL goal into ordered sub-tasks:
+#                  open (approach handle + pi0) -> each placement (approach +
+#                  pi0 grasp + carry_to) -> close / turn on / off (approach +
+#                  pi0, plus the push for drawers)
+#   when: <slot>   on any step: only include it if the diagnosis set that slot
+#
+# Prompt slots (filled by the agent from the BDDL goal and the scene):
+#   {instruction}  original task language
+#   {target}       movable goal object ("salad dressing")
+#   {target_desc}  target with a spatial descriptor ("black bowl on the left")
+#   {place}        destination clause ("in the tray", "on top of the cabinet",
+#                  "to the right of the plate", "under the cabinet shelf")
+#   {wrong_obj}    object the robot actually grasped / moved
+#   {verb}         articulation verb ("close", "open", "turn on")
+#   {region}       articulated target noun phrase ("the top drawer of the cabinet")
+#
+# `stats` live in logs/library_stats.json so this file stays hand-curated.
+
+entries:
+
+  R1_wrong_object:
+    kind: root_cause
+    description: >
+      Motor execution is fine but aimed at the wrong object (language
+      grounding failure). On libero_90 this is mostly the scene's training
+      task: the cream cheese / cans in the basket scenes, the white mug in the
+      plate scenes, the white bowl in the shelf scene.
+    detect:
+      online: [wrong_grasp]
+      evidence: "a movable object outside the goal's target set was grasped and lifted, or carried > push_dist"
+    # v0 (approach + full pick-and-place prompt) recovered 2/22: pi0 grasped the
+    # right object after the approach, then often carried it to its habitual
+    # destination. Now pi0 only grasps; the carry is scripted.
+    recover:
+      - do: release
+      - do: retract_home
+      - do: approach
+      - do: pi0
+        prompts:
+          - "pick up the {target_desc} and place it {place}"
+          - "pick up the {target_desc}"
+        until: grasp_target
+      - do: carry_to
+    verify: goal
+    provenance: [task46, task49, task50, task58, task62, task65, task71, task76, task80, task83, task86]
+
+  R2_scene_habit:
+    kind: root_cause
+    description: >
+      pi0 executes a task it learned in a similar training scene instead of, or
+      before, the instructed one: closes or opens a drawer, turns on the stove,
+      puts the bowl in the drawer; or completes a later sub-step first.
+    detect:
+      online: [unplanned_articulation, premature_goal]
+      evidence: "a joint not involved in the goal moved, or a close/turn-on predicate became true while an in/on predicate on the same region is still false"
+    recover:
+      - do: release
+      - do: retract_home
+      - do: decompose
+    verify: goal
+    provenance: [task2, task3, task4, task5, task18, task22, task23, task30, task31]
+
+  R3_stopped_short:
+    kind: root_cause
+    description: >
+      Articulation goal (drawer, knob, microwave door) attempted but not
+      completed: the joint moved toward the goal without crossing the predicate
+      threshold, or the gripper reached the fixture and missed the handle/knob.
+    detect:
+      online: [stall, no_progress, out_of_view]
+      evidence: "goal joint moved toward goal but predicate false, or EEF came within reach of the goal fixture"
+    # WoodenCabinet only counts as closed at qpos > 0, so first finish the push
+    # at the handle (drawers only), then retry from home.
+    recover:
+      - do: finish_articulation
+      - do: retract_home
+      - do: pi0
+        prompts:
+          - "{verb} {region}"
+          - "{instruction}"
+        until: goal
+    verify: goal
+    provenance: [task0, task20, task35, task44, task45]
+
+  R4_placement:
+    kind: root_cause
+    description: >
+      Correct object brought to the destination but placed imprecisely: next
+      to it, in a sibling region (wrong caddy compartment), or tipped while
+      adjusting without releasing.
+    detect:
+      online: [stall, no_progress]
+      evidence: "target was grasped and is within place_near_m of the destination, or inside a sibling region, but the predicate is false"
+    recover:
+      - do: release
+      - do: retract_home
+      - do: approach
+      - do: pi0
+        prompts:
+          - "pick up the {target_desc} and place it {place}"
+          - "pick up the {target_desc}"
+        until: grasp_target
+      - do: carry_to
+    verify: goal
+    provenance: [task29, task73, task74, task75, task78, task85]
+
+  R5_target_not_reached:
+    kind: root_cause
+    description: >
+      The goal object or fixture is never engaged: pi0 hovers over an empty
+      spot where the object sits in a sibling scene (phantom target), dithers
+      between candidates without committing, fails to grasp it, or never goes
+      near the knob/handle.
+    detect:
+      online: [stall, no_progress, timeout]
+      evidence: "target never grasped (closest EEF approach reported), or goal joint unmoved and EEF never within reach_dist_m of the fixture"
+    recover:
+      - do: release
+      - do: retract_home
+      - do: approach
+        when: focus_obj
+      - do: pi0
+        when: focus_obj
+        prompts:
+          - "pick up the {target_desc} and place it {place}"
+          - "pick up the {target_desc}"
+        until: grasp_target
+      - do: carry_to
+        when: focus_obj
+      - do: approach
+        joint: artic
+        when: focus_fixture
+      - do: pi0
+        when: focus_fixture
+        prompts:
+          - "{verb} {region}"
+          - "{instruction}"
+        until: goal
+    verify: goal
+    provenance: [task20, task27, task36, task37, task53, task59, task81, task82]
+
+  R6_destination_missed:
+    kind: root_cause
+    description: >
+      The right object was grasped but never brought to the destination:
+      carried somewhere unrelated (the shelf scene carries the book away from
+      the shelf), held in the air, or dropped in transit.
+    detect:
+      online: [stall, no_progress, out_of_view, timeout]
+      evidence: "target grasped, but never within place_near_m of the destination"
+    recover:
+      - do: carry_to           # if still held
+      - do: release
+      - do: retract_home
+      - do: approach
+      - do: pi0
+        prompts:
+          - "pick up the {target_desc} and place it {place}"
+          - "pick up the {target_desc}"
+        until: grasp_target
+      - do: carry_to
+    verify: goal
+    provenance: [task9, task17, task34, task43, task88, task89]
+
+  R7_partial_task:
+    kind: root_cause
+    description: >
+      Multi-step instruction: pi0 completes one sub-goal correctly, then never
+      starts the next (hovers at the first site, or undoes it).
+    detect:
+      online: [stall, no_progress, timeout]
+      evidence: "a goal predicate became true during the episode while another is still false"
+    recover:
+      - do: release
+      - do: retract_home
+      - do: decompose
+    verify: goal
+    provenance: [task1, task21, task23, task63, task64]
+
+  S1_stall:
+    kind: symptom
+    description: >
+      EEF twitches in place, or dithers with no contact progress; pi0 never
+      terminates on its own. Used when no root cause is identified.
+    detect:
+      online: [stall, no_progress]
+    recover:
+      - do: release
+      - do: retract_home
+      - do: pi0
+        prompts:
+          - "{instruction}"
+          - "pick up the {target_desc} and place it {place}"
+          - "{verb} {region}"
+        until: goal
+    verify: goal
+    provenance: [task0, task2, task25, task44, task73, task80]
+
+  S2_disturbance:
+    kind: symptom
+    description: >
+      Collision in clutter: an object toppled or was pushed. Lift clear,
+      re-observe from home, replan (the target may have moved).
+    detect:
+      online: [disturbance]
+    recover:
+      - do: release
+      - do: retract_home
+      - do: pi0
+        prompts:
+          - "{instruction}"
+          - "pick up the {target_desc} and place it {place}"
+        until: goal
+    verify: goal
+    provenance: [task14, task16, task18, task39, task51, task52, task53]
+
+  S3_out_of_view:
+    kind: symptom
+    description: >
+      Arm leaves the agentview camera frame; observations become
+      out-of-distribution and pi0 does not come back on its own.
+    detect:
+      online: [out_of_view]
+    recover:
+      - do: retract_home
+      - do: pi0
+        prompts:
+          - "{instruction}"
+          - "pick up the {target_desc} and place it {place}"
+        until: goal
+    verify: goal
+    provenance: [task7, task39, task44, task45, task86, task87]
+
+  S4_wrist_windup:
+    kind: symptom
+    description: >
+      The wrist rolls into a contorted pose far from the top-down demo pose;
+      after that pi0's actions stop being purposeful. Return to the home
+      orientation (keeping any grasp) and restart.
+    detect:
+      online: [wrist_windup]
+    recover:
+      - do: retract_home
+      - do: pi0
+        prompts:
+          - "{instruction}"
+        until: goal
+    verify: goal
+    provenance: [task35, task36, task39, task43, task81]

@@ -1,0 +1,134 @@
+{
+ "task_id": 14,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the middle black bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_2",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_1' but the pending goal targets are ['akita_black_bowl_2']",
+    "'akita_black_bowl_1' displaced 0.047 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the middle on the plate",
+    "target_obj": "akita_black_bowl_2",
+    "target": "black bowl",
+    "target_desc": "black bowl in the middle",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.6,
+ "events": [
+  {
+   "t": 73,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "topple",
+   "tilt_change": 45.0,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.057,
+    0.11,
+    0.94
+   ],
+   "held": null
+  },
+  {
+   "t": 298,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": true
+  },
+  {
+   "t": 329,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    0.079,
+    0.154,
+    0.914
+   ]
+  },
+  {
+   "t": 351,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 351,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_1",
+   "targets": [
+    "akita_black_bowl_2"
+   ]
+  },
+  {
+   "t": 355,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.137,
+    0.177,
+    0.938
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 24.8,
+  "min_place_dist": {
+   "0": 0.139
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_2": 298,
+   "akita_black_bowl_1": 351
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_2": 0.045,
+   "plate_1": 0.115
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.047,
+   "akita_black_bowl_2": 0.09,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.0
+  }
+ }
+}

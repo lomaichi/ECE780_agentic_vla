@@ -1,0 +1,111 @@
+{
+ "task_id": 56,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the butter and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "butter_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "butter_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'cream_cheese_1' but the pending goal targets are ['butter_1']",
+    "'cream_cheese_1' displaced 0.442 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the butter and put it in the tray",
+    "target_obj": "butter_1",
+    "target": "butter",
+    "target_desc": "butter",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "cream cheese"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.6,
+ "events": [
+  {
+   "t": 73,
+   "kind": "grasp",
+   "obj": "cream_cheese_1",
+   "is_target": false
+  },
+  {
+   "t": 73,
+   "kind": "wrong_grasp",
+   "obj": "cream_cheese_1",
+   "targets": [
+    "butter_1"
+   ]
+  },
+  {
+   "t": 169,
+   "kind": "release",
+   "obj": "cream_cheese_1",
+   "pos": [
+    0.022,
+    0.246,
+    0.463
+   ]
+  },
+  {
+   "t": 229,
+   "kind": "stall",
+   "extent_m": 0.0078,
+   "eef": [
+    -0.006,
+    0.248,
+    0.463
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 13.7,
+  "min_place_dist": {
+   "0": 0.208
+  },
+  "held": null,
+  "ever_grasped": {
+   "cream_cheese_1": 73
+  },
+  "min_eef_dist": {
+   "butter_1": 0.181,
+   "wooden_tray_1_contain_region": 0.025
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.442,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.005
+  }
+ }
+}

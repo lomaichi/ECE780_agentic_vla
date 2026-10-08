@@ -1,0 +1,99 @@
+{
+ "task_id": 75,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R4_placement",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'black_book_1' was grasped; 0.187 m from 'desk_caddy_1_right_contain_region' (xy) but ['in', 'black_book_1', 'desk_caddy_1_right_contain_region'] is false",
+    "'black_book_1' is inside sibling region(s) ['desk_caddy_1_back_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 72,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 232,
+   "kind": "no_progress",
+   "since": 72,
+   "eef": [
+    -0.379,
+    -0.104,
+    1.085
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 259,
+   "kind": "stall",
+   "extent_m": 0.0293,
+   "eef": [
+    -0.38,
+    -0.103,
+    1.083
+   ],
+   "held": "black_book_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 31.1,
+  "min_place_dist": {
+   "0": 0.171
+  },
+  "held": "black_book_1",
+  "ever_grasped": {
+   "black_book_1": 72
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.111,
+   "desk_caddy_1_right_contain_region": 0.163
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.387,
+   "white_yellow_mug_1": 0.0
+  }
+ }
+}

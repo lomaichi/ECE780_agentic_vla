@@ -1,0 +1,109 @@
+{
+ "task_id": 9,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.282 m); now dropped 0.370 m away"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 22.2,
+ "events": [
+  {
+   "t": 75,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 98,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.092,
+    -0.068,
+    0.914
+   ]
+  },
+  {
+   "t": 258,
+   "kind": "no_progress",
+   "since": 98,
+   "eef": [
+    0.024,
+    -0.029,
+    0.92
+   ],
+   "held": null
+  },
+  {
+   "t": 281,
+   "kind": "stall",
+   "extent_m": 0.0137,
+   "eef": [
+    0.027,
+    -0.031,
+    0.922
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 39.4,
+  "min_place_dist": {
+   "0": 0.282
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 75
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.048,
+   "plate_1": 0.245
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.094,
+   "plate_1": 0.0
+  }
+ }
+}

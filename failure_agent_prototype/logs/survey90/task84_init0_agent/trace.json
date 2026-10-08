@@ -1,0 +1,242 @@
+{
+ "task_id": 84,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the red mug and place it to the right of the caddy",
+ "goal": [
+  [
+   "on",
+   "red_coffee_mug_1",
+   "study_table_desk_caddy_right_region"
+  ]
+ ],
+ "targets": [
+  "red_coffee_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'red_coffee_mug_1' never approached (closest EEF approach 0.252 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the red mug and place it to the right compartment of the caddy",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug and place it to the right of the caddy",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 410,
+   "evidence": [
+    "target 'red_coffee_mug_1' never approached (closest EEF approach 0.136 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the red mug and place it to the right compartment of the caddy",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 805,
+   "evidence": [
+    "target 'red_coffee_mug_1' never approached (closest EEF approach 0.135 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the red mug and place it to the right compartment of the caddy",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug and place it to the right of the caddy",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "study_table_desk_caddy_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "budget_exhausted": true,
+ "success": false,
+ "success_t": null,
+ "steps": 900,
+ "native_budget_success": false,
+ "wall_s": 31.3,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.179,
+    0.047,
+    1.081
+   ],
+   "held": null
+  },
+  {
+   "t": 260,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.067
+   ]
+  },
+  {
+   "t": 410,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "red_coffee_mug_1 not held"
+  },
+  {
+   "t": 591,
+   "kind": "joint_home",
+   "residual_rad": 0.019
+  },
+  {
+   "t": 591,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.249,
+    0.249,
+    0.249
+   ]
+  },
+  {
+   "t": 656,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.067
+   ]
+  },
+  {
+   "t": 805,
+   "kind": "stall",
+   "extent_m": 0.0291,
+   "eef": [
+    -0.01,
+    0.21,
+    1.051
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 19.9,
+  "min_place_dist": {
+   "0": 0.4
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "red_coffee_mug_1": 0.135,
+   "study_table_desk_caddy_right_region": 0.244
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.002,
+   "porcelain_mug_1": 0.0
+  }
+ }
+}

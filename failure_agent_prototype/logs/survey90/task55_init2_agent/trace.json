@@ -1,0 +1,126 @@
+{
+ "task_id": 55,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the alphabet soup and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 118,
+   "evidence": [
+    "target 'alphabet_soup_1' never approached (closest EEF approach 0.177 m); goal ['in', 'alphabet_soup_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the tray",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "alphabet_soup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the alphabet soup and place it in the tray",
+     "until": {
+      "grasp": "alphabet_soup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "alphabet_soup_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 264,
+ "steps": 264,
+ "native_budget_success": true,
+ "wall_s": 9.8,
+ "events": [
+  {
+   "t": 118,
+   "kind": "stall",
+   "extent_m": 0.0298,
+   "eef": [
+    0.058,
+    -0.193,
+    0.447
+   ],
+   "held": null
+  },
+  {
+   "t": 209,
+   "kind": "grasp",
+   "obj": "alphabet_soup_1",
+   "is_target": true
+  },
+  {
+   "t": 264,
+   "kind": "release",
+   "obj": "alphabet_soup_1",
+   "pos": [
+    -0.005,
+    0.271,
+    0.508
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 9.2,
+  "min_place_dist": {
+   "0": 0.441
+  },
+  "held": null,
+  "ever_grasped": {
+   "alphabet_soup_1": 209
+  },
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.011,
+   "wooden_tray_1_contain_region": 0.331
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.445,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

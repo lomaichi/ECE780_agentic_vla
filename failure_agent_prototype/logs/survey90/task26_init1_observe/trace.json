@@ -1,0 +1,120 @@
+{
+ "task_id": 26,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the wine bottle in the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "wine_bottle_1",
+   "white_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [
+  "wine_bottle_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_1' but the pending goal targets are ['wine_bottle_1']",
+    "'akita_black_bowl_1' displaced 0.359 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle in the bottom drawer of the cabinet",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "white_cabinet_1_bottom_region",
+    "dest": "the bottom drawer of the cabinet",
+    "place": "in the bottom drawer of the cabinet",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 100,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 100,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_1",
+   "targets": [
+    "wine_bottle_1"
+   ]
+  },
+  {
+   "t": 183,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.013,
+    0.154,
+    0.924
+   ]
+  },
+  {
+   "t": 222,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.1584,
+   "now": -0.1352
+  },
+  {
+   "t": 296,
+   "kind": "stall",
+   "extent_m": 0.0258,
+   "eef": [
+    0.038,
+    0.203,
+    0.941
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 36.6,
+  "min_place_dist": {
+   "0": 0.196
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 100
+  },
+  "min_eef_dist": {
+   "wine_bottle_1": 0.17,
+   "white_cabinet_1_bottom_region": 0.037
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_bottom_level": 0.1601
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.359,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

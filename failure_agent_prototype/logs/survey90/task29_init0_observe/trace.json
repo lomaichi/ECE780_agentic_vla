@@ -1,0 +1,93 @@
+{
+ "task_id": 29,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "target 'akita_black_bowl_1' approached but never grasped (closest EEF approach 0.111 m); goal ['in', 'akita_black_bowl_1', 'white_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.1,
+ "events": [
+  {
+   "t": 151,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "topple",
+   "tilt_change": 45.3,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.008,
+    -0.103,
+    0.973
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 17.4,
+  "min_place_dist": {
+   "0": 0.163
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.111,
+   "white_cabinet_1_top_region": 0.222
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.007,
+   "plate_1": 0.0,
+   "ketchup_1": 0.075
+  }
+ }
+}

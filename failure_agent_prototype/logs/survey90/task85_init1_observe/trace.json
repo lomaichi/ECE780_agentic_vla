@@ -1,0 +1,110 @@
+{
+ "task_id": 85,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the white mug and place it to the right of the caddy",
+ "goal": [
+  [
+   "on",
+   "porcelain_mug_1",
+   "study_table_desk_caddy_right_region"
+  ]
+ ],
+ "targets": [
+  "porcelain_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'porcelain_mug_1' was grasped but is not at 'study_table_desk_caddy_right_region' (closest it got: 0.235 m); now dropped 0.455 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the white mug and place it to the right compartment of the caddy",
+    "target_obj": "porcelain_mug_1",
+    "target": "white mug",
+    "target_desc": "white mug",
+    "dest_obj": "study_table_desk_caddy_right_region",
+    "dest": "the right of the caddy",
+    "place": "to the right of the caddy",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.1,
+ "events": [
+  {
+   "t": 94,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 254,
+   "kind": "no_progress",
+   "since": 94,
+   "eef": [
+    -0.307,
+    -0.274,
+    1.035
+   ],
+   "held": "porcelain_mug_1"
+  },
+  {
+   "t": 313,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.392,
+    -0.303,
+    0.923
+   ]
+  },
+  {
+   "t": 373,
+   "kind": "stall",
+   "extent_m": 0.0107,
+   "eef": [
+    -0.386,
+    -0.304,
+    1.0
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 52.3,
+  "min_place_dist": {
+   "0": 0.235
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 94
+  },
+  "min_eef_dist": {
+   "porcelain_mug_1": 0.076,
+   "study_table_desk_caddy_right_region": 0.222
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.381
+  }
+ }
+}

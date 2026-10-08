@@ -1,0 +1,207 @@
+{
+ "task_id": 40,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the frying pan on the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_top_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 67,
+   "evidence": [
+    "target 'chefmate_8_frypan_1' never approached (closest EEF approach 0.224 m); goal ['in', 'chefmate_8_frypan_1', 'wooden_two_layer_shelf_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan and place it on the cabinet shelf",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 299,
+   "evidence": [
+    "target 'chefmate_8_frypan_1' approached but never grasped (closest EEF approach 0.060 m); goal ['in', 'chefmate_8_frypan_1', 'wooden_two_layer_shelf_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 520,
+   "evidence": [
+    "target 'chefmate_8_frypan_1' approached but never grasped (closest EEF approach 0.050 m); goal ['in', 'chefmate_8_frypan_1', 'wooden_two_layer_shelf_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan and place it on the cabinet shelf",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 757,
+ "native_budget_success": false,
+ "wall_s": 34.6,
+ "events": [
+  {
+   "t": 67,
+   "kind": "disturbance",
+   "obj": "white_bowl_1",
+   "how": "topple",
+   "tilt_change": 45.4,
+   "is_target": false
+  },
+  {
+   "t": 299,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  },
+  {
+   "t": 520,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  },
+  {
+   "t": 757,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 16.2,
+  "min_place_dist": {
+   "0": 0.263
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.05,
+   "wooden_two_layer_shelf_1_top_region": 0.264
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.018,
+   "chefmate_8_frypan_1": 0.005
+  }
+ }
+}

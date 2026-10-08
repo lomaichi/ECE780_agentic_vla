@@ -1,0 +1,214 @@
+{
+ "task_id": 36,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the white bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "white_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "white_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'white_bowl_1' never approached (closest EEF approach 0.214 m); goal ['on', 'white_bowl_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl and place it on the plate",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 281,
+   "evidence": [
+    "target 'white_bowl_1' approached but never grasped (closest EEF approach 0.025 m); goal ['on', 'white_bowl_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 410,
+   "evidence": [
+    "joint 'microwave_1_microjoint' of 'microwave_1' moved 0.0 -> -0.2033; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl and place it on the plate",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 618,
+ "native_budget_success": false,
+ "wall_s": 29.2,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.077,
+    -0.067,
+    1.004
+   ],
+   "held": null
+  },
+  {
+   "t": 281,
+   "kind": "disturbance",
+   "obj": "white_bowl_1",
+   "how": "topple",
+   "tilt_change": 48.3,
+   "is_target": true
+  },
+  {
+   "t": 410,
+   "kind": "unplanned_articulation",
+   "joint": "microwave_1_microjoint",
+   "owner": "microwave_1",
+   "planned": false,
+   "start": 0.0,
+   "now": -0.2033
+  },
+  {
+   "t": 618,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "white_bowl_1 not held"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 30.0,
+  "min_place_dist": {
+   "0": 0.203
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "white_bowl_1": 0.025,
+   "plate_1": 0.062
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.029,
+   "plate_1": 0.007
+  }
+ }
+}

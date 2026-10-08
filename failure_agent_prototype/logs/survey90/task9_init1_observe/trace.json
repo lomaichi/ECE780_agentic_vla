@@ -1,0 +1,120 @@
+{
+ "task_id": 9,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the black bowl on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.271 m); now held 0.424 m away"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.1,
+ "events": [
+  {
+   "t": 69,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 104,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.108,
+    -0.096,
+    0.913
+   ]
+  },
+  {
+   "t": 210,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 216,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.06,
+    -0.125,
+    0.918
+   ]
+  },
+  {
+   "t": 217,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 377,
+   "kind": "no_progress",
+   "since": 217,
+   "eef": [
+    0.073,
+    -0.117,
+    0.99
+   ],
+   "held": "akita_black_bowl_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 28.9,
+  "min_place_dist": {
+   "0": 0.271
+  },
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 69
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.049,
+   "plate_1": 0.238
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.167,
+   "plate_1": 0.0
+  }
+ }
+}

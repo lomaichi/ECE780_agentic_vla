@@ -1,0 +1,300 @@
+{
+ "task_id": 83,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 124,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the pending goal targets are ['black_book_1']",
+    "'porcelain_mug_1' displaced 0.058 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy",
+    "wrong_obj": "white mug"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the right compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_right_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "timeout",
+   "t": 312,
+   "evidence": [
+    "'black_book_1' was grasped; 0.005 m from 'desk_caddy_1_right_contain_region' (xy) but ['in', 'black_book_1', 'desk_caddy_1_right_contain_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the right compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_right_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "timeout",
+   "t": 448,
+   "evidence": [
+    "'black_book_1' was grasped but is not at 'desk_caddy_1_right_contain_region' (closest it got: 0.004 m); now dropped 0.183 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_right_contain_region",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_right_contain_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the right compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_right_contain_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 561,
+ "native_budget_success": false,
+ "wall_s": 13.2,
+ "events": [
+  {
+   "t": 124,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 124,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 139,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.265,
+    -0.035,
+    0.883
+   ]
+  },
+  {
+   "t": 212,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.039
+   ]
+  },
+  {
+   "t": 230,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 312,
+   "kind": "primitive_incomplete",
+   "primitive": "carry_to",
+   "residual_m": [
+    0.04
+   ]
+  },
+  {
+   "t": 312,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.415,
+    0.007,
+    1.02
+   ]
+  },
+  {
+   "t": 374,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.052
+   ]
+  },
+  {
+   "t": 386,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 448,
+   "kind": "primitive_incomplete",
+   "primitive": "carry_to",
+   "residual_m": [
+    0.069
+   ]
+  },
+  {
+   "t": 448,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.229,
+    0.012,
+    1.086
+   ]
+  },
+  {
+   "t": 448,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "black_book_1 not held"
+  },
+  {
+   "t": 505,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 561,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.142,
+    -0.03,
+    0.948
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 18.4,
+  "min_place_dist": {
+   "0": 0.004
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 124,
+   "black_book_1": 230
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.055,
+   "desk_caddy_1_right_contain_region": 0.171
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.116,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.069
+  }
+ }
+}

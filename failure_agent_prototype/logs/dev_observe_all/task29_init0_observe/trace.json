@@ -1,0 +1,85 @@
+{
+ "task_id": 29,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "S2_disturbance",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "disturbance: {'obj': 'ketchup_1', 'how': 'push', 'dist': 0.086, 'is_target': False}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.0,
+ "events": [
+  {
+   "t": 154,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "push",
+   "dist": 0.086,
+   "is_target": false
+  },
+  {
+   "t": 391,
+   "kind": "stall",
+   "extent_m": 0.0145,
+   "eef": [
+    -0.077,
+    -0.159,
+    0.965
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.147,
+   "white_cabinet_1_top_region": 0.208
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "plate_1": 0.005,
+   "ketchup_1": 0.08
+  }
+ }
+}

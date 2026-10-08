@@ -1,0 +1,102 @@
+{
+ "task_id": 53,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the orange juice and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "orange_juice_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "orange_juice_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "target 'orange_juice_1' approached but never grasped (closest EEF approach 0.110 m); goal ['in', 'orange_juice_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the orange juice and put it in the basket",
+    "target_obj": "orange_juice_1",
+    "target": "orange juice",
+    "target_desc": "orange juice",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 150,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 47.0,
+   "is_target": true
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.029,
+    -0.131,
+    0.608
+   ],
+   "held": null
+  },
+  {
+   "t": 190,
+   "kind": "disturbance",
+   "obj": "milk_1",
+   "how": "push",
+   "dist": 0.085,
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 15.2,
+  "min_place_dist": {
+   "0": 0.503
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "orange_juice_1": 0.11,
+   "basket_1_contain_region": 0.206
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.022,
+   "cream_cheese_1": 0.001,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.099,
+   "milk_1": 0.137,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

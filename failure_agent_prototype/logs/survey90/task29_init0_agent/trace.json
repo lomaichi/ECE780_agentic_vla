@@ -1,0 +1,254 @@
+{
+ "task_id": 29,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 140,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.138 m); goal ['in', 'akita_black_bowl_1', 'white_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "white_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 307,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.138 m); goal ['in', 'akita_black_bowl_1', 'white_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "white_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 466,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.138 m); goal ['in', 'akita_black_bowl_1', 'white_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "white_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 626,
+ "native_budget_success": false,
+ "wall_s": 21.8,
+ "events": [
+  {
+   "t": 140,
+   "kind": "stall",
+   "extent_m": 0.0298,
+   "eef": [
+    0.036,
+    -0.095,
+    1.017
+   ],
+   "held": null
+  },
+  {
+   "t": 247,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.138
+   ]
+  },
+  {
+   "t": 307,
+   "kind": "stall",
+   "extent_m": 0.0274,
+   "eef": [
+    0.058,
+    -0.02,
+    1.092
+   ],
+   "held": null
+  },
+  {
+   "t": 406,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.122
+   ]
+  },
+  {
+   "t": 466,
+   "kind": "stall",
+   "extent_m": 0.0251,
+   "eef": [
+    0.046,
+    -0.004,
+    1.077
+   ],
+   "held": null
+  },
+  {
+   "t": 566,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.097
+   ]
+  },
+  {
+   "t": 626,
+   "kind": "stall",
+   "extent_m": 0.0156,
+   "eef": [
+    0.049,
+    -0.022,
+    1.063
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 24.3,
+  "min_place_dist": {
+   "0": 0.171
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.138,
+   "white_cabinet_1_top_region": 0.175
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0219
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.007,
+   "plate_1": 0.0,
+   "ketchup_1": 0.081
+  }
+ }
+}

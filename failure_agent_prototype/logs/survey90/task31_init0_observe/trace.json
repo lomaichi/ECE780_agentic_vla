@@ -1,0 +1,113 @@
+{
+ "task_id": 31,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "white_cabinet_1_top_side"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.1553 -> -0.1333; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the black bowl on top of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "white_cabinet_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 91,
+   "kind": "stall",
+   "extent_m": 0.0293,
+   "eef": [
+    0.023,
+    -0.018,
+    1.099
+   ],
+   "held": null
+  },
+  {
+   "t": 278,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "topple",
+   "tilt_change": 59.4,
+   "is_target": false
+  },
+  {
+   "t": 279,
+   "kind": "disturbance",
+   "obj": "ketchup_1",
+   "how": "push",
+   "dist": 0.091,
+   "is_target": false
+  },
+  {
+   "t": 301,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 330,
+   "kind": "unplanned_articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": false,
+   "start": -0.1553,
+   "now": -0.1333
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 31.4,
+  "min_place_dist": {
+   "0": 0.305
+  },
+  "held": "akita_black_bowl_1",
+  "ever_grasped": {
+   "akita_black_bowl_1": 301
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.051,
+   "white_cabinet_1_top_side": 0.3
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.271,
+   "plate_1": 0.0,
+   "ketchup_1": 0.094
+  }
+ }
+}

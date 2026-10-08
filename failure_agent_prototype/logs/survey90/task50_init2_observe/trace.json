@@ -1,0 +1,103 @@
+{
+ "task_id": 50,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "pick up the alphabet soup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "out_of_view",
+   "t": 400,
+   "evidence": [
+    "target 'alphabet_soup_1' never approached (closest EEF approach 0.171 m); goal ['in', 'alphabet_soup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the basket",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.1,
+ "events": [
+  {
+   "t": 73,
+   "kind": "out_of_view",
+   "eef": [
+    0.081,
+    -0.297,
+    0.557
+   ]
+  },
+  {
+   "t": 103,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "push",
+   "dist": 0.08,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.002,
+    -0.342,
+    0.57
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 14.1,
+  "min_place_dist": {
+   "0": 0.403
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.171,
+   "basket_1_contain_region": 0.307
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.11,
+   "milk_1": 0.0,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

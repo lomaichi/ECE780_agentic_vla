@@ -1,0 +1,105 @@
+{
+ "task_id": 39,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn off the stove",
+ "goal": [
+  [
+   "turnoff",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "goal fixture 'flat_stove_1' never engaged (closest EEF approach 0.337 m, joint unmoved); goal ['turnoff', 'flat_stove_1']"
+   ],
+   "slots": {
+    "instruction": "turn off the stove",
+    "verb": "turn off",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button",
+    "focus_fixture": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.7,
+ "events": [
+  {
+   "t": 143,
+   "kind": "stall",
+   "extent_m": 0.0184,
+   "eef": [
+    -0.414,
+    0.259,
+    0.914
+   ],
+   "held": null
+  },
+  {
+   "t": 198,
+   "kind": "wrist_windup",
+   "angle_deg": 129.9
+  },
+  {
+   "t": 200,
+   "kind": "disturbance",
+   "obj": "moka_pot_1",
+   "how": "topple",
+   "tilt_change": 45.6,
+   "is_target": false
+  },
+  {
+   "t": 202,
+   "kind": "disturbance",
+   "obj": "moka_pot_1",
+   "how": "push",
+   "dist": 0.089,
+   "is_target": false
+  },
+  {
+   "t": 225,
+   "kind": "out_of_view",
+   "eef": [
+    -0.41,
+    0.47,
+    1.276
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 178.7,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.337
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0
+  },
+  "obj_disp": {
+   "moka_pot_1": 0.107,
+   "moka_pot_2": 0.001
+  }
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "task_id": 71,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the red mug on the plate",
+ "goal": [
+  [
+   "on",
+   "red_coffee_mug_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "red_coffee_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the goal targets are ['red_coffee_mug_1']",
+    "'porcelain_mug_1' displaced 0.295 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest": "the plate",
+    "place": "on the plate",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.2,
+ "events": [
+  {
+   "t": 84,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 84,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 141,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.109,
+    0.041,
+    0.452
+   ]
+  },
+  {
+   "t": 280,
+   "kind": "grasp",
+   "obj": "chocolate_pudding_1",
+   "is_target": false
+  },
+  {
+   "t": 280,
+   "kind": "wrong_grasp",
+   "obj": "chocolate_pudding_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 366,
+   "kind": "release",
+   "obj": "chocolate_pudding_1",
+   "pos": [
+    0.091,
+    0.229,
+    0.47
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 84,
+   "chocolate_pudding_1": 280
+  },
+  "min_eef_dist": {
+   "red_coffee_mug_1": 0.148,
+   "plate_1": 0.109
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.295,
+   "red_coffee_mug_1": 0.0,
+   "plate_1": 0.003,
+   "chocolate_pudding_1": 0.172
+  }
+ }
+}

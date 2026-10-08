@@ -1,0 +1,121 @@
+{
+ "task_id": 32,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the ketchup in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_1' but the pending goal targets are ['ketchup_1']",
+    "'akita_black_bowl_1' displaced 0.183 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the ketchup in the top drawer of the cabinet",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.8,
+ "events": [
+  {
+   "t": 134,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 134,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_1",
+   "targets": [
+    "ketchup_1"
+   ]
+  },
+  {
+   "t": 172,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_top_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.1514,
+   "now": -0.1292
+  },
+  {
+   "t": 306,
+   "kind": "stall",
+   "extent_m": 0.0292,
+   "eef": [
+    -0.046,
+    0.152,
+    1.136
+   ],
+   "held": "akita_black_bowl_1"
+  },
+  {
+   "t": 366,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.052,
+    0.19,
+    1.101
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 34.9,
+  "min_place_dist": {
+   "0": 0.287
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 134
+  },
+  "min_eef_dist": {
+   "ketchup_1": 0.112,
+   "white_cabinet_1_top_region": 0.138
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.1531
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.183,
+   "plate_1": 0.0,
+   "ketchup_1": 0.0
+  }
+ }
+}

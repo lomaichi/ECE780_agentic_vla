@@ -1,0 +1,109 @@
+{
+ "task_id": 21,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn on the stove and put the frying pan on it",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ],
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R7_partial_task",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "sub-goals [['turnon', 'flat_stove_1']] hold but [['on', 'chefmate_8_frypan_1', 'flat_stove_1_cook_region']] were never completed"
+   ],
+   "slots": {
+    "instruction": "turn on the stove and put the frying pan on it",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.3,
+ "events": [
+  {
+   "t": 76,
+   "kind": "articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": true,
+   "start": 0.0,
+   "now": 0.2299
+  },
+  {
+   "t": 85,
+   "kind": "predicate",
+   "index": 0,
+   "predicate": [
+    "turnon",
+    "flat_stove_1"
+   ],
+   "value": true
+  },
+  {
+   "t": 245,
+   "kind": "no_progress",
+   "since": 85,
+   "eef": [
+    -0.021,
+    -0.045,
+    0.986
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   true,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 53.4,
+  "min_place_dist": {
+   "1": 0.446
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.028,
+   "chefmate_8_frypan_1": 0.22,
+   "flat_stove_1_cook_region": 0.108
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 1.4025
+  },
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.003,
+   "moka_pot_1": 0.019
+  }
+ }
+}

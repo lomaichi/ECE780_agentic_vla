@@ -1,0 +1,111 @@
+{
+ "task_id": 2,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "akita_black_bowl_1",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "target 'akita_black_bowl_1' never approached (closest EEF approach 0.248 m); goal ['in', 'akita_black_bowl_1', 'wooden_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "put the black bowl in the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 25.4,
+ "events": [
+  {
+   "t": 49,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.146,
+   "now": -0.1255
+  },
+  {
+   "t": 209,
+   "kind": "no_progress",
+   "since": 49,
+   "eef": [
+    0.063,
+    -0.197,
+    1.14
+   ],
+   "held": null
+  },
+  {
+   "t": 249,
+   "kind": "stall",
+   "extent_m": 0.0293,
+   "eef": [
+    0.065,
+    -0.208,
+    1.135
+   ],
+   "held": null
+  },
+  {
+   "t": 383,
+   "kind": "wrist_windup",
+   "angle_deg": 108.5
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 178.3,
+  "min_place_dist": {
+   "0": 0.217
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.248,
+   "wooden_cabinet_1_top_region": 0.094
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1242
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

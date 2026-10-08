@@ -1,0 +1,69 @@
+{
+ "task_id": 27,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the wine bottle on the wine rack",
+ "goal": [
+  [
+   "on",
+   "wine_bottle_1",
+   "wine_rack_1_top_region"
+  ]
+ ],
+ "targets": [
+  "wine_bottle_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "S2_disturbance",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "disturbance: {'obj': 'wine_bottle_1', 'how': 'topple', 'tilt_change': 45.4, 'is_target': True}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest": "the wine rack",
+    "place": "on the wine rack"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 113,
+   "kind": "disturbance",
+   "obj": "wine_bottle_1",
+   "how": "topple",
+   "tilt_change": 45.4,
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wine_bottle_1": 0.105,
+   "wine_rack_1_top_region": 0.054
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "wine_bottle_1": 0.018
+  }
+ }
+}

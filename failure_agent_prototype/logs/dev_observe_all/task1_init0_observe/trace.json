@@ -1,0 +1,95 @@
+{
+ "task_id": 1,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "close the top drawer of the cabinet and put the black bowl on top of it",
+ "goal": [
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ],
+  [
+   "on",
+   "akita_black_bowl_1",
+   "wooden_cabinet_1_top_side"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "goal ['close', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0622, closest EEF approach 0.074 m"
+   ],
+   "slots": {
+    "instruction": "close the top drawer of the cabinet and put the black bowl on top of it",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 25.3,
+ "events": [
+  {
+   "t": 90,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.1585,
+   "now": -0.1378
+  },
+  {
+   "t": 150,
+   "kind": "stall",
+   "extent_m": 0.0245,
+   "eef": [
+    0.015,
+    -0.097,
+    1.095
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.074,
+   "akita_black_bowl_1": 0.219,
+   "wooden_cabinet_1_top_side": 0.178
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.0622
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

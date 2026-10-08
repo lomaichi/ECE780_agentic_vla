@@ -1,0 +1,243 @@
+{
+ "task_id": 6,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "open the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 155,
+   "evidence": [
+    "joint 'wooden_cabinet_1_middle_level' of 'wooden_cabinet_1' moved 0.0 -> -0.0237; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "open the bottom drawer of the cabinet",
+    "verb": "open",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_bottom_level"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_bottom_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the bottom drawer of the cabinet",
+     "until": {
+      "predicate": [
+       "open",
+       "wooden_cabinet_1_bottom_region"
+      ]
+     },
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "out_of_view",
+   "t": 275,
+   "evidence": [
+    "goal fixture 'wooden_cabinet_1_bottom_region' never engaged (closest EEF approach 0.173 m, joint unmoved); goal ['open', 'wooden_cabinet_1_bottom_region']"
+   ],
+   "slots": {
+    "instruction": "open the bottom drawer of the cabinet",
+    "verb": "open",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_bottom_level",
+    "focus_fixture": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_bottom_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "out_of_view",
+   "t": 531,
+   "evidence": [
+    "goal fixture 'wooden_cabinet_1_bottom_region' never engaged (closest EEF approach 0.173 m, joint unmoved); goal ['open', 'wooden_cabinet_1_bottom_region']"
+   ],
+   "slots": {
+    "instruction": "open the bottom drawer of the cabinet",
+    "verb": "open",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_bottom_level",
+    "focus_fixture": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "wooden_cabinet_1_bottom_level"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the bottom drawer of the cabinet",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 790,
+ "native_budget_success": false,
+ "wall_s": 16.4,
+ "events": [
+  {
+   "t": 155,
+   "kind": "unplanned_articulation",
+   "joint": "wooden_cabinet_1_middle_level",
+   "owner": "wooden_cabinet_1",
+   "planned": false,
+   "start": 0.0,
+   "now": -0.0237
+  },
+  {
+   "t": 260,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.106
+   ]
+  },
+  {
+   "t": 275,
+   "kind": "out_of_view",
+   "eef": [
+    0.009,
+    -0.362,
+    1.137
+   ]
+  },
+  {
+   "t": 460,
+   "kind": "joint_home",
+   "residual_rad": 0.014
+  },
+  {
+   "t": 460,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.235,
+    0.236,
+    0.236
+   ]
+  },
+  {
+   "t": 516,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.106
+   ]
+  },
+  {
+   "t": 531,
+   "kind": "out_of_view",
+   "eef": [
+    0.01,
+    -0.375,
+    1.137
+   ]
+  },
+  {
+   "t": 719,
+   "kind": "joint_home",
+   "residual_rad": 0.014
+  },
+  {
+   "t": 719,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.235,
+    0.236,
+    0.236
+   ]
+  },
+  {
+   "t": 775,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.106
+   ]
+  },
+  {
+   "t": 790,
+   "kind": "out_of_view",
+   "eef": [
+    0.01,
+    -0.371,
+    1.137
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 50.8,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_bottom_region": 0.173
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_bottom_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "plate_1": 0.0
+  }
+ }
+}

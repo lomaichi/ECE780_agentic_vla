@@ -1,0 +1,106 @@
+{
+ "task_id": 11,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "open the top drawer of the cabinet",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "wrist_windup",
+   "t": 400,
+   "evidence": [
+    "goal fixture 'wooden_cabinet_1_top_region' never engaged (closest EEF approach 0.239 m, joint unmoved); goal ['open', 'wooden_cabinet_1_top_region']"
+   ],
+   "slots": {
+    "instruction": "open the top drawer of the cabinet",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level",
+    "focus_fixture": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.9,
+ "events": [
+  {
+   "t": 101,
+   "kind": "wrist_windup",
+   "angle_deg": 77.2
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.092,
+    -0.107,
+    0.958
+   ],
+   "held": null
+  },
+  {
+   "t": 321,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_1",
+   "how": "push",
+   "dist": 0.081,
+   "is_target": false
+  },
+  {
+   "t": 384,
+   "kind": "disturbance",
+   "obj": "plate_1",
+   "how": "push",
+   "dist": 0.084,
+   "is_target": false
+  },
+  {
+   "t": 399,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_2",
+   "how": "push",
+   "dist": 0.082,
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 80.0,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.239
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.0
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.299,
+   "akita_black_bowl_2": 0.09,
+   "akita_black_bowl_3": 0.004,
+   "plate_1": 0.111
+  }
+ }
+}

@@ -1,0 +1,84 @@
+{
+ "task_id": 59,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the tomato sauce and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "tomato_sauce_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "tomato_sauce_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "target 'tomato_sauce_1' never approached (closest EEF approach 0.220 m); goal ['in', 'tomato_sauce_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the tray",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 112,
+   "kind": "stall",
+   "extent_m": 0.0258,
+   "eef": [
+    0.069,
+    -0.159,
+    0.454
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 8.8,
+  "min_place_dist": {
+   "0": 0.208
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "tomato_sauce_1": 0.22,
+   "wooden_tray_1_contain_region": 0.338
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.001,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

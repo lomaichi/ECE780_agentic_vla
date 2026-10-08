@@ -1,0 +1,98 @@
+{
+ "task_id": 42,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the frying pan under the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_bottom_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'chefmate_8_frypan_1' was grasped but is not at 'wooden_two_layer_shelf_1_bottom_region' (closest it got: 0.272 m); now dropped 0.329 m away"
+   ],
+   "slots": {
+    "instruction": "put the frying pan under the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_bottom_region",
+    "dest": "the cabinet shelf",
+    "place": "under the cabinet shelf",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.7,
+ "events": [
+  {
+   "t": 145,
+   "kind": "grasp",
+   "obj": "chefmate_8_frypan_1",
+   "is_target": true
+  },
+  {
+   "t": 163,
+   "kind": "release",
+   "obj": "chefmate_8_frypan_1",
+   "pos": [
+    0.082,
+    0.074,
+    0.897
+   ]
+  },
+  {
+   "t": 323,
+   "kind": "no_progress",
+   "since": 163,
+   "eef": [
+    -0.045,
+    0.209,
+    0.982
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 20.0,
+  "min_place_dist": {
+   "0": 0.272
+  },
+  "held": null,
+  "ever_grasped": {
+   "chefmate_8_frypan_1": 145
+  },
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.093,
+   "wooden_two_layer_shelf_1_bottom_region": 0.226
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.0,
+   "chefmate_8_frypan_1": 0.056
+  }
+ }
+}

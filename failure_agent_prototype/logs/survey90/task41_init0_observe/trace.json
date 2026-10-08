@@ -1,0 +1,121 @@
+{
+ "task_id": 41,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the frying pan on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_top_side"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'white_bowl_1' but the pending goal targets are ['chefmate_8_frypan_1']",
+    "'white_bowl_1' displaced 0.009 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on top of the cabinet",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "wrong_obj": "white bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 144,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 144,
+   "kind": "wrong_grasp",
+   "obj": "white_bowl_1",
+   "targets": [
+    "chefmate_8_frypan_1"
+   ]
+  },
+  {
+   "t": 169,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    -0.14,
+    0.117,
+    0.911
+   ]
+  },
+  {
+   "t": 252,
+   "kind": "wrist_windup",
+   "angle_deg": 94.3
+  },
+  {
+   "t": 329,
+   "kind": "no_progress",
+   "since": 169,
+   "eef": [
+    -0.206,
+    0.088,
+    1.38
+   ],
+   "held": null
+  },
+  {
+   "t": 330,
+   "kind": "out_of_view",
+   "eef": [
+    -0.211,
+    0.095,
+    1.373
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 178.8,
+  "min_place_dist": {
+   "0": 0.246
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_bowl_1": 144
+  },
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.244,
+   "wooden_two_layer_shelf_1_top_side": 0.274
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.009,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

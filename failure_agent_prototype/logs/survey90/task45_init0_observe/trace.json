@@ -1,0 +1,107 @@
+{
+ "task_id": 45,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn on the stove and put the frying pan on it",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ],
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal ['turnon', 'flat_stove_1'] unsatisfied; goal joint moved 0.0059, closest EEF approach 0.100 m"
+   ],
+   "slots": {
+    "instruction": "turn on the stove and put the frying pan on it",
+    "verb": "turn on",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.9,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.289,
+    0.232,
+    0.931
+   ],
+   "held": null
+  },
+  {
+   "t": 230,
+   "kind": "wrist_windup",
+   "angle_deg": 135.3
+  },
+  {
+   "t": 265,
+   "kind": "out_of_view",
+   "eef": [
+    -0.161,
+    0.398,
+    1.317
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 177.6,
+  "min_place_dist": {
+   "1": 0.334
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.1,
+   "chefmate_8_frypan_1": 0.333,
+   "flat_stove_1_cook_region": 0.2
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0059
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.042,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

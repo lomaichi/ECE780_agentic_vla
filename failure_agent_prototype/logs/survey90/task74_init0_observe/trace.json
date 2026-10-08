@@ -1,0 +1,99 @@
+{
+ "task_id": 74,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the left compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_left_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R4_placement",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'black_book_1' was grasped; 0.110 m from 'desk_caddy_1_left_contain_region' (xy) but ['in', 'black_book_1', 'desk_caddy_1_left_contain_region'] is false",
+    "'black_book_1' is inside sibling region(s) ['desk_caddy_1_back_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the left compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_left_contain_region",
+    "dest": "the left compartment of the caddy",
+    "place": "in the left compartment of the caddy"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.3,
+ "events": [
+  {
+   "t": 68,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 228,
+   "kind": "no_progress",
+   "since": 68,
+   "eef": [
+    -0.398,
+    -0.103,
+    1.096
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 275,
+   "kind": "stall",
+   "extent_m": 0.0279,
+   "eef": [
+    -0.399,
+    -0.101,
+    1.087
+   ],
+   "held": "black_book_1"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 43.2,
+  "min_place_dist": {
+   "0": 0.103
+  },
+  "held": "black_book_1",
+  "ever_grasped": {
+   "black_book_1": 68
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.105,
+   "desk_caddy_1_left_contain_region": 0.222
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.399,
+   "white_yellow_mug_1": 0.0
+  }
+ }
+}

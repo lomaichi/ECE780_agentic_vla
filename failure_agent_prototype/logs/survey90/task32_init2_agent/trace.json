@@ -1,0 +1,185 @@
+{
+ "task_id": 32,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "put the ketchup in the top drawer of the cabinet",
+ "goal": [
+  [
+   "in",
+   "ketchup_1",
+   "white_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "ketchup_1"
+ ],
+ "goal_joints": [
+  "white_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 153,
+   "evidence": [
+    "grasped 'akita_black_bowl_1' but the pending goal targets are ['ketchup_1']",
+    "'akita_black_bowl_1' displaced 0.043 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the ketchup in the top drawer of the cabinet",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "wrong_obj": "black bowl"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "white_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "timeout",
+   "t": 303,
+   "evidence": [
+    "'ketchup_1' was grasped; 0.009 m from 'white_cabinet_1_top_region' (xy) but ['in', 'ketchup_1', 'white_cabinet_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "put the ketchup in the top drawer of the cabinet",
+    "target_obj": "ketchup_1",
+    "target": "ketchup",
+    "target_desc": "ketchup",
+    "dest_obj": "white_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "ketchup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the ketchup and place it in the top drawer of the cabinet",
+     "until": {
+      "grasp": "ketchup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "ketchup_1",
+     "dest": "white_cabinet_1_top_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 374,
+ "steps": 374,
+ "native_budget_success": true,
+ "wall_s": 12.7,
+ "events": [
+  {
+   "t": 153,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 153,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_1",
+   "targets": [
+    "ketchup_1"
+   ]
+  },
+  {
+   "t": 168,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.022,
+    -0.093,
+    0.898
+   ]
+  },
+  {
+   "t": 243,
+   "kind": "grasp",
+   "obj": "ketchup_1",
+   "is_target": true
+  },
+  {
+   "t": 303,
+   "kind": "release",
+   "obj": "ketchup_1",
+   "pos": [
+    -0.005,
+    0.191,
+    1.137
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 9.8,
+  "min_place_dist": {
+   "0": 0.02
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 153,
+   "ketchup_1": 243
+  },
+  "min_eef_dist": {
+   "ketchup_1": 0.041,
+   "white_cabinet_1_top_region": 0.053
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_top_level": 0.0365
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.043,
+   "plate_1": 0.0,
+   "ketchup_1": 0.326
+  }
+ }
+}

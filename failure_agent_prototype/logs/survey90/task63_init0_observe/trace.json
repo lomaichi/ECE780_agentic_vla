@@ -1,0 +1,140 @@
+{
+ "task_id": 63,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "stack the left bowl on the right bowl and place them in the tray",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "akita_black_bowl_2"
+  ],
+  [
+   "in",
+   "akita_black_bowl_2",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1",
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "out_of_view",
+   "t": 400,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'akita_black_bowl_2' (closest it got: 0.073 m); now dropped 0.235 m away"
+   ],
+   "slots": {
+    "instruction": "stack the left bowl on the right bowl and place them in the tray",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "akita_black_bowl_2",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the left",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 58,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 125,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.036,
+    0.242,
+    0.452
+   ]
+  },
+  {
+   "t": 141,
+   "kind": "out_of_view",
+   "eef": [
+    0.043,
+    0.278,
+    0.567
+   ]
+  },
+  {
+   "t": 285,
+   "kind": "no_progress",
+   "since": 125,
+   "eef": [
+    0.008,
+    0.277,
+    0.482
+   ],
+   "held": null
+  },
+  {
+   "t": 306,
+   "kind": "stall",
+   "extent_m": 0.0296,
+   "eef": [
+    0.012,
+    0.283,
+    0.481
+   ],
+   "held": null
+  },
+  {
+   "t": 346,
+   "kind": "out_of_view",
+   "eef": [
+    0.014,
+    0.29,
+    0.504
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 16.9,
+  "min_place_dist": {
+   "0": 0.073,
+   "1": 0.241
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 58
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.036,
+   "akita_black_bowl_2": 0.127,
+   "wooden_tray_1_contain_region": 0.017
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.414,
+   "akita_black_bowl_2": 0.0,
+   "new_salad_dressing_1": 0.0,
+   "chocolate_pudding_1": 0.0,
+   "wooden_tray_1": 0.001
+  }
+ }
+}

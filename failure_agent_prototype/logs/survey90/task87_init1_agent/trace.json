@@ -1,0 +1,146 @@
+{
+ "task_id": 87,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "pick up the book on the left and place it on top of the shelf",
+ "goal": [
+  [
+   "on",
+   "yellow_book_2",
+   "wooden_two_layer_shelf_1_top_side"
+  ]
+ ],
+ "targets": [
+  "yellow_book_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 62,
+   "evidence": [
+    "grasped 'yellow_book_1' but the pending goal targets are ['yellow_book_2']",
+    "'yellow_book_1' displaced 0.005 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the left and place it on top of the shelf",
+    "target_obj": "yellow_book_2",
+    "target": "book",
+    "target_desc": "book on the left",
+    "dest_obj": "wooden_two_layer_shelf_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "wrong_obj": "book"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "yellow_book_2"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book on the left and place it on top of the cabinet",
+     "until": {
+      "grasp": "yellow_book_2"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "yellow_book_2",
+     "dest": "wooden_two_layer_shelf_1_top_side"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 251,
+ "steps": 251,
+ "native_budget_success": true,
+ "wall_s": 6.7,
+ "events": [
+  {
+   "t": 62,
+   "kind": "grasp",
+   "obj": "yellow_book_1",
+   "is_target": false
+  },
+  {
+   "t": 62,
+   "kind": "wrong_grasp",
+   "obj": "yellow_book_1",
+   "targets": [
+    "yellow_book_2"
+   ]
+  },
+  {
+   "t": 77,
+   "kind": "release",
+   "obj": "yellow_book_1",
+   "pos": [
+    -0.213,
+    -0.004,
+    0.883
+   ]
+  },
+  {
+   "t": 156,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.021
+   ]
+  },
+  {
+   "t": 187,
+   "kind": "grasp",
+   "obj": "yellow_book_2",
+   "is_target": true
+  },
+  {
+   "t": 251,
+   "kind": "release",
+   "obj": "yellow_book_2",
+   "pos": [
+    -0.178,
+    0.291,
+    1.098
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 9.3,
+  "min_place_dist": {
+   "0": 0.531
+  },
+  "held": null,
+  "ever_grasped": {
+   "yellow_book_1": 62,
+   "yellow_book_2": 187
+  },
+  "min_eef_dist": {
+   "yellow_book_2": 0.088,
+   "wooden_two_layer_shelf_1_top_side": 0.284
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "yellow_book_1": 0.01,
+   "yellow_book_2": 0.538
+  }
+ }
+}

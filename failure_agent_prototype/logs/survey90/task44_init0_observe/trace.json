@@ -1,0 +1,89 @@
+{
+ "task_id": 44,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn on the stove",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal fixture 'flat_stove_1' never engaged (closest EEF approach 0.159 m, joint unmoved); goal ['turnon', 'flat_stove_1']"
+   ],
+   "slots": {
+    "instruction": "turn on the stove",
+    "verb": "turn on",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button",
+    "focus_fixture": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 25.0,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.363,
+    0.188,
+    0.982
+   ],
+   "held": null
+  },
+  {
+   "t": 177,
+   "kind": "wrist_windup",
+   "angle_deg": 123.8
+  },
+  {
+   "t": 216,
+   "kind": "out_of_view",
+   "eef": [
+    -0.22,
+    0.47,
+    1.265
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 174.6,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.159
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.0,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

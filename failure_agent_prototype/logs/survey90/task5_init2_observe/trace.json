@@ -1,0 +1,118 @@
+{
+ "task_id": 5,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+ "goal": [
+  [
+   "in",
+   "chocolate_pudding_1",
+   "wooden_cabinet_1_top_region"
+  ],
+  [
+   "close",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "premature_goal",
+   "t": 400,
+   "evidence": [
+    "worked on ['close', 'wooden_cabinet_1_top_region'] (joint moved 0.0216) while ['in', 'chocolate_pudding_1', 'wooden_cabinet_1_top_region'] is still false: sub-steps out of order"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding in the top drawer of the cabinet and close it",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "wooden_cabinet_1_top_region",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "verb": "close",
+    "region": "the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.0,
+ "events": [
+  {
+   "t": 70,
+   "kind": "articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": true,
+   "start": -0.151,
+   "now": -0.1294
+  },
+  {
+   "t": 70,
+   "kind": "premature_goal",
+   "satisfied": [
+    "close",
+    "wooden_cabinet_1_top_region"
+   ],
+   "pending": [
+    "in",
+    "chocolate_pudding_1",
+    "wooden_cabinet_1_top_region"
+   ],
+   "joint": "wooden_cabinet_1_top_level",
+   "moved": 0.0216
+  },
+  {
+   "t": 192,
+   "kind": "stall",
+   "extent_m": 0.0292,
+   "eef": [
+    -0.086,
+    -0.188,
+    1.098
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 44.5,
+  "min_place_dist": {
+   "0": 0.22
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.233,
+   "wooden_cabinet_1_top_region": 0.146
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.1384
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "butter_1": 0.0,
+   "butter_2": 0.0,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

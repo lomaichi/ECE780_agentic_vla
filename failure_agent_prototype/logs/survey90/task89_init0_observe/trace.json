@@ -1,0 +1,107 @@
+{
+ "task_id": 89,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book on the right and place it under the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "yellow_book_1",
+   "wooden_two_layer_shelf_1_bottom_region"
+  ]
+ ],
+ "targets": [
+  "yellow_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'yellow_book_1' was grasped but is not at 'wooden_two_layer_shelf_1_bottom_region' (closest it got: 0.298 m); now held 0.733 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the right and place it under the cabinet shelf",
+    "target_obj": "yellow_book_1",
+    "target": "book",
+    "target_desc": "book at the back",
+    "dest_obj": "wooden_two_layer_shelf_1_bottom_region",
+    "dest": "the cabinet shelf",
+    "place": "under the cabinet shelf",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.7,
+ "events": [
+  {
+   "t": 55,
+   "kind": "grasp",
+   "obj": "yellow_book_1",
+   "is_target": true
+  },
+  {
+   "t": 215,
+   "kind": "no_progress",
+   "since": 55,
+   "eef": [
+    -0.33,
+    -0.24,
+    1.026
+   ],
+   "held": "yellow_book_1"
+  },
+  {
+   "t": 245,
+   "kind": "disturbance",
+   "obj": "yellow_book_2",
+   "how": "topple",
+   "tilt_change": 62.3,
+   "is_target": false
+  },
+  {
+   "t": 292,
+   "kind": "wrist_windup",
+   "angle_deg": 76.1
+  },
+  {
+   "t": 361,
+   "kind": "wrist_windup",
+   "angle_deg": 81.7
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 95.8,
+  "min_place_dist": {
+   "0": 0.298
+  },
+  "held": "yellow_book_1",
+  "ever_grasped": {
+   "yellow_book_1": 55
+  },
+  "min_eef_dist": {
+   "yellow_book_1": 0.093,
+   "wooden_two_layer_shelf_1_bottom_region": 0.307
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "yellow_book_1": 0.465,
+   "yellow_book_2": 0.008
+  }
+ }
+}

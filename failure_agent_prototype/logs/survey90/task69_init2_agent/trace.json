@@ -1,0 +1,114 @@
+{
+ "task_id": 69,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "put the chocolate pudding to the left of the plate",
+ "goal": [
+  [
+   "on",
+   "chocolate_pudding_1",
+   "living_room_table_plate_left_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 108,
+   "evidence": [
+    "target 'chocolate_pudding_1' never approached (closest EEF approach 0.225 m); goal ['on', 'chocolate_pudding_1', 'living_room_table_plate_left_region']"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding to the left of the plate",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest_obj": "living_room_table_plate_left_region",
+    "dest": "the left of the plate",
+    "place": "to the left of the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chocolate_pudding_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the chocolate pudding and place it to the left of the plate",
+     "until": {
+      "grasp": "chocolate_pudding_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chocolate_pudding_1",
+     "dest": "living_room_table_plate_left_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 224,
+ "steps": 224,
+ "native_budget_success": true,
+ "wall_s": 8.1,
+ "events": [
+  {
+   "t": 108,
+   "kind": "stall",
+   "extent_m": 0.0288,
+   "eef": [
+    -0.097,
+    -0.128,
+    0.507
+   ],
+   "held": null
+  },
+  {
+   "t": 194,
+   "kind": "grasp",
+   "obj": "chocolate_pudding_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 12.6,
+  "min_place_dist": {
+   "0": 0.26
+  },
+  "held": null,
+  "ever_grasped": {
+   "chocolate_pudding_1": 194
+  },
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.017,
+   "living_room_table_plate_left_region": 0.253
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.006,
+   "red_coffee_mug_1": 0.0,
+   "plate_1": 0.0,
+   "chocolate_pudding_1": 0.286
+  }
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "task_id": 35,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "open the microwave",
+ "goal": [
+  [
+   "open",
+   "microwave_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "microwave_1_microjoint"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal ['open', 'microwave_1'] unsatisfied; goal joint moved 0.0621, closest EEF approach 0.215 m"
+   ],
+   "slots": {
+    "instruction": "open the microwave",
+    "verb": "open",
+    "region": "the microwave",
+    "artic_joint": "microwave_1_microjoint"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.088,
+    -0.134,
+    1.108
+   ],
+   "held": null
+  },
+  {
+   "t": 248,
+   "kind": "stall",
+   "extent_m": 0.0295,
+   "eef": [
+    -0.058,
+    -0.152,
+    1.099
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 31.2,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "microwave_1": 0.215
+  },
+  "goal_joint_progress": {
+   "microwave_1_microjoint": 0.0621
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.001,
+   "plate_1": 0.0
+  }
+ }
+}

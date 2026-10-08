@@ -1,0 +1,102 @@
+{
+ "task_id": 46,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the alphabet soup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'tomato_sauce_1' but the goal targets are ['alphabet_soup_1']",
+    "'tomato_sauce_1' displaced 0.480 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the basket",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "tomato sauce"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 19.5,
+ "events": [
+  {
+   "t": 144,
+   "kind": "grasp",
+   "obj": "tomato_sauce_1",
+   "is_target": false
+  },
+  {
+   "t": 144,
+   "kind": "wrong_grasp",
+   "obj": "tomato_sauce_1",
+   "targets": [
+    "alphabet_soup_1"
+   ]
+  },
+  {
+   "t": 256,
+   "kind": "release",
+   "obj": "tomato_sauce_1",
+   "pos": [
+    0.05,
+    0.243,
+    0.615
+   ]
+  },
+  {
+   "t": 316,
+   "kind": "stall",
+   "extent_m": 0.0098,
+   "eef": [
+    0.011,
+    0.259,
+    0.619
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "tomato_sauce_1": 144
+  },
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.101,
+   "basket_1_contain_region": 0.094
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.002,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.48,
+   "ketchup_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

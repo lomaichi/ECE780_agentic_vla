@@ -1,0 +1,106 @@
+{
+ "task_id": 75,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "S1_stall",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "stall: {'extent_m': 0.0293, 'eef': [-0.372, -0.11, 1.08], 'held': 'black_book_1'}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.5,
+ "events": [
+  {
+   "t": 80,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 195,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.434,
+    -0.163,
+    1.037
+   ]
+  },
+  {
+   "t": 201,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 292,
+   "kind": "stall",
+   "extent_m": 0.0293,
+   "eef": [
+    -0.372,
+    -0.11,
+    1.08
+   ],
+   "held": "black_book_1"
+  },
+  {
+   "t": 386,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.43,
+    -0.176,
+    1.025
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "black_book_1": 80
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.105,
+   "desk_caddy_1_right_contain_region": 0.173
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.419,
+   "white_yellow_mug_1": 0.0
+  }
+ }
+}

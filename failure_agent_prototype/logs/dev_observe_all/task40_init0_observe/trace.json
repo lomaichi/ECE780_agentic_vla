@@ -1,0 +1,120 @@
+{
+ "task_id": 40,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the frying pan on the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_top_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'white_bowl_1' but the goal targets are ['chefmate_8_frypan_1']",
+    "'white_bowl_1' displaced 0.204 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "wrong_obj": "white bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.6,
+ "events": [
+  {
+   "t": 75,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 75,
+   "kind": "wrong_grasp",
+   "obj": "white_bowl_1",
+   "targets": [
+    "chefmate_8_frypan_1"
+   ]
+  },
+  {
+   "t": 133,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    0.029,
+    -0.134,
+    1.134
+   ]
+  },
+  {
+   "t": 141,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 144,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    0.039,
+    -0.123,
+    1.131
+   ]
+  },
+  {
+   "t": 169,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 178,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    0.032,
+    -0.024,
+    1.034
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "white_bowl_1": 75
+  },
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.078,
+   "wooden_two_layer_shelf_1_top_region": 0.161
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.204,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

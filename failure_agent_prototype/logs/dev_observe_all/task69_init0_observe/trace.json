@@ -1,0 +1,90 @@
+{
+ "task_id": 69,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the chocolate pudding to the left of the plate",
+ "goal": [
+  [
+   "on",
+   "chocolate_pudding_1",
+   "living_room_table_plate_left_region"
+  ]
+ ],
+ "targets": [
+  "chocolate_pudding_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the goal targets are ['chocolate_pudding_1']",
+    "'porcelain_mug_1' displaced 0.406 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the chocolate pudding to the left of the plate",
+    "target_obj": "chocolate_pudding_1",
+    "target": "chocolate pudding",
+    "target_desc": "chocolate pudding",
+    "dest": "the left of the plate",
+    "place": "to the left of the plate",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.2,
+ "events": [
+  {
+   "t": 88,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 88,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "chocolate_pudding_1"
+   ]
+  },
+  {
+   "t": 149,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    0.19,
+    0.093,
+    0.451
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 88
+  },
+  "min_eef_dist": {
+   "chocolate_pudding_1": 0.153,
+   "living_room_table_plate_left_region": 0.213
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.406,
+   "red_coffee_mug_1": 0.0,
+   "plate_1": 0.013,
+   "chocolate_pudding_1": 0.0
+  }
+ }
+}

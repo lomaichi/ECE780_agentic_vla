@@ -1,0 +1,207 @@
+{
+ "task_id": 18,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "put the frying pan on the stove",
+ "goal": [
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 112,
+   "evidence": [
+    "joint 'flat_stove_1_button' of 'flat_stove_1' moved 0.0 -> 0.2065; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the stove",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan and place it on the stove",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "flat_stove_1_cook_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 351,
+   "evidence": [
+    "target 'chefmate_8_frypan_1' approached but never grasped (closest EEF approach 0.072 m); goal ['on', 'chefmate_8_frypan_1', 'flat_stove_1_cook_region']"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the stove",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan and place it on the stove",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "flat_stove_1_cook_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 585,
+   "evidence": [
+    "target 'chefmate_8_frypan_1' approached but never grasped (closest EEF approach 0.066 m); goal ['on', 'chefmate_8_frypan_1', 'flat_stove_1_cook_region']"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the stove",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "chefmate_8_frypan_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the frying pan",
+     "until": {
+      "grasp": "chefmate_8_frypan_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "chefmate_8_frypan_1",
+     "dest": "flat_stove_1_cook_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 810,
+ "native_budget_success": false,
+ "wall_s": 35.7,
+ "events": [
+  {
+   "t": 112,
+   "kind": "unplanned_articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": false,
+   "start": 0.0,
+   "now": 0.2065
+  },
+  {
+   "t": 351,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  },
+  {
+   "t": 585,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  },
+  {
+   "t": 810,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "chefmate_8_frypan_1 not held"
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 23.9,
+  "min_place_dist": {
+   "0": 0.465
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.066,
+   "flat_stove_1_cook_region": 0.066
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.0,
+   "moka_pot_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,98 @@
+{
+ "task_id": 43,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the white bowl on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "white_bowl_1",
+   "wooden_two_layer_shelf_1_top_side"
+  ]
+ ],
+ "targets": [
+  "white_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "'white_bowl_1' was grasped but is not at 'wooden_two_layer_shelf_1_top_side' (closest it got: 0.395 m); now dropped 0.480 m away"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on top of the cabinet",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "wooden_two_layer_shelf_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.9,
+ "events": [
+  {
+   "t": 107,
+   "kind": "stall",
+   "extent_m": 0.0279,
+   "eef": [
+    -0.17,
+    0.099,
+    0.911
+   ],
+   "held": null
+  },
+  {
+   "t": 361,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 397,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    -0.308,
+    0.079,
+    0.959
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 22.0,
+  "min_place_dist": {
+   "0": 0.395
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_bowl_1": 361
+  },
+  "min_eef_dist": {
+   "white_bowl_1": 0.015,
+   "wooden_two_layer_shelf_1_top_side": 0.336
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.164,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

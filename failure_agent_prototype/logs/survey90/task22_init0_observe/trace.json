@@ -1,0 +1,112 @@
+{
+ "task_id": 22,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "close the bottom drawer of the cabinet",
+ "goal": [
+  [
+   "close",
+   "white_cabinet_1_bottom_region"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "white_cabinet_1_bottom_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "goal ['close', 'white_cabinet_1_bottom_region'] unsatisfied; goal joint moved 0.0408, closest EEF approach 0.117 m"
+   ],
+   "slots": {
+    "instruction": "close the bottom drawer of the cabinet",
+    "verb": "close",
+    "region": "the bottom drawer of the cabinet",
+    "artic_joint": "white_cabinet_1_bottom_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 122,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 172,
+   "kind": "articulation",
+   "joint": "white_cabinet_1_bottom_level",
+   "owner": "white_cabinet_1",
+   "planned": true,
+   "start": -0.155,
+   "now": -0.134
+  },
+  {
+   "t": 193,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    -0.065,
+    0.14,
+    0.942
+   ]
+  },
+  {
+   "t": 353,
+   "kind": "no_progress",
+   "since": 193,
+   "eef": [
+    0.041,
+    0.073,
+    0.959
+   ],
+   "held": null
+  },
+  {
+   "t": 391,
+   "kind": "stall",
+   "extent_m": 0.0131,
+   "eef": [
+    0.032,
+    0.071,
+    0.955
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 52.4,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 122
+  },
+  "min_eef_dist": {
+   "white_cabinet_1_bottom_region": 0.117
+  },
+  "goal_joint_progress": {
+   "white_cabinet_1_bottom_level": 0.0408
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.221,
+   "wine_bottle_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,126 @@
+{
+ "task_id": 59,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the tomato sauce and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "tomato_sauce_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "tomato_sauce_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 109,
+   "evidence": [
+    "target 'tomato_sauce_1' never approached (closest EEF approach 0.224 m); goal ['in', 'tomato_sauce_1', 'wooden_tray_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the tray",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "tomato_sauce_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the tomato sauce and place it in the tray",
+     "until": {
+      "grasp": "tomato_sauce_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "tomato_sauce_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 233,
+ "steps": 233,
+ "native_budget_success": true,
+ "wall_s": 9.3,
+ "events": [
+  {
+   "t": 109,
+   "kind": "stall",
+   "extent_m": 0.0265,
+   "eef": [
+    0.061,
+    -0.156,
+    0.453
+   ],
+   "held": null
+  },
+  {
+   "t": 195,
+   "kind": "grasp",
+   "obj": "tomato_sauce_1",
+   "is_target": true
+  },
+  {
+   "t": 233,
+   "kind": "release",
+   "obj": "tomato_sauce_1",
+   "pos": [
+    -0.02,
+    0.267,
+    0.508
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 6.3,
+  "min_place_dist": {
+   "0": 0.204
+  },
+  "held": null,
+  "ever_grasped": {
+   "tomato_sauce_1": 195
+  },
+  "min_eef_dist": {
+   "tomato_sauce_1": 0.005,
+   "wooden_tray_1_contain_region": 0.207
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.007,
+   "tomato_sauce_1": 0.21,
+   "ketchup_1": 0.0,
+   "butter_1": 0.0,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,277 @@
+{
+ "task_id": 63,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "stack the left bowl on the right bowl and place them in the tray",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "akita_black_bowl_2"
+  ],
+  [
+   "in",
+   "akita_black_bowl_2",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1",
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "out_of_view",
+   "t": 155,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'akita_black_bowl_2' (closest it got: 0.098 m); now dropped 0.245 m away"
+   ],
+   "slots": {
+    "instruction": "stack the left bowl on the right bowl and place them in the tray",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "akita_black_bowl_2",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the left",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl on the right and place it on the black bowl on the left",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "timeout",
+   "t": 387,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'akita_black_bowl_2' (closest it got: 0.098 m); now dropped 0.247 m away"
+   ],
+   "slots": {
+    "instruction": "stack the left bowl on the right bowl and place them in the tray",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "akita_black_bowl_2",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the left",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl on the right",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R6_destination_missed",
+   "trigger": "timeout",
+   "t": 617,
+   "evidence": [
+    "'akita_black_bowl_1' was grasped but is not at 'akita_black_bowl_2' (closest it got: 0.098 m); now dropped 0.251 m away"
+   ],
+   "slots": {
+    "instruction": "stack the left bowl on the right bowl and place them in the tray",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "akita_black_bowl_2",
+    "dest": "the black bowl",
+    "place": "on the black bowl on the left",
+    "target_held": ""
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "akita_black_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the black bowl on the right and place it on the black bowl on the left",
+     "until": {
+      "grasp": "akita_black_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "akita_black_bowl_1",
+     "dest": "akita_black_bowl_2"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 758,
+ "native_budget_success": false,
+ "wall_s": 33.1,
+ "events": [
+  {
+   "t": 59,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 130,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.015,
+    0.232,
+    0.455
+   ]
+  },
+  {
+   "t": 155,
+   "kind": "out_of_view",
+   "eef": [
+    0.048,
+    0.288,
+    0.522
+   ]
+  },
+  {
+   "t": 155,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 387,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 387,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 617,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 617,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "akita_black_bowl_1 not held"
+  },
+  {
+   "t": 758,
+   "kind": "stall",
+   "extent_m": 0.0203,
+   "eef": [
+    0.034,
+    0.245,
+    0.506
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 10.8,
+  "min_place_dist": {
+   "0": 0.098,
+   "1": 0.228
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 59
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.037,
+   "akita_black_bowl_2": 0.151,
+   "wooden_tray_1_contain_region": 0.023
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.411,
+   "akita_black_bowl_2": 0.0,
+   "new_salad_dressing_1": 0.0,
+   "chocolate_pudding_1": 0.0,
+   "wooden_tray_1": 0.001
+  }
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "task_id": 15,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the middle black bowl on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_2",
+   "wooden_cabinet_1_top_side"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_2"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_3' but the pending goal targets are ['akita_black_bowl_2']",
+    "'akita_black_bowl_3' displaced 0.179 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the middle black bowl on top of the cabinet",
+    "target_obj": "akita_black_bowl_2",
+    "target": "black bowl",
+    "target_desc": "black bowl on the right",
+    "dest_obj": "wooden_cabinet_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.5,
+ "events": [
+  {
+   "t": 74,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_3",
+   "is_target": false
+  },
+  {
+   "t": 74,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_3",
+   "targets": [
+    "akita_black_bowl_2"
+   ]
+  },
+  {
+   "t": 147,
+   "kind": "release",
+   "obj": "akita_black_bowl_3",
+   "pos": [
+    0.005,
+    -0.214,
+    1.127
+   ]
+  },
+  {
+   "t": 197,
+   "kind": "unplanned_articulation",
+   "joint": "wooden_cabinet_1_top_level",
+   "owner": "wooden_cabinet_1",
+   "planned": false,
+   "start": 0.0,
+   "now": -0.0201
+  },
+  {
+   "t": 291,
+   "kind": "stall",
+   "extent_m": 0.0161,
+   "eef": [
+    0.058,
+    -0.139,
+    1.136
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 15.5,
+  "min_place_dist": {
+   "0": 0.494
+  },
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_3": 74
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_2": 0.173,
+   "wooden_cabinet_1_top_side": 0.064
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.0,
+   "akita_black_bowl_3": 0.179,
+   "plate_1": 0.0
+  }
+ }
+}

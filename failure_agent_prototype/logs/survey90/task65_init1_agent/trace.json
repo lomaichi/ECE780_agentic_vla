@@ -1,0 +1,263 @@
+{
+ "task_id": 65,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the red mug on the left plate",
+ "goal": [
+  [
+   "on",
+   "red_coffee_mug_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "red_coffee_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 71,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']",
+    "'porcelain_mug_1' displaced 0.044 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the left plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate on the left",
+    "wrong_obj": "white mug"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug and place it on the plate on the left",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 291,
+   "evidence": [
+    "target 'red_coffee_mug_1' never approached (closest EEF approach 0.126 m); goal ['on', 'red_coffee_mug_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the left plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate on the left",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug and place it on the plate on the left",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 402,
+   "evidence": [
+    "target 'red_coffee_mug_1' approached but never grasped (closest EEF approach 0.089 m); goal ['on', 'red_coffee_mug_1', 'plate_1']"
+   ],
+   "slots": {
+    "instruction": "put the red mug on the left plate",
+    "target_obj": "red_coffee_mug_1",
+    "target": "red mug",
+    "target_desc": "red mug",
+    "dest_obj": "plate_1",
+    "dest": "the plate",
+    "place": "on the plate on the left",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "red_coffee_mug_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the red mug",
+     "until": {
+      "grasp": "red_coffee_mug_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "red_coffee_mug_1",
+     "dest": "plate_1"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 759,
+ "steps": 759,
+ "native_budget_success": false,
+ "wall_s": 25.8,
+ "events": [
+  {
+   "t": 71,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 71,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "red_coffee_mug_1"
+   ]
+  },
+  {
+   "t": 86,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.051,
+    -0.199,
+    0.434
+   ]
+  },
+  {
+   "t": 141,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.079
+   ]
+  },
+  {
+   "t": 291,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "red_coffee_mug_1 not held"
+  },
+  {
+   "t": 355,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.087
+   ]
+  },
+  {
+   "t": 402,
+   "kind": "disturbance",
+   "obj": "red_coffee_mug_1",
+   "how": "topple",
+   "tilt_change": 45.1,
+   "is_target": true
+  },
+  {
+   "t": 628,
+   "kind": "joint_home",
+   "residual_rad": 0.016
+  },
+  {
+   "t": 628,
+   "kind": "primitive_incomplete",
+   "primitive": "retract_home",
+   "residual_m": [
+    0.04,
+    0.055,
+    0.055
+   ]
+  },
+  {
+   "t": 717,
+   "kind": "grasp",
+   "obj": "red_coffee_mug_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 40.2,
+  "min_place_dist": {
+   "0": 0.333
+  },
+  "held": null,
+  "ever_grasped": {
+   "porcelain_mug_1": 71,
+   "red_coffee_mug_1": 717
+  },
+  "min_eef_dist": {
+   "red_coffee_mug_1": 0.024,
+   "plate_1": 0.211
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.039,
+   "red_coffee_mug_1": 0.364,
+   "white_yellow_mug_1": 0.001,
+   "plate_1": 0.002,
+   "plate_2": 0.0
+  }
+ }
+}

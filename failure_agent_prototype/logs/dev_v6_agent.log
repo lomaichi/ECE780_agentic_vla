@@ -1,0 +1,48 @@
+task 9 init 0 [agent]
+    [t=258] no_progress -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.282 m); now dropped 0.368 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=649] timeout -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.282 m); now dropped 0.364 m away
+        pi0: "pick up the black bowl"
+    success=True steps=879 diagnoses: no_progress->R6_destination_missed > timeout->R6_destination_missed
+task 84 init 0 [agent]
+    [t=141] disturbance -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.251 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=326] disturbance -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.135 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    [t=699] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' approached but never grasped (closest EEF approach 0.053 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    success=False steps=900 diagnoses: disturbance->R5_target_not_reached > disturbance->R5_target_not_reached > timeout->R5_target_not_reached
+task 17 init 0 [agent]
+    [t=75] disturbance -> R5_target_not_reached: target 'akita_black_bowl_2' never approached (closest EEF approach 0.156 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']
+        pi0: "pick up the black bowl in the middle and place it on the black bowl at the back"
+    [t=317] timeout -> R5_target_not_reached: target 'akita_black_bowl_2' approached but never grasped (closest EEF approach 0.052 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']
+        pi0: "pick up the black bowl in the middle"
+    [t=560] timeout -> R5_target_not_reached: target 'akita_black_bowl_2' approached but never grasped (closest EEF approach 0.052 m); goal ['on', 'akita_black_bowl_2', 'akita_black_bowl_3']
+        pi0: "pick up the black bowl in the middle and place it on the black bowl at the back"
+    success=False steps=805 diagnoses: disturbance->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+task 17 init 1 [agent]
+    [t=147] disturbance -> R6_destination_missed: 'akita_black_bowl_2' was grasped but is not at 'akita_black_bowl_3' (closest it got: 0.144 m); now held 0.226 m away
+        pi0: "pick up the black bowl in the middle and place it on the black bowl at the back"
+    success=True steps=178 diagnoses: disturbance->R6_destination_missed
+task 9 init 1 [agent]
+    [t=297] no_progress -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.256 m); now dropped 0.271 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    success=True steps=635 diagnoses: no_progress->R6_destination_missed
+task 84 init 1 [agent]
+    [t=160] no_progress -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.253 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=413] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.138 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    [t=677] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.136 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    success=False steps=900 diagnoses: no_progress->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+
+task  init mode     success t      diagnoses
+9     0    agent    True    879    no_progress->R6_destination_missed > timeout->R6_destination_missed
+9     1    agent    True    635    no_progress->R6_destination_missed
+17    0    agent    False   -      disturbance->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+17    1    agent    True    178    disturbance->R6_destination_missed
+84    0    agent    False   -      disturbance->R5_target_not_reached > disturbance->R5_target_not_reached > timeout->R5_target_not_reached
+84    1    agent    False   -      no_progress->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+agent: 3/6 succeeded
+logs: logs/dev_v6_agent

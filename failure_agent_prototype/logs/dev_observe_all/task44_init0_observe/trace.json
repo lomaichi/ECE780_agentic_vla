@@ -1,0 +1,67 @@
+{
+ "task_id": 44,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn on the stove",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "out_of_view",
+   "t": 400,
+   "evidence": [
+    "goal ['turnon', 'flat_stove_1'] unsatisfied; goal joint moved 0.0187, closest EEF approach 0.133 m"
+   ],
+   "slots": {
+    "instruction": "turn on the stove",
+    "verb": "turn on",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 19.9,
+ "events": [
+  {
+   "t": 228,
+   "kind": "out_of_view",
+   "eef": [
+    -0.325,
+    0.463,
+    1.26
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.133
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0187
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.073,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

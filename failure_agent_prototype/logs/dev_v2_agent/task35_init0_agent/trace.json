@@ -1,0 +1,113 @@
+{
+ "task_id": 35,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "open the microwave",
+ "goal": [
+  [
+   "open",
+   "microwave_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "microwave_1_microjoint"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 276,
+   "evidence": [
+    "goal ['open', 'microwave_1'] unsatisfied; goal joint moved 0.5462, closest EEF approach 0.221 m"
+   ],
+   "slots": {
+    "instruction": "open the microwave",
+    "verb": "open",
+    "region": "the microwave",
+    "artic_joint": "microwave_1_microjoint"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "microwave_1_microjoint"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the microwave",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 490,
+ "steps": 490,
+ "native_budget_success": false,
+ "wall_s": 26.6,
+ "events": [
+  {
+   "t": 116,
+   "kind": "articulation",
+   "joint": "microwave_1_microjoint",
+   "owner": "microwave_1",
+   "planned": true,
+   "start": -0.0045,
+   "now": -0.2111
+  },
+  {
+   "t": 276,
+   "kind": "no_progress",
+   "since": 116,
+   "eef": [
+    -0.046,
+    0.067,
+    0.955
+   ],
+   "held": null
+  },
+  {
+   "t": 276,
+   "kind": "primitive_skipped",
+   "primitive": "finish_articulation",
+   "joint": "microwave_1_microjoint",
+   "reason": "joint type hinge"
+  },
+  {
+   "t": 392,
+   "kind": "articulation",
+   "joint": "microwave_1_microjoint",
+   "owner": "microwave_1",
+   "planned": true,
+   "start": -0.454,
+   "now": -0.6645
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 37.7,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "microwave_1": 0.221
+  },
+  "goal_joint_progress": {
+   "microwave_1_microjoint": 1.2873
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.0,
+   "plate_1": 0.0
+  }
+ }
+}

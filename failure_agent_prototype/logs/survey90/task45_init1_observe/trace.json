@@ -1,0 +1,120 @@
+{
+ "task_id": 45,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "turn on the stove and put the frying pan on it",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ],
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'white_bowl_1' but the pending goal targets are ['chefmate_8_frypan_1']",
+    "'white_bowl_1' displaced 0.177 m from its start"
+   ],
+   "slots": {
+    "instruction": "turn on the stove and put the frying pan on it",
+    "verb": "turn on",
+    "region": "the stove",
+    "artic_joint": "flat_stove_1_button",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove",
+    "wrong_obj": "white bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 25.1,
+ "events": [
+  {
+   "t": 115,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 115,
+   "kind": "wrong_grasp",
+   "obj": "white_bowl_1",
+   "targets": [
+    "chefmate_8_frypan_1"
+   ]
+  },
+  {
+   "t": 213,
+   "kind": "stall",
+   "extent_m": 0.027,
+   "eef": [
+    -0.145,
+    0.297,
+    0.941
+   ],
+   "held": "white_bowl_1"
+  },
+  {
+   "t": 289,
+   "kind": "articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": true,
+   "start": 0.0,
+   "now": 0.2004
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 10.6,
+  "min_place_dist": {
+   "1": 0.292
+  },
+  "held": "white_bowl_1",
+  "ever_grasped": {
+   "white_bowl_1": 115
+  },
+  "min_eef_dist": {
+   "flat_stove_1": 0.063,
+   "chefmate_8_frypan_1": 0.248,
+   "flat_stove_1_cook_region": 0.096
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.3856
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.177,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

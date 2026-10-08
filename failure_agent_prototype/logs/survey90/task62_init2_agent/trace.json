@@ -1,0 +1,148 @@
+{
+ "task_id": 62,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the salad dressing and put it in the tray",
+ "goal": [
+  [
+   "in",
+   "new_salad_dressing_1",
+   "wooden_tray_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "new_salad_dressing_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 124,
+   "evidence": [
+    "grasped 'chocolate_pudding_1' but the pending goal targets are ['new_salad_dressing_1']",
+    "'chocolate_pudding_1' displaced 0.010 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the salad dressing and put it in the tray",
+    "target_obj": "new_salad_dressing_1",
+    "target": "salad dressing",
+    "target_desc": "salad dressing",
+    "dest_obj": "wooden_tray_1_contain_region",
+    "dest": "the tray",
+    "place": "in the tray",
+    "wrong_obj": "chocolate pudding"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "new_salad_dressing_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the salad dressing and place it in the tray",
+     "until": {
+      "grasp": "new_salad_dressing_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "new_salad_dressing_1",
+     "dest": "wooden_tray_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 291,
+ "steps": 291,
+ "native_budget_success": true,
+ "wall_s": 10.6,
+ "events": [
+  {
+   "t": 124,
+   "kind": "grasp",
+   "obj": "chocolate_pudding_1",
+   "is_target": false
+  },
+  {
+   "t": 124,
+   "kind": "wrong_grasp",
+   "obj": "chocolate_pudding_1",
+   "targets": [
+    "new_salad_dressing_1"
+   ]
+  },
+  {
+   "t": 139,
+   "kind": "release",
+   "obj": "chocolate_pudding_1",
+   "pos": [
+    0.103,
+    -0.179,
+    0.45
+   ]
+  },
+  {
+   "t": 219,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.037
+   ]
+  },
+  {
+   "t": 240,
+   "kind": "grasp",
+   "obj": "new_salad_dressing_1",
+   "is_target": true
+  },
+  {
+   "t": 291,
+   "kind": "release",
+   "obj": "new_salad_dressing_1",
+   "pos": [
+    -0.008,
+    0.266,
+    0.505
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 8.3,
+  "min_place_dist": {
+   "0": 0.434
+  },
+  "held": null,
+  "ever_grasped": {
+   "chocolate_pudding_1": 124,
+   "new_salad_dressing_1": 240
+  },
+  "min_eef_dist": {
+   "new_salad_dressing_1": 0.093,
+   "wooden_tray_1_contain_region": 0.339
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.0,
+   "new_salad_dressing_1": 0.45,
+   "chocolate_pudding_1": 0.008,
+   "wooden_tray_1": 0.0
+  }
+ }
+}

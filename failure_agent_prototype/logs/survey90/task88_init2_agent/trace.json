@@ -1,0 +1,241 @@
+{
+ "task_id": 88,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the book on the right and place it on the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "yellow_book_1",
+   "wooden_two_layer_shelf_1_top_region"
+  ]
+ ],
+ "targets": [
+  "yellow_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 243,
+   "evidence": [
+    "'yellow_book_1' was grasped but is not at 'wooden_two_layer_shelf_1_top_region' (closest it got: 0.274 m); now held 0.358 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the right and place it on the cabinet shelf",
+    "target_obj": "yellow_book_1",
+    "target": "book",
+    "target_desc": "book on the right",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "target_held": "yes"
+   },
+   "plan": [
+    {
+     "do": "carry_to",
+     "obj": "yellow_book_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    },
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "yellow_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book on the right and place it on the cabinet shelf",
+     "until": {
+      "grasp": "yellow_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "yellow_book_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "out_of_view",
+   "t": 514,
+   "evidence": [
+    "'yellow_book_1' was grasped; 0.004 m from 'wooden_two_layer_shelf_1_top_region' (xy) but ['in', 'yellow_book_1', 'wooden_two_layer_shelf_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the right and place it on the cabinet shelf",
+    "target_obj": "yellow_book_1",
+    "target": "book",
+    "target_desc": "book on the right",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "yellow_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book on the right and place it on the cabinet shelf",
+     "until": {
+      "grasp": "yellow_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "yellow_book_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R4_placement",
+   "trigger": "out_of_view",
+   "t": 623,
+   "evidence": [
+    "'yellow_book_1' was grasped; 0.006 m from 'wooden_two_layer_shelf_1_top_region' (xy) but ['in', 'yellow_book_1', 'wooden_two_layer_shelf_1_top_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the right and place it on the cabinet shelf",
+    "target_obj": "yellow_book_1",
+    "target": "book",
+    "target_desc": "book on the right",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "yellow_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book on the right",
+     "until": {
+      "grasp": "yellow_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "yellow_book_1",
+     "dest": "wooden_two_layer_shelf_1_top_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 721,
+ "native_budget_success": false,
+ "wall_s": 10.4,
+ "events": [
+  {
+   "t": 83,
+   "kind": "grasp",
+   "obj": "yellow_book_1",
+   "is_target": true
+  },
+  {
+   "t": 243,
+   "kind": "no_progress",
+   "since": 83,
+   "eef": [
+    -0.269,
+    -0.058,
+    1.203
+   ],
+   "held": "yellow_book_1"
+  },
+  {
+   "t": 399,
+   "kind": "release",
+   "obj": "yellow_book_1",
+   "pos": [
+    -0.202,
+    0.291,
+    1.095
+   ]
+  },
+  {
+   "t": 514,
+   "kind": "out_of_view",
+   "eef": [
+    -0.227,
+    0.338,
+    1.132
+   ]
+  },
+  {
+   "t": 623,
+   "kind": "out_of_view",
+   "eef": [
+    -0.227,
+    0.352,
+    1.133
+   ]
+  },
+  {
+   "t": 721,
+   "kind": "out_of_view",
+   "eef": [
+    -0.212,
+    0.34,
+    1.135
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 30.0,
+  "min_place_dist": {
+   "0": 0.003
+  },
+  "held": null,
+  "ever_grasped": {
+   "yellow_book_1": 83
+  },
+  "min_eef_dist": {
+   "yellow_book_1": 0.027,
+   "wooden_two_layer_shelf_1_top_region": 0.105
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "yellow_book_1": 0.3,
+   "yellow_book_2": 0.0
+  }
+ }
+}

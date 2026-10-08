@@ -1,0 +1,214 @@
+{
+ "task_id": 37,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "put the white bowl to the right of the plate",
+ "goal": [
+  [
+   "on",
+   "white_bowl_1",
+   "kitchen_table_plate_right_region"
+  ]
+ ],
+ "targets": [
+  "white_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "target 'white_bowl_1' never approached (closest EEF approach 0.268 m); goal ['on', 'white_bowl_1', 'kitchen_table_plate_right_region']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl to the right of the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "kitchen_table_plate_right_region",
+    "dest": "the right of the plate",
+    "place": "to the right of the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl and place it to the right of the plate",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "kitchen_table_plate_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 269,
+   "evidence": [
+    "target 'white_bowl_1' approached but never grasped (closest EEF approach 0.026 m); goal ['on', 'white_bowl_1', 'kitchen_table_plate_right_region']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl to the right of the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "kitchen_table_plate_right_region",
+    "dest": "the right of the plate",
+    "place": "to the right of the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "kitchen_table_plate_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "timeout",
+   "t": 481,
+   "evidence": [
+    "target 'white_bowl_1' approached but never grasped (closest EEF approach 0.026 m); goal ['on', 'white_bowl_1', 'kitchen_table_plate_right_region']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl to the right of the plate",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "kitchen_table_plate_right_region",
+    "dest": "the right of the plate",
+    "place": "to the right of the plate",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl and place it to the right of the plate",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "kitchen_table_plate_right_region"
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 571,
+ "native_budget_success": false,
+ "wall_s": 24.9,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    0.066,
+    -0.019,
+    1.209
+   ],
+   "held": null
+  },
+  {
+   "t": 269,
+   "kind": "disturbance",
+   "obj": "white_bowl_1",
+   "how": "topple",
+   "tilt_change": 46.6,
+   "is_target": true
+  },
+  {
+   "t": 481,
+   "kind": "primitive_skipped",
+   "primitive": "carry_to",
+   "reason": "white_bowl_1 not held"
+  },
+  {
+   "t": 571,
+   "kind": "disturbance",
+   "obj": "white_bowl_1",
+   "how": "topple",
+   "tilt_change": 47.9,
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 23.5,
+  "min_place_dist": {
+   "0": 0.317
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "white_bowl_1": 0.026,
+   "kitchen_table_plate_right_region": 0.302
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.079,
+   "plate_1": 0.0
+  }
+ }
+}

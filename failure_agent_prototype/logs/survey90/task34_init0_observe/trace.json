@@ -1,0 +1,106 @@
+{
+ "task_id": 34,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the yellow and white mug to the front of the white mug",
+ "goal": [
+  [
+   "on",
+   "white_yellow_mug_1",
+   "kitchen_table_porcelain_mug_front_region"
+  ]
+ ],
+ "targets": [
+  "white_yellow_mug_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 400,
+   "evidence": [
+    "joint 'microwave_1_microjoint' of 'microwave_1' moved -1.655 -> -1.4501; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the yellow and white mug to the front of the white mug",
+    "target_obj": "white_yellow_mug_1",
+    "target": "yellow and white mug",
+    "target_desc": "yellow and white mug",
+    "dest_obj": "kitchen_table_porcelain_mug_front_region",
+    "dest": "the front of the white mug",
+    "place": "to the front of the white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.0,
+ "events": [
+  {
+   "t": 103,
+   "kind": "grasp",
+   "obj": "white_yellow_mug_1",
+   "is_target": true
+  },
+  {
+   "t": 166,
+   "kind": "release",
+   "obj": "white_yellow_mug_1",
+   "pos": [
+    -0.025,
+    0.307,
+    0.945
+   ]
+  },
+  {
+   "t": 230,
+   "kind": "unplanned_articulation",
+   "joint": "microwave_1_microjoint",
+   "owner": "microwave_1",
+   "planned": false,
+   "start": -1.655,
+   "now": -1.4501
+  },
+  {
+   "t": 390,
+   "kind": "no_progress",
+   "since": 230,
+   "eef": [
+    -0.052,
+    0.203,
+    1.077
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 34.1,
+  "min_place_dist": {
+   "0": 0.244
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_yellow_mug_1": 103
+  },
+  "min_eef_dist": {
+   "white_yellow_mug_1": 0.077,
+   "kitchen_table_porcelain_mug_front_region": 0.218
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "porcelain_mug_1": 0.0,
+   "white_yellow_mug_1": 0.329
+  }
+ }
+}

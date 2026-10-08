@@ -1,0 +1,116 @@
+{
+ "task_id": 50,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the alphabet soup and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "alphabet_soup_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "alphabet_soup_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "out_of_view",
+   "t": 83,
+   "evidence": [
+    "target 'alphabet_soup_1' never approached (closest EEF approach 0.167 m); goal ['in', 'alphabet_soup_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the alphabet soup and put it in the basket",
+    "target_obj": "alphabet_soup_1",
+    "target": "alphabet soup",
+    "target_desc": "alphabet soup",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "alphabet_soup_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the alphabet soup and place it in the basket",
+     "until": {
+      "grasp": "alphabet_soup_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "alphabet_soup_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 222,
+ "steps": 222,
+ "native_budget_success": true,
+ "wall_s": 7.9,
+ "events": [
+  {
+   "t": 83,
+   "kind": "out_of_view",
+   "eef": [
+    0.011,
+    -0.32,
+    0.534
+   ]
+  },
+  {
+   "t": 179,
+   "kind": "grasp",
+   "obj": "alphabet_soup_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 5.6,
+  "min_place_dist": {
+   "0": 0.405
+  },
+  "held": null,
+  "ever_grasped": {
+   "alphabet_soup_1": 179
+  },
+  "min_eef_dist": {
+   "alphabet_soup_1": 0.012,
+   "basket_1_contain_region": 0.298
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.406,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.112,
+   "milk_1": 0.0,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

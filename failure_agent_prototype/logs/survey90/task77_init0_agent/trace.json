@@ -1,0 +1,153 @@
+{
+ "task_id": 77,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "pick up the book and place it in the back compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_back_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 131,
+   "evidence": [
+    "grasped 'red_coffee_mug_1' but the pending goal targets are ['black_book_1']",
+    "'red_coffee_mug_1' displaced 0.019 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the back compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest_obj": "desk_caddy_1_back_contain_region",
+    "dest": "the back compartment of the caddy",
+    "place": "in the back compartment of the caddy",
+    "wrong_obj": "red mug"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "black_book_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the book and place it in the back compartment of the caddy",
+     "until": {
+      "grasp": "black_book_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "black_book_1",
+     "dest": "desk_caddy_1_back_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 322,
+ "steps": 322,
+ "native_budget_success": true,
+ "wall_s": 11.3,
+ "events": [
+  {
+   "t": 131,
+   "kind": "grasp",
+   "obj": "red_coffee_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 131,
+   "kind": "wrong_grasp",
+   "obj": "red_coffee_mug_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 146,
+   "kind": "release",
+   "obj": "red_coffee_mug_1",
+   "pos": [
+    -0.229,
+    0.11,
+    0.898
+   ]
+  },
+  {
+   "t": 222,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.042
+   ]
+  },
+  {
+   "t": 256,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 322,
+   "kind": "primitive_incomplete",
+   "primitive": "carry_to",
+   "residual_m": [
+    0.03
+   ]
+  },
+  {
+   "t": 322,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.441,
+    -0.134,
+    1.023
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 10.4,
+  "min_place_dist": {
+   "0": 0.25
+  },
+  "held": null,
+  "ever_grasped": {
+   "red_coffee_mug_1": 131,
+   "black_book_1": 256
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.108,
+   "desk_caddy_1_back_contain_region": 0.254
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.27,
+   "red_coffee_mug_1": 0.037
+  }
+ }
+}

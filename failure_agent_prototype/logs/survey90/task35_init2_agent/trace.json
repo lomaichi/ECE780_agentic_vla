@@ -1,0 +1,207 @@
+{
+ "task_id": 35,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "open the microwave",
+ "goal": [
+  [
+   "open",
+   "microwave_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "microwave_1_microjoint"
+ ],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "no_progress",
+   "t": 160,
+   "evidence": [
+    "goal fixture 'microwave_1' never engaged (closest EEF approach 0.255 m, joint unmoved); goal ['open', 'microwave_1']"
+   ],
+   "slots": {
+    "instruction": "open the microwave",
+    "verb": "open",
+    "region": "the microwave",
+    "artic_joint": "microwave_1_microjoint",
+    "focus_fixture": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "joint": "microwave_1_microjoint"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the microwave",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 309,
+   "evidence": [
+    "goal ['open', 'microwave_1'] unsatisfied; goal joint moved 0.0111, closest EEF approach 0.229 m"
+   ],
+   "slots": {
+    "instruction": "open the microwave",
+    "verb": "open",
+    "region": "the microwave",
+    "artic_joint": "microwave_1_microjoint"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "microwave_1_microjoint"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the microwave",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  },
+  {
+   "code": "R3_stopped_short",
+   "trigger": "no_progress",
+   "t": 486,
+   "evidence": [
+    "goal ['open', 'microwave_1'] unsatisfied; goal joint moved 0.1658, closest EEF approach 0.229 m"
+   ],
+   "slots": {
+    "instruction": "open the microwave",
+    "verb": "open",
+    "region": "the microwave",
+    "artic_joint": "microwave_1_microjoint"
+   },
+   "plan": [
+    {
+     "do": "finish_articulation",
+     "joint": "microwave_1_microjoint"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "pi0",
+     "prompt": "open the microwave",
+     "until": "goal",
+     "budget": 250
+    }
+   ],
+   "outcome": "not_recovered"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 693,
+ "native_budget_success": false,
+ "wall_s": 34.9,
+ "events": [
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.217,
+    0.041,
+    0.912
+   ],
+   "held": null
+  },
+  {
+   "t": 247,
+   "kind": "primitive_incomplete",
+   "primitive": "approach",
+   "residual_m": [
+    0.021
+   ]
+  },
+  {
+   "t": 309,
+   "kind": "stall",
+   "extent_m": 0.0228,
+   "eef": [
+    -0.058,
+    -0.125,
+    1.112
+   ],
+   "held": null
+  },
+  {
+   "t": 309,
+   "kind": "primitive_skipped",
+   "primitive": "finish_articulation",
+   "joint": "microwave_1_microjoint",
+   "reason": "joint type hinge"
+  },
+  {
+   "t": 486,
+   "kind": "no_progress",
+   "since": 326,
+   "eef": [
+    -0.082,
+    0.043,
+    0.919
+   ],
+   "held": null
+  },
+  {
+   "t": 486,
+   "kind": "primitive_skipped",
+   "primitive": "finish_articulation",
+   "joint": "microwave_1_microjoint",
+   "reason": "joint type hinge"
+  },
+  {
+   "t": 693,
+   "kind": "no_progress",
+   "since": 533,
+   "eef": [
+    -0.183,
+    0.143,
+    1.029
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 29.8,
+  "min_place_dist": {},
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "microwave_1": 0.229
+  },
+  "goal_joint_progress": {
+   "microwave_1_microjoint": 0.1658
+  },
+  "obj_disp": {
+   "white_bowl_1": 0.001,
+   "plate_1": 0.082
+  }
+ }
+}

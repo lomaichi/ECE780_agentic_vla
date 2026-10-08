@@ -1,0 +1,115 @@
+{
+ "task_id": 51,
+ "init_idx": 1,
+ "mode": "agent",
+ "instruction": "pick up the butter and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "butter_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "butter_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "disturbance",
+   "t": 92,
+   "evidence": [
+    "target 'butter_1' never approached (closest EEF approach 0.219 m); goal ['in', 'butter_1', 'basket_1_contain_region']"
+   ],
+   "slots": {
+    "instruction": "pick up the butter and put it in the basket",
+    "target_obj": "butter_1",
+    "target": "butter",
+    "target_desc": "butter",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "butter_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the butter and place it in the basket",
+     "until": {
+      "grasp": "butter_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "butter_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 221,
+ "steps": 221,
+ "native_budget_success": true,
+ "wall_s": 9.0,
+ "events": [
+  {
+   "t": 92,
+   "kind": "disturbance",
+   "obj": "milk_1",
+   "how": "topple",
+   "tilt_change": 49.7,
+   "is_target": false
+  },
+  {
+   "t": 191,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 4.6,
+  "min_place_dist": {
+   "0": 0.227
+  },
+  "held": null,
+  "ever_grasped": {
+   "butter_1": 191
+  },
+  "min_eef_dist": {
+   "butter_1": 0.013,
+   "basket_1_contain_region": 0.233
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.003,
+   "milk_1": 0.094,
+   "butter_1": 0.248,
+   "basket_1": 0.0
+  }
+ }
+}

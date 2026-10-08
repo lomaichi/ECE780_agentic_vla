@@ -1,0 +1,137 @@
+{
+ "task_id": 54,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the tomato sauce and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "tomato_sauce_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "tomato_sauce_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'orange_juice_1' but the pending goal targets are ['tomato_sauce_1']",
+    "'orange_juice_1' displaced 0.339 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the tomato sauce and put it in the basket",
+    "target_obj": "tomato_sauce_1",
+    "target": "tomato sauce",
+    "target_desc": "tomato sauce",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "orange juice"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.6,
+ "events": [
+  {
+   "t": 9,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "topple",
+   "tilt_change": 59.9,
+   "is_target": false
+  },
+  {
+   "t": 89,
+   "kind": "disturbance",
+   "obj": "orange_juice_1",
+   "how": "push",
+   "dist": 0.081,
+   "is_target": false
+  },
+  {
+   "t": 160,
+   "kind": "no_progress",
+   "since": 0,
+   "eef": [
+    -0.002,
+    -0.179,
+    0.562
+   ],
+   "held": null
+  },
+  {
+   "t": 178,
+   "kind": "disturbance",
+   "obj": "milk_1",
+   "how": "push",
+   "dist": 0.089,
+   "is_target": false
+  },
+  {
+   "t": 236,
+   "kind": "grasp",
+   "obj": "orange_juice_1",
+   "is_target": false
+  },
+  {
+   "t": 236,
+   "kind": "wrong_grasp",
+   "obj": "orange_juice_1",
+   "targets": [
+    "tomato_sauce_1"
+   ]
+  },
+  {
+   "t": 264,
+   "kind": "release",
+   "obj": "orange_juice_1",
+   "pos": [
+    -0.056,
+    0.039,
+    0.615
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 20.4,
+  "min_place_dist": {
+   "0": 0.219
+  },
+  "held": null,
+  "ever_grasped": {
+   "orange_juice_1": 236
+  },
+  "min_eef_dist": {
+   "tomato_sauce_1": 0.212,
+   "basket_1_contain_region": 0.303
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.001,
+   "cream_cheese_1": 0.0,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.339,
+   "milk_1": 0.126,
+   "butter_1": 0.0,
+   "basket_1": 0.002
+  }
+ }
+}

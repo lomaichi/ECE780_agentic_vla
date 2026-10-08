@@ -1,0 +1,122 @@
+{
+ "task_id": 43,
+ "init_idx": 0,
+ "mode": "agent",
+ "instruction": "put the white bowl on top of the cabinet",
+ "goal": [
+  [
+   "on",
+   "white_bowl_1",
+   "wooden_two_layer_shelf_1_top_side"
+  ]
+ ],
+ "targets": [
+  "white_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R5_target_not_reached",
+   "trigger": "stall",
+   "t": 103,
+   "evidence": [
+    "target 'white_bowl_1' approached but never grasped (closest EEF approach 0.017 m); goal ['on', 'white_bowl_1', 'wooden_two_layer_shelf_1_top_side']"
+   ],
+   "slots": {
+    "instruction": "put the white bowl on top of the cabinet",
+    "target_obj": "white_bowl_1",
+    "target": "white bowl",
+    "target_desc": "white bowl",
+    "dest_obj": "wooden_two_layer_shelf_1_top_side",
+    "dest": "top of the cabinet",
+    "place": "on top of the cabinet",
+    "focus_obj": "yes"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "white_bowl_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the white bowl and place it on top of the cabinet",
+     "until": {
+      "grasp": "white_bowl_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "white_bowl_1",
+     "dest": "wooden_two_layer_shelf_1_top_side"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 277,
+ "steps": 277,
+ "native_budget_success": true,
+ "wall_s": 9.6,
+ "events": [
+  {
+   "t": 103,
+   "kind": "stall",
+   "extent_m": 0.0265,
+   "eef": [
+    -0.188,
+    0.066,
+    0.913
+   ],
+   "held": null
+  },
+  {
+   "t": 198,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 277,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    -0.006,
+    -0.293,
+    1.135
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 11.1,
+  "min_place_dist": {
+   "0": 0.363
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_bowl_1": 198
+  },
+  "min_eef_dist": {
+   "white_bowl_1": 0.017,
+   "wooden_two_layer_shelf_1_top_side": 0.333
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.406,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

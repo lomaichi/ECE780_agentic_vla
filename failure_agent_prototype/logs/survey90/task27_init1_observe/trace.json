@@ -1,0 +1,120 @@
+{
+ "task_id": 27,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "put the wine bottle on the wine rack",
+ "goal": [
+  [
+   "on",
+   "wine_bottle_1",
+   "wine_rack_1_top_region"
+  ]
+ ],
+ "targets": [
+  "wine_bottle_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "'wine_bottle_1' was grasped but is not at 'wine_rack_1_top_region' (closest it got: 0.246 m); now dropped 0.279 m away"
+   ],
+   "slots": {
+    "instruction": "put the wine bottle on the wine rack",
+    "target_obj": "wine_bottle_1",
+    "target": "wine bottle",
+    "target_desc": "wine bottle",
+    "dest_obj": "wine_rack_1_top_region",
+    "dest": "the wine rack",
+    "place": "on the wine rack",
+    "target_held": ""
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.4,
+ "events": [
+  {
+   "t": 126,
+   "kind": "disturbance",
+   "obj": "wine_bottle_1",
+   "how": "topple",
+   "tilt_change": 46.0,
+   "is_target": true
+  },
+  {
+   "t": 132,
+   "kind": "grasp",
+   "obj": "wine_bottle_1",
+   "is_target": true
+  },
+  {
+   "t": 142,
+   "kind": "release",
+   "obj": "wine_bottle_1",
+   "pos": [
+    -0.122,
+    0.039,
+    0.913
+   ]
+  },
+  {
+   "t": 294,
+   "kind": "wrist_windup",
+   "angle_deg": 109.7
+  },
+  {
+   "t": 302,
+   "kind": "no_progress",
+   "since": 142,
+   "eef": [
+    -0.327,
+    0.019,
+    1.037
+   ],
+   "held": null
+  },
+  {
+   "t": 362,
+   "kind": "out_of_view",
+   "eef": [
+    -0.765,
+    0.37,
+    1.19
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 177.9,
+  "min_place_dist": {
+   "0": 0.246
+  },
+  "held": null,
+  "ever_grasped": {
+   "wine_bottle_1": 132
+  },
+  "min_eef_dist": {
+   "wine_bottle_1": 0.088,
+   "wine_rack_1_top_region": 0.174
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "wine_bottle_1": 0.022
+  }
+ }
+}

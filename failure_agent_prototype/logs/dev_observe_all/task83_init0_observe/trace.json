@@ -1,0 +1,159 @@
+{
+ "task_id": 83,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the right compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_right_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'porcelain_mug_1' but the goal targets are ['black_book_1']",
+    "'porcelain_mug_1' displaced 0.224 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the right compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest": "the right compartment of the caddy",
+    "place": "in the right compartment of the caddy",
+    "wrong_obj": "white mug"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 20.3,
+ "events": [
+  {
+   "t": 80,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 80,
+   "kind": "wrong_grasp",
+   "obj": "porcelain_mug_1",
+   "targets": [
+    "black_book_1"
+   ]
+  },
+  {
+   "t": 185,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.488,
+    -0.262,
+    1.064
+   ]
+  },
+  {
+   "t": 192,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 210,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.49,
+    -0.253,
+    1.071
+   ]
+  },
+  {
+   "t": 224,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 226,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.507,
+    -0.253,
+    1.086
+   ]
+  },
+  {
+   "t": 310,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 311,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.682,
+    -0.189,
+    1.231
+   ]
+  },
+  {
+   "t": 344,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  },
+  {
+   "t": 347,
+   "kind": "release",
+   "obj": "porcelain_mug_1",
+   "pos": [
+    -0.621,
+    -0.129,
+    1.202
+   ]
+  },
+  {
+   "t": 352,
+   "kind": "grasp",
+   "obj": "porcelain_mug_1",
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": "porcelain_mug_1",
+  "ever_grasped": {
+   "porcelain_mug_1": 80
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.204,
+   "desk_caddy_1_right_contain_region": 0.187
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "red_coffee_mug_1": 0.0,
+   "porcelain_mug_1": 0.224
+  }
+ }
+}

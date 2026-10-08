@@ -1,0 +1,107 @@
+{
+ "task_id": 42,
+ "init_idx": 2,
+ "mode": "observe",
+ "instruction": "put the frying pan under the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "chefmate_8_frypan_1",
+   "wooden_two_layer_shelf_1_bottom_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'white_bowl_1' but the pending goal targets are ['chefmate_8_frypan_1']",
+    "'white_bowl_1' displaced 0.215 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the frying pan under the cabinet shelf",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "wooden_two_layer_shelf_1_bottom_region",
+    "dest": "the cabinet shelf",
+    "place": "under the cabinet shelf",
+    "wrong_obj": "white bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.3,
+ "events": [
+  {
+   "t": 100,
+   "kind": "grasp",
+   "obj": "white_bowl_1",
+   "is_target": false
+  },
+  {
+   "t": 100,
+   "kind": "wrong_grasp",
+   "obj": "white_bowl_1",
+   "targets": [
+    "chefmate_8_frypan_1"
+   ]
+  },
+  {
+   "t": 220,
+   "kind": "stall",
+   "extent_m": 0.0296,
+   "eef": [
+    -0.086,
+    0.278,
+    0.944
+   ],
+   "held": "white_bowl_1"
+  },
+  {
+   "t": 246,
+   "kind": "release",
+   "obj": "white_bowl_1",
+   "pos": [
+    -0.066,
+    0.299,
+    0.933
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 11.3,
+  "min_place_dist": {
+   "0": 0.299
+  },
+  "held": null,
+  "ever_grasped": {
+   "white_bowl_1": 100
+  },
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.176,
+   "wooden_two_layer_shelf_1_bottom_region": 0.326
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "white_bowl_1": 0.215,
+   "chefmate_8_frypan_1": 0.0
+  }
+ }
+}

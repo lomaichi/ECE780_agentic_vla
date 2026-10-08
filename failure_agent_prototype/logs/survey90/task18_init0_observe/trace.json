@@ -1,0 +1,99 @@
+{
+ "task_id": 18,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the frying pan on the stove",
+ "goal": [
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R2_scene_habit",
+   "trigger": "unplanned_articulation",
+   "t": 400,
+   "evidence": [
+    "joint 'flat_stove_1_button' of 'flat_stove_1' moved 0.0 -> 0.2066; it is not part of the goal"
+   ],
+   "slots": {
+    "instruction": "put the frying pan on the stove",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.3,
+ "events": [
+  {
+   "t": 109,
+   "kind": "unplanned_articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": false,
+   "start": 0.0,
+   "now": 0.2066
+  },
+  {
+   "t": 269,
+   "kind": "no_progress",
+   "since": 109,
+   "eef": [
+    -0.014,
+    -0.105,
+    1.018
+   ],
+   "held": null
+  },
+  {
+   "t": 387,
+   "kind": "stall",
+   "extent_m": 0.0296,
+   "eef": [
+    0.016,
+    -0.133,
+    0.934
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 11.4,
+  "min_place_dist": {
+   "0": 0.466
+  },
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "chefmate_8_frypan_1": 0.125,
+   "flat_stove_1_cook_region": 0.156
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.02,
+   "moka_pot_1": 0.016
+  }
+ }
+}

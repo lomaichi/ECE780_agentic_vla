@@ -1,0 +1,109 @@
+{
+ "task_id": 13,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "put the black bowl at the front on the plate",
+ "goal": [
+  [
+   "on",
+   "akita_black_bowl_1",
+   "plate_1"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "disturbance",
+   "t": 400,
+   "evidence": [
+    "grasped 'akita_black_bowl_2' but the goal targets are ['akita_black_bowl_1']",
+    "'akita_black_bowl_2' displaced 0.207 m from its start"
+   ],
+   "slots": {
+    "instruction": "put the black bowl at the front on the plate",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl at the front",
+    "dest": "the plate",
+    "place": "on the plate",
+    "wrong_obj": "black bowl"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.1,
+ "events": [
+  {
+   "t": 86,
+   "kind": "disturbance",
+   "obj": "akita_black_bowl_2",
+   "how": "push",
+   "dist": 0.08,
+   "is_target": false
+  },
+  {
+   "t": 88,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_2",
+   "is_target": false
+  },
+  {
+   "t": 88,
+   "kind": "wrong_grasp",
+   "obj": "akita_black_bowl_2",
+   "targets": [
+    "akita_black_bowl_1"
+   ]
+  },
+  {
+   "t": 135,
+   "kind": "release",
+   "obj": "akita_black_bowl_2",
+   "pos": [
+    -0.02,
+    0.026,
+    0.917
+   ]
+  },
+  {
+   "t": 270,
+   "kind": "stall",
+   "extent_m": 0.0274,
+   "eef": [
+    -0.025,
+    0.058,
+    0.975
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_2": 88
+  },
+  "min_eef_dist": {
+   "akita_black_bowl_1": 0.154,
+   "plate_1": 0.06
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "akita_black_bowl_1": 0.0,
+   "akita_black_bowl_2": 0.207,
+   "akita_black_bowl_3": 0.0,
+   "plate_1": 0.007
+  }
+ }
+}

@@ -1,0 +1,40 @@
+task 84 init 0 [agent]
+    [t=91] wrong_grasp -> R1_wrong_object: grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=347] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.136 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=709] disturbance -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.132 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    success=False steps=900 diagnoses: wrong_grasp->R1_wrong_object > timeout->R5_target_not_reached > disturbance->R5_target_not_reached
+task 9 init 0 [agent]
+    [t=268] no_progress -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.280 m); now dropped 0.352 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=655] timeout -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.280 m); now dropped 0.345 m away
+        pi0: "pick up the black bowl"
+    [t=900] timeout -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.280 m); now dropped 0.344 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    success=False steps=900 diagnoses: no_progress->R6_destination_missed > timeout->R6_destination_missed > timeout->R6_destination_missed
+task 84 init 1 [agent]
+    [t=90] wrong_grasp -> R1_wrong_object: grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=340] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.138 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=612] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.136 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    success=False steps=900 diagnoses: wrong_grasp->R1_wrong_object > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+task 9 init 1 [agent]
+    [t=212] stall -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.267 m); now dropped 0.414 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=534] stall -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.267 m); now dropped 0.414 m away
+        pi0: "pick up the black bowl"
+    [t=713] stall -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.267 m); now dropped 0.414 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    success=False steps=894 diagnoses: stall->R6_destination_missed > stall->R6_destination_missed > stall->R6_destination_missed
+
+task  init mode     success t      diagnoses
+9     0    agent    False   -      no_progress->R6_destination_missed > timeout->R6_destination_missed > timeout->R6_destination_missed
+9     1    agent    False   -      stall->R6_destination_missed > stall->R6_destination_missed > stall->R6_destination_missed
+84    0    agent    False   -      wrong_grasp->R1_wrong_object > timeout->R5_target_not_reached > disturbance->R5_target_not_reached
+84    1    agent    False   -      wrong_grasp->R1_wrong_object > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+agent: 0/4 succeeded
+logs: logs/dev_v5_agent

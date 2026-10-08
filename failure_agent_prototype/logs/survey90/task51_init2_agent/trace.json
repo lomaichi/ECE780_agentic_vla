@@ -1,0 +1,133 @@
+{
+ "task_id": 51,
+ "init_idx": 2,
+ "mode": "agent",
+ "instruction": "pick up the butter and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "butter_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "butter_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 82,
+   "evidence": [
+    "grasped 'cream_cheese_1' but the pending goal targets are ['butter_1']",
+    "'cream_cheese_1' displaced 0.015 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the butter and put it in the basket",
+    "target_obj": "butter_1",
+    "target": "butter",
+    "target_desc": "butter",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "cream cheese"
+   },
+   "plan": [
+    {
+     "do": "release"
+    },
+    {
+     "do": "retract_home"
+    },
+    {
+     "do": "approach",
+     "obj": "butter_1"
+    },
+    {
+     "do": "pi0",
+     "prompt": "pick up the butter and place it in the basket",
+     "until": {
+      "grasp": "butter_1"
+     },
+     "budget": 150
+    },
+    {
+     "do": "carry_to",
+     "obj": "butter_1",
+     "dest": "basket_1_contain_region"
+    }
+   ],
+   "outcome": "recovered"
+  }
+ ],
+ "success": true,
+ "success_t": 210,
+ "steps": 210,
+ "native_budget_success": true,
+ "wall_s": 8.3,
+ "events": [
+  {
+   "t": 82,
+   "kind": "grasp",
+   "obj": "cream_cheese_1",
+   "is_target": false
+  },
+  {
+   "t": 82,
+   "kind": "wrong_grasp",
+   "obj": "cream_cheese_1",
+   "targets": [
+    "butter_1"
+   ]
+  },
+  {
+   "t": 97,
+   "kind": "release",
+   "obj": "cream_cheese_1",
+   "pos": [
+    0.105,
+    -0.191,
+    0.446
+   ]
+  },
+  {
+   "t": 179,
+   "kind": "grasp",
+   "obj": "butter_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 4.7,
+  "min_place_dist": {
+   "0": 0.235
+  },
+  "held": null,
+  "ever_grasped": {
+   "cream_cheese_1": 82,
+   "butter_1": 179
+  },
+  "min_eef_dist": {
+   "butter_1": 0.018,
+   "basket_1_contain_region": 0.237
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.019,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.003,
+   "milk_1": 0.109,
+   "butter_1": 0.238,
+   "basket_1": 0.0
+  }
+ }
+}

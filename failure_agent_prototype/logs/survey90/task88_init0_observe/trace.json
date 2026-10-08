@@ -1,0 +1,97 @@
+{
+ "task_id": 88,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book on the right and place it on the cabinet shelf",
+ "goal": [
+  [
+   "in",
+   "yellow_book_1",
+   "wooden_two_layer_shelf_1_top_region"
+  ]
+ ],
+ "targets": [
+  "yellow_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R6_destination_missed",
+   "trigger": "no_progress",
+   "t": 400,
+   "evidence": [
+    "'yellow_book_1' was grasped but is not at 'wooden_two_layer_shelf_1_top_region' (closest it got: 0.305 m); now held 0.679 m away"
+   ],
+   "slots": {
+    "instruction": "pick up the book on the right and place it on the cabinet shelf",
+    "target_obj": "yellow_book_1",
+    "target": "book",
+    "target_desc": "book at the back",
+    "dest_obj": "wooden_two_layer_shelf_1_top_region",
+    "dest": "the cabinet shelf",
+    "place": "on the cabinet shelf",
+    "target_held": "yes"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.2,
+ "events": [
+  {
+   "t": 79,
+   "kind": "grasp",
+   "obj": "yellow_book_1",
+   "is_target": true
+  },
+  {
+   "t": 239,
+   "kind": "no_progress",
+   "since": 79,
+   "eef": [
+    -0.283,
+    -0.193,
+    1.151
+   ],
+   "held": "yellow_book_1"
+  },
+  {
+   "t": 383,
+   "kind": "disturbance",
+   "obj": "yellow_book_2",
+   "how": "topple",
+   "tilt_change": 61.6,
+   "is_target": false
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 57.3,
+  "min_place_dist": {
+   "0": 0.305
+  },
+  "held": "yellow_book_1",
+  "ever_grasped": {
+   "yellow_book_1": 79
+  },
+  "min_eef_dist": {
+   "yellow_book_1": 0.101,
+   "wooden_two_layer_shelf_1_top_region": 0.289
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.0,
+   "yellow_book_1": 0.443,
+   "yellow_book_2": 0.036
+  }
+ }
+}

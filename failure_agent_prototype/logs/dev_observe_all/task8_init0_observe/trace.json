@@ -1,0 +1,133 @@
+{
+ "task_id": 8,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "open the top drawer of the cabinet and put the bowl in it",
+ "goal": [
+  [
+   "open",
+   "wooden_cabinet_1_top_region"
+  ],
+  [
+   "in",
+   "akita_black_bowl_1",
+   "wooden_cabinet_1_top_region"
+  ]
+ ],
+ "targets": [
+  "akita_black_bowl_1"
+ ],
+ "goal_joints": [
+  "wooden_cabinet_1_top_level"
+ ],
+ "diagnoses": [
+  {
+   "code": "R3_stopped_short",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "goal ['open', 'wooden_cabinet_1_top_region'] unsatisfied; goal joint moved 0.0017, closest EEF approach 0.119 m"
+   ],
+   "slots": {
+    "instruction": "open the top drawer of the cabinet and put the bowl in it",
+    "verb": "open",
+    "region": "the top drawer of the cabinet",
+    "target_obj": "akita_black_bowl_1",
+    "target": "black bowl",
+    "target_desc": "black bowl",
+    "dest": "the top drawer of the cabinet",
+    "place": "in the top drawer of the cabinet",
+    "artic_joint": "wooden_cabinet_1_top_level"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.9,
+ "events": [
+  {
+   "t": 109,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 127,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.059,
+    -0.094,
+    1.191
+   ]
+  },
+  {
+   "t": 133,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 187,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.063,
+    -0.17,
+    1.092
+   ]
+  },
+  {
+   "t": 200,
+   "kind": "grasp",
+   "obj": "akita_black_bowl_1",
+   "is_target": true
+  },
+  {
+   "t": 254,
+   "kind": "release",
+   "obj": "akita_black_bowl_1",
+   "pos": [
+    0.062,
+    -0.172,
+    1.091
+   ]
+  },
+  {
+   "t": 337,
+   "kind": "stall",
+   "extent_m": 0.0154,
+   "eef": [
+    0.039,
+    -0.195,
+    1.139
+   ],
+   "held": null
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false,
+   false
+  ],
+  "held": null,
+  "ever_grasped": {
+   "akita_black_bowl_1": 109
+  },
+  "min_eef_dist": {
+   "wooden_cabinet_1_top_region": 0.119,
+   "akita_black_bowl_1": 0.065
+  },
+  "goal_joint_progress": {
+   "wooden_cabinet_1_top_level": 0.0017
+  },
+  "obj_disp": {
+   "akita_black_bowl_1": 0.175,
+   "plate_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,94 @@
+{
+ "task_id": 39,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "turn off the stove",
+ "goal": [
+  [
+   "turnoff",
+   "flat_stove_1"
+  ]
+ ],
+ "targets": [],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "S1_stall",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "stall: {'extent_m': 0.0144, 'eef': [-0.399, 0.273, 0.916], 'held': None}",
+    "no root cause matched; using the symptom's generic recovery"
+   ],
+   "slots": {
+    "instruction": "turn off the stove",
+    "verb": "turn off",
+    "region": "the stove"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 23.7,
+ "events": [
+  {
+   "t": 167,
+   "kind": "stall",
+   "extent_m": 0.0144,
+   "eef": [
+    -0.399,
+    0.273,
+    0.916
+   ],
+   "held": null
+  },
+  {
+   "t": 221,
+   "kind": "disturbance",
+   "obj": "moka_pot_1",
+   "how": "topple",
+   "tilt_change": 52.9,
+   "is_target": false
+  },
+  {
+   "t": 222,
+   "kind": "disturbance",
+   "obj": "moka_pot_1",
+   "how": "push",
+   "dist": 0.087,
+   "is_target": false
+  },
+  {
+   "t": 262,
+   "kind": "out_of_view",
+   "eef": [
+    -0.518,
+    0.522,
+    1.208
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": null,
+  "ever_grasped": {},
+  "min_eef_dist": {
+   "flat_stove_1": 0.337
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 0.0
+  },
+  "obj_disp": {
+   "moka_pot_1": 0.106,
+   "moka_pot_2": 0.0
+  }
+ }
+}

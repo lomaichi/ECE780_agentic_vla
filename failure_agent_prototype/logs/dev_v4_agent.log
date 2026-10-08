@@ -1,0 +1,98 @@
+task 52 init 0 [agent]
+    [t=126] disturbance -> R5_target_not_reached: target 'milk_1' never approached (closest EEF approach 0.123 m); goal ['in', 'milk_1', 'basket_1_contain_region']
+        pi0: "pick up the milk and place it in the basket"
+    success=True steps=254 diagnoses: disturbance->R5_target_not_reached
+task 71 init 0 [agent]
+    [t=74] wrong_grasp -> R1_wrong_object: grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']
+        pi0: "pick up the red mug and place it on the plate"
+    [t=215] disturbance -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.127 m); goal ['on', 'red_coffee_mug_1', 'plate_1']
+        pi0: "pick up the red mug and place it on the plate"
+    success=True steps=361 diagnoses: wrong_grasp->R1_wrong_object > disturbance->R5_target_not_reached
+task 52 init 1 [agent]
+    [t=96] out_of_view -> R5_target_not_reached: target 'milk_1' never approached (closest EEF approach 0.136 m); goal ['in', 'milk_1', 'basket_1_contain_region']
+        pi0: "pick up the milk and place it in the basket"
+    success=True steps=269 diagnoses: out_of_view->R5_target_not_reached
+task 84 init 0 [agent]
+    [t=119] wrong_grasp -> R1_wrong_object: grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=339] stall -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.135 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=900] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.125 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    success=False steps=900 diagnoses: wrong_grasp->R1_wrong_object > stall->R5_target_not_reached > timeout->R5_target_not_reached
+task 30 init 0 [agent]
+    [t=105] stall -> R5_target_not_reached: target 'akita_black_bowl_1' never approached (closest EEF approach 0.191 m); goal ['on', 'akita_black_bowl_1', 'plate_1']
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=302] unplanned_articulation -> R2_scene_habit: joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.1547 -> -0.1338; it is not part of the goal
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=531] timeout -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.205 m); now dropped 0.202 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    success=False steps=759 diagnoses: stall->R5_target_not_reached > unplanned_articulation->R2_scene_habit > timeout->R6_destination_missed
+task 9 init 0 [agent]
+    [t=256] no_progress -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.282 m); now dropped 0.337 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=813] timeout -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.282 m); now dropped 0.341 m away
+        pi0: "pick up the black bowl"
+    success=False steps=900 diagnoses: no_progress->R6_destination_missed > timeout->R6_destination_missed
+task 80 init 0 [agent]
+    [t=69] disturbance -> R5_target_not_reached: target 'black_book_1' never approached (closest EEF approach 0.160 m); goal ['in', 'black_book_1', 'desk_caddy_1_right_contain_region']
+        pi0: "pick up the book and place it in the right compartment of the caddy"
+    [t=277] timeout -> R5_target_not_reached: target 'black_book_1' approached but never grasped (closest EEF approach 0.034 m); goal ['in', 'black_book_1', 'desk_caddy_1_right_contain_region']
+        pi0: "pick up the book"
+    [t=497] timeout -> R5_target_not_reached: target 'black_book_1' approached but never grasped (closest EEF approach 0.032 m); goal ['in', 'black_book_1', 'desk_caddy_1_right_contain_region']
+        pi0: "pick up the book and place it in the right compartment of the caddy"
+    success=False steps=717 diagnoses: disturbance->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+task 71 init 1 [agent]
+    [t=76] wrong_grasp -> R1_wrong_object: grasped 'porcelain_mug_1' but the pending goal targets are ['red_coffee_mug_1']
+        pi0: "pick up the red mug and place it on the plate"
+    [t=248] stall -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.151 m); goal ['on', 'red_coffee_mug_1', 'plate_1']
+        pi0: "pick up the red mug and place it on the plate"
+    [t=685] timeout -> R6_destination_missed: 'red_coffee_mug_1' was grasped but is not at 'plate_1' (closest it got: 0.334 m); now dropped 0.312 m away
+        pi0: "pick up the red mug and place it on the plate"
+    success=False steps=894 diagnoses: wrong_grasp->R1_wrong_object > stall->R5_target_not_reached > timeout->R6_destination_missed
+task 30 init 1 [agent]
+    [t=102] stall -> R5_target_not_reached: target 'akita_black_bowl_1' never approached (closest EEF approach 0.190 m); goal ['on', 'akita_black_bowl_1', 'plate_1']
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=235] unplanned_articulation -> R2_scene_habit: joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.16 -> -0.1396; it is not part of the goal
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=358] unplanned_articulation -> R2_scene_habit: joint 'white_cabinet_1_top_level' of 'white_cabinet_1' moved -0.1335 -> -0.1122; it is not part of the goal
+        pi0: "pick up the black bowl and place it on the plate"
+    success=True steps=585 diagnoses: stall->R5_target_not_reached > unplanned_articulation->R2_scene_habit > unplanned_articulation->R2_scene_habit
+task 80 init 1 [agent]
+    [t=218] stall -> R6_destination_missed: 'black_book_1' was grasped but is not at 'desk_caddy_1_right_contain_region' (closest it got: 0.197 m); now held 0.224 m away
+        pi0: "pick up the book and place it in the right compartment of the caddy"
+    [t=437] timeout -> R4_placement: 'black_book_1' was grasped; 0.108 m from 'desk_caddy_1_right_contain_region' (xy) but ['in', 'black_book_1', 'desk_caddy_1_right_contain_region'] is false
+        pi0: "pick up the book and place it in the right compartment of the caddy"
+    [t=579] timeout -> R6_destination_missed: 'black_book_1' was grasped but is not at 'desk_caddy_1_right_contain_region' (closest it got: 0.023 m); now dropped 0.387 m away
+        pi0: "pick up the book"
+    success=False steps=778 diagnoses: stall->R6_destination_missed > timeout->R4_placement > timeout->R6_destination_missed
+task 84 init 1 [agent]
+    [t=160] no_progress -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.249 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    [t=400] timeout -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.138 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug"
+    [t=537] disturbance -> R5_target_not_reached: target 'red_coffee_mug_1' never approached (closest EEF approach 0.132 m); goal ['on', 'red_coffee_mug_1', 'study_table_desk_caddy_right_region']
+        pi0: "pick up the red mug and place it to the right of the caddy"
+    success=False steps=774 diagnoses: no_progress->R5_target_not_reached > timeout->R5_target_not_reached > disturbance->R5_target_not_reached
+task 9 init 1 [agent]
+    [t=332] no_progress -> R6_destination_missed: 'akita_black_bowl_1' was grasped but is not at 'plate_1' (closest it got: 0.267 m); now dropped 0.312 m away
+        pi0: "pick up the black bowl and place it on the plate"
+    [t=900] timeout -> R4_placement: 'akita_black_bowl_1' was grasped; 0.056 m from 'plate_1' (xy) but ['on', 'akita_black_bowl_1', 'plate_1'] is false
+        pi0: "pick up the black bowl and place it on the plate"
+    success=False steps=900 diagnoses: no_progress->R6_destination_missed > timeout->R4_placement
+
+task  init mode     success t      diagnoses
+9     0    agent    False   -      no_progress->R6_destination_missed > timeout->R6_destination_missed
+9     1    agent    False   -      no_progress->R6_destination_missed > timeout->R4_placement
+30    0    agent    False   -      stall->R5_target_not_reached > unplanned_articulation->R2_scene_habit > timeout->R6_destination_missed
+30    1    agent    True    585    stall->R5_target_not_reached > unplanned_articulation->R2_scene_habit > unplanned_articulation->R2_scene_habit
+52    0    agent    True    254    disturbance->R5_target_not_reached
+52    1    agent    True    269    out_of_view->R5_target_not_reached
+71    0    agent    True    361    wrong_grasp->R1_wrong_object > disturbance->R5_target_not_reached
+71    1    agent    False   -      wrong_grasp->R1_wrong_object > stall->R5_target_not_reached > timeout->R6_destination_missed
+80    0    agent    False   -      disturbance->R5_target_not_reached > timeout->R5_target_not_reached > timeout->R5_target_not_reached
+80    1    agent    False   -      stall->R6_destination_missed > timeout->R4_placement > timeout->R6_destination_missed
+84    0    agent    False   -      wrong_grasp->R1_wrong_object > stall->R5_target_not_reached > timeout->R5_target_not_reached
+84    1    agent    False   -      no_progress->R5_target_not_reached > timeout->R5_target_not_reached > disturbance->R5_target_not_reached
+agent: 4/12 succeeded
+logs: logs/dev_v4_agent

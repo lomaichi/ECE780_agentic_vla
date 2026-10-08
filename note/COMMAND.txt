@@ -1,0 +1,84 @@
+// change acccess control
+chmod -R 777 /path/to/directory
+
+--------------------- INSTALLATION NOTE -----------------
+
+// warning during robosuite installation verification
+// might need to install additional robosuite models
+root@airmomo:/home/DockerShared/ECE780# python3 -c "import robosuite; print('robosuite version:', robosuite.__version__)"
+[robosuite WARNING] Could not import robosuite_models. Some robots may not be available. If you want to use these robots, please install robosuite_models from source (https://github.com/ARISE-Initiative/robosuite_models) or through pip install. (__init__.py:30)
+[robosuite WARNING] Could not load the mink-based whole-body IK. Make sure you install related import properly, otherwise you will not be able to use the default IK controller setting for GR1 robot. (__init__.py:40)
+robosuite version: 1.5.2
+
+// naive installation downloads incompatible mujoco and robosuite versions (i.e. mujoco too new, robosuite require mujoco > 3.3.0, <3.10)
+robosuite 1.5.2
+// MuJoCo   3.14.0   ← incompatible, got through native download
+Mujoco 3.9.0
+
+
+----------------- Mujuco Note --------------------
+///mjModel
+- MuJoCo's mjModel, contains the model description, i.e., all quantities which do not change over time. The complete description of mjModel can be found at the end of the header file mjmodel.h. Note that the header files contain short, useful inline comments, describing each field.
+
+model = mujoco.MjModel.from_xml_string(xml)
+//model is defined by an xml file. the 0th model is always the world, other models start from id=1
+
+///mjData
+- mjData contains the state and quantities that depend on it. The state is made up of time, generalized positions and generalized velocities. These are respectively data.time, data.qpos and data.qvel. In order to make a new mjData, all we need is our mjModel
+- Derived quantities in `mjData` need to be explicitly propagated (see [below](#scrollTo=QY1gpms1HXeN)). In our case, the minimal required function is [`mj_kinematics`](https://mujoco.readthedocs.io/en/latest/APIreference.html#mj-kinematics), which computes global Cartesian poses for all objects (excluding cameras and lights).
+
+mujoco.mj_kinematics(model, data)
+print('raw access:\n', data.geom_xpos)
+# MjData also supports named access:
+print('\nnamed access:\n', data.geom('green_sphere').xpos)
+
+// Rendering
+model = mujoco.MjModel.from_xml_string(xml)
+data = mujoco.MjData(model)
+
+with mujoco.Renderer(model) as renderer:
+  mujoco.mj_forward(model, data)
+  renderer.update_scene(data)
+
+  media.show_image(renderer.render())
+  
+ // motion simulation requires joint definition, i.e. defining DOF
+ // A joint has no degree of freedom unless specified
+	 xml = """
+	<mujoco>
+	  <worldbody>
+	    <light name="top" pos="0 0 1"/>
+	    <body name="box_and_sphere" euler="0 0 -30">
+	      <joint name="swing" type="hinge" axis="1 -1 0" pos="-.2 -.2 -.2"/>
+	      <geom name="red_box" type="box" size=".2 .2 .2" rgba="1 0 0 1"/>
+	      <geom name="green_sphere" pos=".2 .2 .2" size=".1" rgba="0 1 0 1"/>
+	    </body>
+	  </worldbody>
+	</mujoco>
+	"""
+	model = mujoco.MjModel.from_xml_string(xml)
+	data = mujoco.MjData(model)
+
+	# enable joint visualization option:
+	scene_option = mujoco.MjvOption()
+	scene_option.flags[mujoco.mjtVisFlag.mjVIS_JOINT] = True
+
+	duration = 3.8  # (seconds)
+	framerate = 60  # (Hz)
+
+	# Simulate and display video.
+	frames = []
+	mujoco.mj_resetData(model, data)
+	with mujoco.Renderer(model) as renderer:
+	  while data.time < duration:
+	    mujoco.mj_step(model, data)
+	    if len(frames) < data.time * framerate:
+	      renderer.update_scene(data, scene_option=scene_option)
+	      pixels = renderer.render()
+	      frames.append(pixels)
+
+	media.show_video(frames, fps=framerate)
+
+/// Defining velocity and position
+// Velocity: use the generalized coordinate, i.e. one velocity for one DOF
+// Position: x,y,z, quarternion --> len=7 in total

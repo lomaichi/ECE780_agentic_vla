@@ -1,0 +1,122 @@
+{
+ "task_id": 52,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "pick up the milk and put it in the basket",
+ "goal": [
+  [
+   "in",
+   "milk_1",
+   "basket_1_contain_region"
+  ]
+ ],
+ "targets": [
+  "milk_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "stall",
+   "t": 400,
+   "evidence": [
+    "grasped 'orange_juice_1' but the pending goal targets are ['milk_1']",
+    "'orange_juice_1' displaced 0.529 m from its start"
+   ],
+   "slots": {
+    "instruction": "pick up the milk and put it in the basket",
+    "target_obj": "milk_1",
+    "target": "milk",
+    "target_desc": "milk",
+    "dest_obj": "basket_1_contain_region",
+    "dest": "the basket",
+    "place": "in the basket",
+    "wrong_obj": "orange juice"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.3,
+ "events": [
+  {
+   "t": 115,
+   "kind": "stall",
+   "extent_m": 0.0268,
+   "eef": [
+    0.051,
+    -0.253,
+    0.552
+   ],
+   "held": null
+  },
+  {
+   "t": 158,
+   "kind": "grasp",
+   "obj": "orange_juice_1",
+   "is_target": false
+  },
+  {
+   "t": 158,
+   "kind": "wrong_grasp",
+   "obj": "orange_juice_1",
+   "targets": [
+    "milk_1"
+   ]
+  },
+  {
+   "t": 229,
+   "kind": "out_of_view",
+   "eef": [
+    0.053,
+    0.252,
+    0.668
+   ]
+  },
+  {
+   "t": 272,
+   "kind": "release",
+   "obj": "orange_juice_1",
+   "pos": [
+    -0.015,
+    0.27,
+    0.548
+   ]
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "goal_start": [
+   false
+  ],
+  "max_tilt_deg": 30.3,
+  "min_place_dist": {
+   "0": 0.392
+  },
+  "held": null,
+  "ever_grasped": {
+   "orange_juice_1": 158
+  },
+  "min_eef_dist": {
+   "milk_1": 0.051,
+   "basket_1_contain_region": 0.069
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "alphabet_soup_1": 0.0,
+   "cream_cheese_1": 0.004,
+   "tomato_sauce_1": 0.0,
+   "ketchup_1": 0.0,
+   "orange_juice_1": 0.529,
+   "milk_1": 0.017,
+   "butter_1": 0.0,
+   "basket_1": 0.0
+  }
+ }
+}

@@ -1,0 +1,119 @@
+=====================================================================
+ Running pi0 inference on LIBERO (container: libero_pi0:v0)
+=====================================================================
+
+## Environment check
+Everything needed is already installed in the container. openpi (Physical
+Intelligence's pi0 repo) lives at /opt/openpi. JAX in the server environment
+has been confirmed to see the RTX 5090.
+
+---------------------------------------------------------------------
+## Default checkpoint and checkpoint options
+IMPORTANT: --env LIBERO is pi0.5, NOT pi0\
+
+The command 
+    uv run scripts/serve_policy.py --env LIBERO
+
+loads pi0.5 (config "pi05_libero"), not pi0. To get pi0 you must name the
+config and checkpoint explicitly (see Step 1).
+
+Published LIBERO checkpoints (gs://openpi-assets/checkpoints/...):
+    pi0_libero        ~12.0 GB   pi0
+    pi0_fast_libero   ~10.9 GB   pi0-FAST
+    pi05_libero       ~12.4 GB   pi0.5 (what --env LIBERO serves)
+
+=====================================================================
+ How it works
+=====================================================================
+Inference runs as two processes that talk over a websocket on port 8000:
+
+They are separate because LIBERO needs an old robosuite and Python 3.8,
+which can't share an environment with openpi's JAX stack.
+
+##Policy server
+    Python env : /opt/openpi/.venv  (Python 3.11, JAX)
+    Job        : loads pi0 on the GPU and returns action chunks
+
+##LIBERO client
+    Python env : /opt/openpi/examples/libero/.venv  (Python 3.8, robosuite 1.4.1)
+    Job        : runs the MuJoCo sim, sends images, robot state and the
+                 task prompt to the server, executes the returned actions
+                 
+---------------------------------------------------------------------
+ Step 0: start two containers
+---------------------------------------------------------------------
+ Step 1: start the pi0 policy server (shell 1)
+---------------------------------------------------------------------
+    cd /opt/openpi
+    uv run scripts/serve_policy.py policy:checkpoint \
+        --policy.config=pi0_libero \
+        --policy.dir=gs://openpi-assets/checkpoints/pi0_libero
+
+Notes:
+  - First run downloads ~12 GB into
+        OPENPI_DATA_HOME=/home/DockerShared/.cache/openpi
+    That folder is on the mounted share, so it survives --rm.
+  - Wait until the log shows the server listening on 0.0.0.0:8000.
+  - Other checkpoints:
+        pi0-FAST : use pi0_fast_libero for both --policy.config and the
+                   checkpoint folder name in --policy.dir
+        pi0.5    : uv run scripts/serve_policy.py --env LIBERO
+
+---------------------------------------------------------------------
+ Step 2: run the LIBERO client (shell 2)
+---------------------------------------------------------------------
+ cd /opt/openpi
+    source examples/libero/.venv/bin/activate
+    python examples/libero/main.py \
+        --args.task-suite-name libero_90 \
+        --args.num-trials-per-task 1 \
+        --args.video-out-path /home/DockerShared/ECE780/Documentation\
+        --args.num-tasks 20
+
+Notes:
+  - Suites: libero_spatial, libero_object, libero_goal, libero_10, libero_90 ******(what are these)
+  - Run length: default is 50 trials for each of the 10 tasks (500 episodes).
+    --args.num-trials-per-task 1 gives a quick test; leave it at 50 to
+    reproduce benchmark numbers.
+  - Videos: Each episode is saved as an mp4 marked success or failure, and the
+    log prints the success rate.
+  - Rendering is headless (MUJOCO_GL=egl is already set).
+  - The client asks the model for new actions every 5 steps
+    (--args.replan-steps, default 5).
+  - Other client flags: --args.host, --args.port (default 0.0.0.0:8000),
+    --args.seed (default 7).
+
+
+---------------------------------------------------------------------
+ Writing your own inference loop
+---------------------------------------------------------------------
+examples/libero/main.py is the reference. To adapt libero_demo.py, replace
+the random actions with calls to the server (run inside the LIBERO client
+venv, with the server from Step 1 running):
+
+    from openpi_client import image_tools, websocket_client_policy
+    client = websocket_client_policy.WebsocketClientPolicy("0.0.0.0", 8000)
+
+    img   = image_tools.convert_to_uint8(image_tools.resize_with_pad(
+                np.ascontiguousarray(obs["agentview_image"][::-1, ::-1]), 224, 224))
+    wrist = image_tools.convert_to_uint8(image_tools.resize_with_pad(
+                np.ascontiguousarray(obs["robot0_eye_in_hand_image"][::-1, ::-1]), 224, 224))
+    state = np.concatenate([obs["robot0_eef_pos"],
+                            _quat2axisangle(obs["robot0_eef_quat"]),   # copy from main.py
+                            obs["robot0_gripper_qpos"]])               # 8-D state
+
+    chunk = client.infer({"observation/image": img,
+                          "observation/wrist_image": wrist,
+                          "observation/state": state,
+                          "prompt": task.language})["actions"]
+    for a in chunk[:5]:
+        obs, reward, done, info = env.step(a.tolist())   # 7-D: delta EEF + gripper
+
+pi0 only performs well if its inputs match how it was trained:
+  - Rotate images 180 degrees ([::-1, ::-1]).
+  - Resize with padding to 224x224.
+  - Build the 8-D state exactly as above
+    (eef_pos 3 + axis-angle 3 + gripper_qpos 2).
+  - Use the task's language string as the prompt.
+  - After reset, wait about 10 no-op steps so the objects settle
+    (main.py sends [0, 0, 0, 0, 0, 0, -1]).

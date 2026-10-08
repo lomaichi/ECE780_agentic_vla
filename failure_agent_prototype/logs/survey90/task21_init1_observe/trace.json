@@ -1,0 +1,131 @@
+{
+ "task_id": 21,
+ "init_idx": 1,
+ "mode": "observe",
+ "instruction": "turn on the stove and put the frying pan on it",
+ "goal": [
+  [
+   "turnon",
+   "flat_stove_1"
+  ],
+  [
+   "on",
+   "chefmate_8_frypan_1",
+   "flat_stove_1_cook_region"
+  ]
+ ],
+ "targets": [
+  "chefmate_8_frypan_1"
+ ],
+ "goal_joints": [
+  "flat_stove_1_button"
+ ],
+ "diagnoses": [
+  {
+   "code": "R1_wrong_object",
+   "trigger": "wrong_grasp",
+   "t": 400,
+   "evidence": [
+    "grasped 'moka_pot_1' but the pending goal targets are ['chefmate_8_frypan_1']",
+    "'moka_pot_1' displaced 0.365 m from its start"
+   ],
+   "slots": {
+    "instruction": "turn on the stove and put the frying pan on it",
+    "target_obj": "chefmate_8_frypan_1",
+    "target": "frying pan",
+    "target_desc": "frying pan",
+    "dest_obj": "flat_stove_1_cook_region",
+    "dest": "the stove",
+    "place": "on the stove",
+    "wrong_obj": "moka pot"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 24.4,
+ "events": [
+  {
+   "t": 100,
+   "kind": "articulation",
+   "joint": "flat_stove_1_button",
+   "owner": "flat_stove_1",
+   "planned": true,
+   "start": 0.0,
+   "now": 0.2184
+  },
+  {
+   "t": 109,
+   "kind": "predicate",
+   "index": 0,
+   "predicate": [
+    "turnon",
+    "flat_stove_1"
+   ],
+   "value": true
+  },
+  {
+   "t": 235,
+   "kind": "grasp",
+   "obj": "moka_pot_1",
+   "is_target": false
+  },
+  {
+   "t": 235,
+   "kind": "wrong_grasp",
+   "obj": "moka_pot_1",
+   "targets": [
+    "chefmate_8_frypan_1"
+   ]
+  },
+  {
+   "t": 329,
+   "kind": "release",
+   "obj": "moka_pot_1",
+   "pos": [
+    -0.039,
+    0.203,
+    1.002
+   ]
+  },
+  {
+   "t": 371,
+   "kind": "wrist_windup",
+   "angle_deg": 137.6
+  }
+ ],
+ "final": {
+  "goal_status": [
+   true,
+   false
+  ],
+  "goal_start": [
+   false,
+   false
+  ],
+  "max_tilt_deg": 177.9,
+  "min_place_dist": {
+   "1": 0.448
+  },
+  "held": null,
+  "ever_grasped": {
+   "moka_pot_1": 235
+  },
+  "min_eef_dist": {
+   "flat_stove_1": 0.047,
+   "chefmate_8_frypan_1": 0.189,
+   "flat_stove_1_cook_region": 0.149
+  },
+  "goal_joint_progress": {
+   "flat_stove_1_button": 1.1783
+  },
+  "obj_disp": {
+   "chefmate_8_frypan_1": 0.024,
+   "moka_pot_1": 0.365
+  }
+ }
+}

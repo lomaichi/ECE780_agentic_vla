@@ -1,0 +1,116 @@
+{
+ "task_id": 78,
+ "init_idx": 0,
+ "mode": "observe",
+ "instruction": "pick up the book and place it in the front compartment of the caddy",
+ "goal": [
+  [
+   "in",
+   "black_book_1",
+   "desk_caddy_1_front_contain_region"
+  ]
+ ],
+ "targets": [
+  "black_book_1"
+ ],
+ "goal_joints": [],
+ "diagnoses": [
+  {
+   "code": "R4_placement",
+   "trigger": "timeout",
+   "t": 400,
+   "evidence": [
+    "'black_book_1' was grasped; 0.093 m from 'desk_caddy_1_front_contain_region' (xy) but ['in', 'black_book_1', 'desk_caddy_1_front_contain_region'] is false"
+   ],
+   "slots": {
+    "instruction": "pick up the book and place it in the front compartment of the caddy",
+    "target_obj": "black_book_1",
+    "target": "book",
+    "target_desc": "book",
+    "dest": "the front compartment of the caddy",
+    "place": "in the front compartment of the caddy"
+   },
+   "plan": null,
+   "outcome": "posthoc"
+  }
+ ],
+ "success": false,
+ "success_t": null,
+ "steps": 400,
+ "native_budget_success": false,
+ "wall_s": 19.3,
+ "events": [
+  {
+   "t": 96,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 152,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.393,
+    -0.223,
+    1.014
+   ]
+  },
+  {
+   "t": 157,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 202,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.397,
+    -0.227,
+    1.016
+   ]
+  },
+  {
+   "t": 261,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  },
+  {
+   "t": 351,
+   "kind": "release",
+   "obj": "black_book_1",
+   "pos": [
+    -0.402,
+    -0.222,
+    1.027
+   ]
+  },
+  {
+   "t": 356,
+   "kind": "grasp",
+   "obj": "black_book_1",
+   "is_target": true
+  }
+ ],
+ "final": {
+  "goal_status": [
+   false
+  ],
+  "held": "black_book_1",
+  "ever_grasped": {
+   "black_book_1": 96
+  },
+  "min_eef_dist": {
+   "black_book_1": 0.114,
+   "desk_caddy_1_front_contain_region": 0.117
+  },
+  "goal_joint_progress": {},
+  "obj_disp": {
+   "black_book_1": 0.249,
+   "red_coffee_mug_1": 0.0
+  }
+ }
+}
