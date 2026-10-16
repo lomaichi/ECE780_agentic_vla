@@ -120,6 +120,40 @@ Modes:
   recover, up to `agent.max_recoveries` (3) times, with a hard cap of
   `env.max_total_steps` (900).
 
+## What the diagnosis sees
+
+LIBERO has no trace API. The agent reads the simulator directly at every env
+step and builds its own trace. The diagnosis is rule-based (no LLM) and
+never looks at pixels.
+
+1. Raw signals (`scene.py`):
+   - goal predicate truth values (BDDL `goal_state` via `env._eval_predicate`)
+   - targets and destinations (the arguments of `in`/`on` predicates)
+   - object positions and tilt (`object_states_dict[...].get_geom_state()`)
+   - grasps (`env._check_grasp`, gripper-pad contacts)
+   - articulated joint positions (drawers, knobs, doors), with their
+     open/close ranges and handle positions
+   - EEF position, orientation and gripper width (`obs`), and the EEF
+     projected into the agentview camera
+2. Events and triggers (`monitor.py`):
+   - events: `grasp` (target or not), `release`, `predicate` flips,
+     `articulation`
+   - triggers: the online triggers in the taxonomy table
+   - running summary (`snapshot()`): `goal_status`, `held`,
+     `ever_grasped`, closest EEF approach to each goal argument, closest
+     object-to-destination xy distance, goal-joint progress, object
+     displacement, max wrist tilt
+
+   `DiagnosisAgent` applies R1-R7 to the events of the current phase plus
+   this summary.
+3. Saved per episode: `trace.json`, the MuJoCo state at each diagnosis and
+   the video (see Outputs).
+
+Not included: camera images (the video is for humans only) and pi0's
+actions or internals. Every signal above is privileged sim state. On
+hardware, a VLM or perception stack would have to estimate grasps, poses
+and predicates.
+
 ## Outputs (`logs/<run>/task<id>_init<k>_<mode>/`)
 
 - `trace.json`: goal, targets, every event (grasp, release, predicate,
