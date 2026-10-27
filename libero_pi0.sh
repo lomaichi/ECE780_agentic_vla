@@ -2,18 +2,43 @@
 # Podman (rootless) launcher for the libero_pi0:v0 image (pi0 + LIBERO).
 # Based on mujoco_robosuite.sh: same X11 display, camera, and GPU access.
 #
+# Usage: ./libero_pi0.sh [container-name]   (default: robomomo)
+# First run starts the container; running it again while the container is up
+# opens another shell in it instead.
+#
 # Inside the container:
 #   shell 1 (policy server):
 #     cd /opt/openpi && uv run scripts/serve_policy.py --env LIBERO
-#   shell 2 (open with: podman exec -it libero_pi0 bash):
+#   shell 2 (open by running this script again):
 #     cd /opt/openpi && source examples/libero/.venv/bin/activate
 #     python examples/libero/main.py --args.task-suite-name libero_spatial
 #
 # Rendering defaults to headless EGL (MUJOCO_GL=egl). For an on-screen
 # MuJoCo viewer window, run with MUJOCO_GL=glx instead.
 
+CONTAINER="${1:-robomomo}"
+
 # Allow the container (running as your uid) to open windows on your X display
 xhost +SI:localuser:"$USER" >/dev/null
+
+# Shell setup shared by the first and any additional shells
+INIT_CMD="
+	export XDG_RUNTIME_DIR=/tmp/runtime-root
+	mkdir -p \$XDG_RUNTIME_DIR
+	chmod 700 \$XDG_RUNTIME_DIR
+
+	cd /home/DockerShared/ECE780
+
+	exec bash
+"
+
+# Container already running: just open a new shell in it
+if [ "$(podman inspect -f '{{.State.Running}}' "$CONTAINER" 2>/dev/null)" = "true" ]; then
+	exec podman exec -it \
+		--env=DISPLAY \
+		"$CONTAINER" \
+		bash -c "$INIT_CMD"
+fi
 
 CAM_DEVICES=()
 for dev in /dev/video* /dev/media*; do
@@ -40,14 +65,6 @@ podman run -it \
 	-v terminator-config:/etc/xdg/terminator \
 	-v claude-config:/root/.claude-config \
 	-v "$HOME/DockerShared:/home/DockerShared" \
-	--name=robomomo \
+	--name="$CONTAINER" \
 	libero_pi0:v0 \
-	bash -c "
-		export XDG_RUNTIME_DIR=/tmp/runtime-root
-		mkdir -p \$XDG_RUNTIME_DIR
-		chmod 700 \$XDG_RUNTIME_DIR
-
-		cd /home/DockerShared/ECE780
-
-		exec bash
-    "
+	bash -c "$INIT_CMD"
