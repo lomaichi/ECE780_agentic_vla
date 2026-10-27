@@ -2,28 +2,28 @@
 
 ## Project premise
 
-Preliminary research in **agentic robot control**, using **pi0** (and potentially **pi0.5**) as benchmarks and the base VLA models. 
+Preliminary research in **agentic robot control**, using **pi0** as benchmarks and the base VLA models. 
 
-**Pi0** uses a 3B VLM backbone plus a flow-matching action expert for action-chunk generation. While pi0 was originally developed as a stand-alone action policy, this project adopts it for action clients, utilizing its ability to perform atomic short-horizon tasks, while delegating the long-horizon reasoning or failure analysis to other VLM agents. 
+**Pi0** uses a 3B VLM backbone plus a flow-matching action expert for action-chunk generation. Pi0 struggles with generalizability, as it has very low zero-shot success when tested against LIBERO-90. Note that Pi0 is finetuned on LIBERO-spatial and LIBERO-10, but not on LIBERO-90. To improve zero-shot success in a data-efficient and explanable manner, we propose combining VLM agent and RL. The goal is: 
+- To avoid data-intensive fine-tuning
+- To explicitly accumulate reusable failure recovery strategy
 
-**Pi0.5** will be used for comparison, as it implements an opposite philosophy -- integrating the VLM high-level reasoning and low-level VLA action expert in one utilized network, instead of decentralizing them as we propose.
+## System architecture
 
-## System architecture (2 modules, 5 parts, closed loop)
+**Training: Failure Recovery Skill Library**
+1. **Failure Survey**: An VLM agent surveys the failed Pi0 rollouts on LIBERO-spatial, LIBERO-10, and a random 50% of LIBERO-90. During the survey, the agent:
+- Common failure modes: high-level and low-level. High-level modes refer to those caused by reasoning error (e.g. identified the wrong object), low-level control modes refer to those related to fine motor control or fine spatial perception (e.g. gripper misaligning with the grippable area)
+- For high-level failure mode: Agent propose solutions
+- For low-level failure mode: Agent initiate an RL for that corresponding subtask (e.g. if gripper jitters and fail to pick up a bowl due to mislignment is a low-level failure mode, initiate RL for the pickup() task). 
+2. **RL for low-level failure recovery**: The RL method will following SimpleVLA-RL (https://github.com/PRIME-RL/SimpleVLA-RL), LIBERO will provide binary pass/fail during the online RL for the corresponding subtask. Tentatively an agent will be called to dispatch the most similar LIBERO-spatial or LIBERO-10 subtask success to guide the RL
 
-**Module 1 : Closed-Loop Execution** 
-1. **Coordinator agent**: a stronger VLM that plans subtasks and assigns individual short-horizon tasks to the action clients, drawing from the patched motion primitive
-2. **Action client**: performs pi0 inference to execute the subtasks.
-3. **Diagnosis agent**: analyzes why a task failed and patches common failure modes into the library.
+**Testing : Closed-Loop Execution** 
+This uses the remaining 50% LIBERO-90 tasks for zero-shot success evaluation.
+3. **Coordinator agent**: a VLM that plans subtasks and assigns individual short-horizon tasks to the action clients. For example, with the task instruction "pick_up_the_book_on_the_right_and_place_it_on_the_cabinet_shelf", it breaks it down into atomic tasks "navigate_to(red_block), pick_up(red_block), navigate_to(blue_bowl), place(cabinet shelf, on)"
+4. **Action client**: performs pi0 inference to execute the subtasks.
+5. **Failure Recovery Agent (FR Agent)**: Monitor the task by looking at the screenshot at 1 fps as well as proprioception (i.e. robot pose), and detects failure, while deciding whether failure is high-level or low-level:
+- High-level failure: FR Agent use self-proposed high-level recovery method in failure recovery skill library
+- Low-level failure: FR Agent use low-level RL in failure recovery library
 
-**Module 2: Skill Library**
-4. **Motion Primitive Library**: contains motion primitives distilled from successful short-horizon task runs
-5. **Failure Recovery Library**: contains a failure-recovery method for each common failure mode.
-
-## Tentative directions
-
-- Use RL (referencing **SimpleVLA-RL**) to develop failure-recovery strategies.
-- Search successful episodes of native, standalone pi0 for motion primitives / mini-tasks that pi0 achieves reliably and repeatably, forming a **motion-primitives library** the coordinator agent can use.
-
-## Paths
-
-- Host path: `/home/e36luo/DockerShared/ECE780`, mounted in the container as `/home/DockerShared/ECE780`.
+**Post Training: Finetune Pi0 with Successful Trajectory**
+6. Use the test-time success trajectory to fine tune pi0 after each rollout, so that finetuned pi0 can be used for next test time
