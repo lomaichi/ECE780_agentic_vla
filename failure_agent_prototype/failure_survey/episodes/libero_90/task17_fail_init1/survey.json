@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task17_fail_init1",
+  "task_language": "stack the middle black bowl on the back black bowl",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(middle_black_bowl)",
+      "outcome": "success: grasped ~73-87, lifted by 100"
+    },
+    {
+      "name": "stack(middle_black_bowl, back_black_bowl)",
+      "outcome": "failed: bowl carried past the back bowl to the cabinet top (127) and held there tilted until 409"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct middle bowl, carries it over and past the back bowl to the top/front edge of the cabinet on the image right, and holds it there tilted against the cabinet for ~280 steps.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination",
+      "mode_definition": "pi0 grasps the correct object but transports it to a location other than the instructed destination and holds it there.",
+      "subtask": "stack(middle_black_bowl, back_black_bowl)",
+      "onset_step": 127,
+      "onset_window": [
+        113,
+        127
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> VERIFY(bowl still in gripper) -> RETREAT(up 5 cm, 10 cm away from the cabinet toward the table centre) -> REPROMPT 'pick up the middle black bowl and place it on the back black bowl' -> WATCH 3 s that the EE moves toward the back bowl -> VERIFY(bowl on back bowl); retry once, then ESCALATE",
+      "prevention": "While an object is held, WATCH that the EE moves toward the destination ROI; HALT if it moves away from the destination for 2 frames.",
+      "observation": "Steps 60-87: gripper descends on the image-left (middle) bowl and lifts it. 100: bowl lifted near the back bowl. 113: moving to the right past the back bowl. 127-140: bowl at the cabinet top edge on the image right. 147-409: bowl held tilted against the cabinet front/top near the handles; the back bowl stays in place on the table.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_destination.png"
+    }
+  ],
+  "notes": "The cabinet is not a destination in this task. It may be pi0 drawn to the cabinet as a habitual target in KITCHEN_SCENE2 (compare the task11 drawer episodes)."
+}

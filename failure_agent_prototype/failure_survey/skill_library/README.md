@@ -1,0 +1,146 @@
+# Failure recovery skill library (v0.2, from the full survey)
+
+`library.json` is the machine-readable library. The FR agent loads it at test time. This file is the human-readable version. `build_library.py` generates it: the entry logic is written by hand there, and `instances` / RL reset states come from `survey_results.json`.
+
+v0.2 replaces the PoC library (`Documentation/failure_survey_test/skill_library`, v0.1). **HL-1, HL-2 and LL-1 keep their IDs and meaning**; HL-3…HL-8 and LL-2…LL-8 are new.
+
+## How the FR agent uses it
+These steps are unchanged from v0.1.
+1. Every 1 fps frame: compute the cheap proprio cues (EE displacement, gripper width, EE in view) and check the coordinator's **protected states**.
+2. When an entry's `detect.proprio` cue fires, ask the VLM the matching `detect.visual` question. Use `distinguish_from` to separate look-alike entries.
+3. Bind `slots` from the coordinator's current plan.
+4. Run `recovery` top to bottom, then check `success_check`. On failure, take the retry/escalate branch.
+5. Log the episode and onset under `instances`. An entry becomes `validated` once its recovery works when replayed from a recorded onset state.
+
+**Primitives:**
+- From v0.1: `HALT`, `RETREAT`, `REPROMPT`, `INSERT_SUBTASK`, `VERIFY`, `WATCH`, `INVOKE_RL`, `ESCALATE`.
+- New in v0.2:
+  - **`POINT_APPROACH(x)`**: the VLM points at x in the agentview frame. The pixel is back-projected onto the table or fixture plane using the camera calibration, and a scripted move takes the EE 7 cm above it before pi0 takes over. It uses images and calibration only, never privileged sim positions.
+  - **`RELEASE`**: scripted lower, open and retreat, for when pi0 won't let go.
+
+**Prompt rule (unchanged):** use full LIBERO-style sentences, e.g. `pick up the {obj} and place it on the {dest}`, never bare verbs.
+
+**Camera rule:** the agentview camera faces the robot, so **robot-left is on the image right** and "front" is lower in the image. This was verified on libero_10/task4_success_init0.
+
+**Split guard:** RL environments, reset states and demos may only come from the 45 survey-split libero_90 tasks (`split_guard.held_out_tasks`). The v0.1 LL-1 spec used libero_90 task0/task2, which are now **held out**, so v0.2 drops them.
+
+## High-level entries
+
+### HL-1 subtask_handoff_stall
+pi0 finishes subtask k (a fixture action or a grasp), then idles. **6 instances.**
+- **Detect:** EE moves < 1 cm over 3 frames, or the arm is out of view for 2 frames, and the previous subtask passes VERIFY.
+- **Recover:**
+  1. VERIFY(done) → HALT → RETREAT 10 cm.
+  2. REPROMPT the next-subtask sentence (the place sentence, if pi0 is still holding the object).
+  3. WATCH 3 s. If nothing happens, POINT_APPROACH(next_obj) and retry once, then ESCALATE.
+- **Prevent:** one subtask per prompt, advancing only on VERIFY.
+- **Seen in:** L10 task8/0, task1/1, task9/0-1 (holds the bowl after grasping it), task23/0-1.
+
+### HL-2 scene_default_skill_override
+pi0 runs the scene's habitual or trained skill instead of the instructed one: pushes the drawer shut, grabs a moka pot for "turn off the stove", skips the drawer. **9 primary / 14 total.**
+- **Detect:** the empty gripper heads for a non-target fixture over 2 frames, or a protected state flips.
+- **Recover:**
+  1. HALT → RETREAT 10 cm, plus 5 cm away from the fixture pi0 is drawn to.
+  2. INSERT_SUBTASK to restore any broken precondition.
+  3. POINT_APPROACH(target) → REPROMPT an object-first sentence → WATCH 5 s.
+  4. Retry once with a 15 cm retreat, then ESCALATE.
+- **Prevent:** declare protected states. For knob and drawer tasks, POINT_APPROACH the fixture before pi0's first step.
+- **Seen in:** task3/0-1, 8/0-1, 11/1, 31/1, 39/0-1, 85/1 (+ secondary in 6/0, 22/1, 23/0-1, 85/0).
+
+### HL-3 wrong_object_category
+pi0 picks a different-category object, usually one from a trained task: soup for tomato sauce, white bowl for the frying pan, mug for the book. **25, the largest entry.**
+- **Detect:** a pre-grasp trigger (EE about 5 cm above the support, or the gripper starting to close) runs VERIFY("the object between the fingers is {target}") on a 2x crop.
+- **Recover:**
+  1. HALT. If the wrong object is already lifted, RELEASE it back down.
+  2. RETREAT 10 cm.
+  3. POINT_APPROACH(target) → REPROMPT the pick-and-place sentence.
+  4. VERIFY(grasped); retry once, then ESCALATE.
+- **Prevent:** the coordinator lists trained-task objects as known distractors, and every pick gets the pre-grasp VERIFY.
+- **Seen in:** task14/0, 21/1, 31/0, 41/0-1, 42/0-1, 49/0-1, 53/0-1, 57/1, 58/0-1, 59/0-1, 61/0-1, 62/0-1, 69/0-1, 77/1, 78/1, 80/0.
+
+### HL-4 referring_expression_instance_error
+The right kind of object or fixture, but the wrong instance; the qualifier is ignored. Examples: the middle drawer opened for "top" or "bottom", always the same book, the white mug for "red mug". **10 instances.**
+- **Detect:** the HL-3 trigger, with a VERIFY phrased on the qualifier on a 3x zoom.
+- **Recover:**
+  1. HALT → RETREAT.
+  2. Optionally undo the wrong change, e.g. close the drawer that was opened by mistake.
+  3. POINT_APPROACH(the instance the coordinator resolved) → REPROMPT → VERIFY; retry once, then ESCALATE.
+- **Prevent:** the coordinator resolves qualifiers in the robot frame and never relies on pi0 to read them.
+- **Seen in:** task6/0-1, 11/0, 38/1, 71/0-1, 86/0-1, 87/0-1.
+
+### HL-5 intermediate_subtask_skipped
+For "stack A on B and place them in C", pi0 carries one bowl straight to C. It never stacked in any episode. **4 instances.**
+- **Detect:** a loaded gripper heads for the container before VERIFY(stacked).
+- **Recover:**
+  - If B is already in C, stack in place: REPROMPT `pick up the {A} and place it on the {B}`.
+  - Otherwise: RELEASE → POINT_APPROACH(A) → stack sentence → VERIFY → `pick up the {B} and place it in the {C}`.
+- **Prevent:** two VERIFY-gated prompts.
+- **Seen in:** task63/0-1, 64/0-1.
+
+### HL-6 destination_misgrounding
+The right object goes to the wrong destination or relation, usually the trained one: the back compartment for "front", right of the plate for "left of", the microwave for "front of the mug". Or pi0 hovers without committing. **11 primary / 18 total.**
+- **Detect:** the loaded gripper moves away from the destination over 2 frames, or hovers for more than 3 s.
+- **Recover:**
+  1. HALT, keeping the grasp → RETREAT 10 cm.
+  2. POINT_APPROACH(the destination point resolved from the relation) → REPROMPT the place sentence, or RELEASE.
+  3. VERIFY; retry once, then ESCALATE.
+- **Prevent:** the coordinator turns relation and compartment words into a point. Placing "under the shelf" may need a horizontal-insertion skill.
+- **Seen in:** task17/1, 25/0-1, 34/0-1, 73/0-1, 88/0-1, 89/0-1 (+ secondary in 9/0-1, 69/0, 86/0-1, 87/0-1).
+
+### HL-7 target_never_approached
+pi0 wanders all episode and never approaches the target. **3 instances.**
+- **Detect:** a VLM heading check fails for 3 frames.
+- **Recover:** HALT → RETREAT → POINT_APPROACH(target) → REPROMPT → WATCH 3 s → ESCALATE.
+- **Seen in:** task35/1, 37/0-1 (bowl on top of the microwave).
+
+### HL-8 grasp_loss_unnoticed
+After a slip or a miss, pi0 carries on with an empty gripper. **3 instances, all secondary to LL-4/LL-5.**
+- **Detect:** gripper width is about 0 while moving to the destination, and the crop shows nothing between the fingers.
+- **Recover:** HALT → RETREAT → POINT_APPROACH(the object's new position) → INVOKE_RL(`rl/pick`), or REPROMPT until that policy exists → VERIFY.
+- **Prevent:** VERIFY the grasp after every pick.
+- **Seen in:** task10/0-1, 80/1.
+
+## Low-level entries → RL policies
+
+Every LL entry tries `INVOKE_RL(policy)` first. Until the policy is trained, the fallback is HALT → RETREAT 5 cm → POINT_APPROACH → REPROMPT → WATCH 5 s → ESCALATE, which is expected to be weak.
+
+| Entry | Failure | Policy | Inst. | Reset states (episode @ step) |
+|---|---|---|---|---|
+| LL-1 drawer_push_stall | push stalls 1/2-2/3 closed | `rl/close_drawer` | 2 | task1/0 @60, task22/1 @280 |
+| LL-2 hinged_door_pull_stall | door swings partly open, pull stops | `rl/open_door` | 1 | task35/0 @160 |
+| LL-3 knob_approach_contortion | wrist folds onto knob, arm swings away | `rl/turn_knob` | 2 | task44/0 @167, task44/1 @180 |
+| LL-4 unstable_grasp_slip | rim/edge/handle grasp tilts, pivots, slips | `rl/pick` | 10 | task10/0 @53, task10/1 @40, task25/1 @160, task77/0 @80, task78/0 @80, task85/0 @180, L10 task2/1 @160, task21/0 @280 |
+| LL-5 pregrasp_contact_disturbance | descent knocks or pushes object before grasp | `rl/pick` | 4 | task80/1 @60, L10 task6/0 @253, task31/0 @280 |
+| LL-8 pregrasp_hesitation | hovers next to target, never closes in time | `rl/pick` | 3 | L10 task8/1 @260, task21/0 @160, task21/1 @200 |
+| LL-6 placement_instability | released off-centre or tilted, falls or tips | `rl/place` | 4 | task38/1 @260, L10 task4/1 @333 |
+| LL-7 place_release_stall | held at the right destination, never released | `rl/place` | 3 | task14/1 @120, task17/0 @120, task72/1 @160 |
+
+Unmarked episodes are libero_90. LL instances seen while pi0 was handling a *non-instructed* object are kept in `instances` with `on_instructed_subtask: false`, but they are excluded from the reset states: task41/0-1, task42/0-1, task49/0.
+
+### RL policies (`rl_policies` in library.json)
+
+**`rl/close_drawer`**
+- Reward environment: libero_90 task22, "close the bottom drawer" (survey split).
+- Guide demos: task22_success_init0; libero_10 task3 (PoC-verified horizontal push).
+
+**`rl/open_door`**
+- Reward environment: libero_90 task35, "open the microwave".
+- Guide demos: there is no in-distribution door-opening demo, so a scripted demo may be needed.
+
+**`rl/turn_knob`**
+- Reward environment: libero_90 task44 "turn on the stove", with task39 "turn off the stove" for the reverse.
+- Guide demo: libero_10 task2 success, where pi0 turns the knob reliably.
+
+**`rl/pick`** (largest: 14 reset states)
+- Reward: a custom predicate, Grasped and lifted at least 5 cm for 10 steps. Use a short horizon or a step penalty to cover LL-8.
+- Guide demos: libero_spatial bowl picks; libero_10 task5 (book).
+
+**`rl/place`**
+- Reward: a custom On/In predicate, with the gripper open and retreated.
+- Reset: the object held above the destination.
+- Guide demos: libero_spatial; libero_10 task4.
+
+Reset states come from `trace/states.npy[step]`, following `state_convention` in meta.json. Steps are only as precise as the sampling (±20 at 1 fps, ±7 at 3 fps), so check each one against the trace before training. Guide demos not marked as verified have not been watched yet.
+
+## Adding an entry
+The fields are the same as in v0.1: `id, level, name, summary, applies_when, slots, detect{proprio, visual, distinguish_from}, recovery[], prevention, success_check, instances[], status`, plus `rl_spec` for LL entries. Edit `build_library.py` and re-run it. Add an `instance` before adding a new entry.

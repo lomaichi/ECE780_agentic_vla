@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task41_fail_init1",
+  "task_language": "put the frying pan on top of the cabinet",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(frying_pan)",
+      "outcome": "never attempted: the white bowl is picked instead"
+    },
+    {
+      "name": "place(frying_pan, cabinet, on)",
+      "outcome": "never attempted (the wrong object, the bowl, is carried to the cabinet top and falls off its edge)"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the white bowl (~67), carries it up and over to the cabinet (173-213) and releases it at the cabinet's front edge, where it falls to the table beside the pan (~220-227). It then hovers over the pan/bowl area until timeout (233-409) without grasping anything.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 approaches, grasps and manipulates a non-instructed object in the scene instead of the instructed target object.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 53,
+      "onset_window": [
+        47,
+        53
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
+        "RETREAT(dz=+0.10)",
+        "REPROMPT('pick up the frying pan and place it on top of the cabinet')",
+        "WATCH(EE approaches the frying pan, 5 s)",
+        "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
+      ],
+      "prevention": "Before allowing gripper closure, VERIFY the object under the gripper is the instructed target (pre-grasp identity check); HALT as soon as the EE descends over a non-target object for 2 frames.",
+      "observation": "By step 53 the gripper is above the white bowl; bowl grasped at ~67, lifted and carried back (140) then right toward the cabinet (173-213). The destination (top of the cabinet) is the right one, the object is wrong: effectively executing the sibling libero_90 task 'put the white bowl on top of the cabinet'.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_bowl_to_cabinet.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "placement_falls_off_support",
+      "mode_definition": "The object is released at or beyond the edge of the destination surface and falls off onto the surface below.",
+      "subtask": "place(white_bowl, cabinet, on) [non-instructed object]",
+      "onset_step": 220,
+      "onset_window": [
+        213,
+        220
+      ],
+      "rl_reset_step": 207,
+      "rl_reset_frame": "frames/step0207.png",
+      "rl_subtask": "place(white_bowl, cabinet, on)",
+      "rl_success_check": "bowl resting upright on the top surface of the cabinet, fully inside its footprint",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "At 187-213 the bowl is held under the gripper at the left (image) edge of the cabinet top; at 220 it is dropping below the gripper and at 227 it lies on the table in front of the cabinet, right of the pan, then stands on its rim for the rest of the episode. Recorded as LL evidence on a non-instructed object.",
+      "confidence": "medium",
+      "evidence": "evidence_wrong_object_bowl_to_cabinet.png"
+    }
+  ],
+  "notes": "From 233 to 409 the gripper hovers above the pan rim/bowl; no visible grasp of either. Whether the release at 213-220 was intended (placement) or a slip cannot be resolved at 3 fps; the arm was already over the cabinet edge, so treated as an imprecise placement."
+}

@@ -1,0 +1,58 @@
+{
+  "episode": "libero_10/task8_fail_init0",
+  "task_language": "put both moka pots on the stove",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(moka_pot_center)",
+      "outcome": "success: grasped ~step 120-140"
+    },
+    {
+      "name": "place(moka_pot_center, stove, on)",
+      "outcome": "success (visual): set down ~step 240-260 on the back-right part of the stove; could not confirm it is inside the cook region"
+    },
+    {
+      "name": "pick(moka_pot_left_in_image)",
+      "outcome": "never attempted: arm sweeps up to the image-top-left and leaves the camera view by step 400"
+    },
+    {
+      "name": "place(moka_pot_left_in_image, stove, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the pot nearest the stove and sets it on the stove by ~step 260, then swings the arm up and toward the image-top-left (steps 300-380), leaves the camera view and stays out of view until the timeout at 529; the second pot is never touched.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-1",
+      "mode_name": "subtask_handoff_stall",
+      "mode_definition": "pi0 finishes subtask k of a compound instruction, then idles (here: parks outside the camera view); subtask k+1 never starts.",
+      "subtask": "pick(moka_pot_left_in_image)",
+      "onset_step": 340,
+      "onset_window": [
+        300,
+        340
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "VERIFY first moka pot is on the stove (2x zoom of stove ROI)",
+        "HALT",
+        "RETREAT up 10 cm and back toward the workspace centre (EE is out of view)",
+        "REPROMPT \"pick up the moka pot and place it on the stove\" (the remaining pot is the only one off the stove)",
+        "WATCH 3 s for an approach to the remaining pot",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator issues one pot at a time and advances only on VERIFY; FR agent flags the EE leaving the camera view as an idle/handoff cue.",
+      "observation": "Pot 1 is on the stove at step 260 (gripper released, arm lifting). Steps 300-380 the arm swings up toward the image-top-left (the robot's right, the side of the remaining pot) but stays high and behind the table edge; from step 400 to 529 only the robot base is visible and the scene is static. The remaining pot at image-left never moves.",
+      "confidence": "medium",
+      "evidence": "evidence_pot1_place_and_idle.png"
+    }
+  ],
+  "notes": "The arm is out of view from step 400, so I cannot tell whether it idles or is attempting something off-camera; the scene is static, so no contact with pot 2 happened. Pot 1 sits at the back-right corner of the stove, partly over the burner; if it is outside the cook region this is also an imprecise placement. This is a libero_10 (in-distribution) task."
+}

@@ -1,0 +1,76 @@
+{
+  "episode": "libero_90/task87_fail_init1",
+  "task_language": "pick up the book on the left and place it on top of the shelf",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(left_book)",
+      "outcome": "failed: grasped the robot-right (image-left) book instead"
+    },
+    {
+      "name": "place(left_book, shelf, on)",
+      "outcome": "never attempted; the target robot-left book was pressed down and tipped flat"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the robot-right book (40-100), carries it right, presses it down onto the robot-left book (260-340) so that book ends lying flat, and leaves.",
+  "runs_trained_task": "No libero_10 task exists in STUDY_SCENE4. The motion (grasp the image-left book, carry it to the robot's left / image right-back and set it down) resembles the STUDY_SCENE1 libero_10 task 'pick up the book and place it in the back compartment of the caddy', where the book starts on the image left and the caddy sits back-right; cross-scene transfer, low-medium confidence.",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "Grasps a different instance of the object category than the one singled out by the instruction's referring expression (position/ordinal/colour qualifier), typically a habitual or default instance.",
+      "subtask": "pick(left_book)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
+        "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
+        "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
+        "VERIFY the referred book is between the fingers after closure",
+        "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the referring expression (left/middle/right are robot-frame, i.e. mirrored in the agent view) to an image location and VERIFYs the approach target before gripper closure; add a distinguishing attribute (e.g. colour) to the prompt when one exists.",
+      "observation": "40: gripper over the image-left book; 60-80 descends and closes on it; 120-160 lifted and carried right.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_book_grasp.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination_placement",
+      "mode_definition": "Transports the grasped object to a location other than the instructed destination fixture/region and releases or abandons it there.",
+      "subtask": "place(left_book, shelf, on)",
+      "onset_step": 140,
+      "onset_window": [
+        120,
+        140
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
+        "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
+        "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
+        "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares the destination region in image space and the FR agent HALTs on the first frames of transport heading elsewhere; pi0 has a strong scene-independent 'carry to robot-left/back' habit for books.",
+      "observation": "140-240 held book carried to the robot's left; 260 pressed down onto the robot-left book, which tilts (280-300) and lies flat by 340-360. The shelf on the image left is never approached.",
+      "confidence": "medium",
+      "evidence": "evidence_knock_over.png"
+    }
+  ],
+  "notes": "At 409 only one flat grey book is visible beside the black book; the picked book may be lying on top of the knocked-over target or out of frame. Collateral knock-over of the target book (260-340)."
+}

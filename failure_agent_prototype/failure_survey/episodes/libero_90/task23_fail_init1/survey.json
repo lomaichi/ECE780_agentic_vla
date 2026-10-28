@@ -1,0 +1,76 @@
+{
+  "episode": "libero_90/task23_fail_init1",
+  "task_language": "close the bottom drawer of the cabinet and open the top drawer",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "close(bottom_drawer)",
+      "outcome": "success: drawer flush by ~300"
+    },
+    {
+      "name": "open(top_drawer)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 executes its trained KITCHEN_SCENE4 task in full. Bowl grasped ~100-140, placed in the bottom drawer ~160-260, drawer pushed shut ~280-320. It then rests its hand against the closed bottom drawer front until timeout and never goes to the top drawer handle.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4: put the black bowl in the bottom drawer of the cabinet and close it",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-1",
+      "mode_name": "subtask_handoff_stall",
+      "mode_definition": "pi0 finishes one subtask of a compound instruction, then idles near the finished fixture and never starts the next subtask.",
+      "subtask": "open(top_drawer)",
+      "onset_step": 340,
+      "onset_window": [
+        320,
+        340
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "VERIFY bottom drawer flush",
+        "HALT",
+        "RETREAT up 10 cm and 5 cm away from the cabinet",
+        "REPROMPT 'open the top drawer of the cabinet'",
+        "WATCH 3 s for the EE approaching the top drawer handle; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator issues 'close the bottom drawer of the cabinet' and 'open the top drawer of the cabinet' as separate prompts and advances on VERIFY.",
+      "observation": "Bottom drawer is flush (handles in line) by ~300; from then to 409 the gripper stays pressed low against the bottom drawer front near its handle with almost no motion and never reaches up to the top drawer handle. The top drawer stays closed.",
+      "confidence": "high",
+      "evidence": "evidence_close_then_idle.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained libero_10) skill sequence instead of, or before, the instructed one.",
+      "subtask": "close(bottom_drawer)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE heads for the bowl with the gripper empty",
+        "RETREAT up 10 cm",
+        "REPROMPT 'close the bottom drawer of the cabinet'",
+        "WATCH 3 s; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator flags non-target objects as 'do not touch'.",
+      "observation": "Before closing the drawer pi0 picks the black bowl and places it in the bottom drawer, an un-instructed pick-and-place from the trained task. It did not prevent the close, but used about 180-260 steps.",
+      "confidence": "high",
+      "evidence": "evidence_close_then_idle.png"
+    }
+  ],
+  "notes": "Closed state is a visual judgement (drawer face flush, handles aligned), not the LIBERO predicate. The idle phase matches the end of the trained libero_10 task, which finishes on a drawer close."
+}

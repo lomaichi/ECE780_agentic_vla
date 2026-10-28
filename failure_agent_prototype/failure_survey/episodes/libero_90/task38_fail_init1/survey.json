@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task38_fail_init1",
+  "task_language": "put the right moka pot on the stove",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(right_moka_pot)",
+      "outcome": "failed: picked the other pot. The robot's right pot is the image-left one; pi0 grasped the image-centre pot (robot's left, nearest the stove)"
+    },
+    {
+      "name": "place(right_moka_pot, stove, on)",
+      "outcome": "never attempted with the correct pot; the wrong pot was placed and then toppled onto its side (step 300-320)"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the pot nearest the stove (the same first pot it takes in libero_10 'put both moka pots on the stove'), sets it on the stove tilted, the pot topples on release, pi0 comes back and presses on it (340-380) and leaves it lying on the stove.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE8: put both moka pots on the stove (first-pot phase)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_instance_spatial_qualifier",
+      "mode_definition": "The policy selects a same-category object other than the one identified by a spatial qualifier (left/right/front/back) in the instruction.",
+      "subtask": "pick(right_moka_pot)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT up 10 cm",
+        "if the wrong pot is on the stove: INSERT_SUBTASK \"pick up the left moka pot and place it on the table\"",
+        "REPROMPT \"put the right moka pot on the stove\"",
+        "WATCH 5 s for an approach to the image-left (robot's right) pot",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the qualifier to one instance (image-left = robot's right) before running pi0, and the FR agent HALTs when the EE descends on the non-target instance.",
+      "observation": "At step 60 the gripper is above the table between the pots; by 80-120 it descends onto the image-centre pot (the robot's left pot) and lifts it at 180-200. The image-left pot never moves.",
+      "confidence": "medium",
+      "evidence": "evidence_wrong_pot_choice.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "release_tipover_on_placement",
+      "mode_definition": "The object is set down tilted or off-centre and topples on release, ending on its side instead of upright on the destination.",
+      "subtask": "place(moka_pot, stove, on)",
+      "onset_step": 320,
+      "onset_window": [
+        300,
+        320
+      ],
+      "rl_reset_step": 260,
+      "rl_reset_frame": "frames/step0260.png",
+      "rl_subtask": "place(moka_pot, stove, on)",
+      "rl_success_check": "moka pot upright on the stove cook region, gripper open and clear",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "At 260-280 the pot is held over the stove; at 300 it is tilted as the gripper opens; at 320 it lies on its side across the burner. Steps 340-380 pi0 comes back down on top of it without righting it; at 409 it is still on its side.",
+      "confidence": "high",
+      "evidence": "evidence_place_tipover.png"
+    }
+  ],
+  "notes": "Left/right follows the protocol convention (robot's left = image right). If the BDDL 'right' pot were the image-centre one, the primary failure would instead be the LL tip-over; the tip-over alone would fail the task in either case. I could not check init0 to compare."
+}

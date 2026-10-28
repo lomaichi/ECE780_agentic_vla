@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task78_fail_init0",
+  "task_language": "pick up the book and place it in the front compartment of the caddy",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(book)",
+      "outcome": "partial: book lifted at ~120 but grasped at its top edge and swings to horizontal in the gripper by ~140"
+    },
+    {
+      "name": "place(book, caddy_front_compartment, in)",
+      "outcome": "failed: book held flat above the middle of the caddy at rim height (160-300), never enters a compartment and is never released; pi0 lifts it back out (320-409) and is still holding it at the end"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the standing book by its upper edge; the book swings to horizontal in the gripper; pi0 lowers it over the middle column of the caddy but it cannot enter, then lifts it back out and holds it in the air until the timeout.",
+  "runs_trained_task": "libero_10 STUDY_SCENE1: pick up the book and place it in the back compartment of the caddy (destination behaviour, possibly)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "object_pivots_in_grasp",
+      "mode_definition": "The object is grasped off-centre at one edge and rotates in the gripper during lift, so it arrives at the destination in an orientation that cannot be inserted or placed.",
+      "subtask": "pick(book)",
+      "onset_step": 140,
+      "onset_window": [
+        120,
+        140
+      ],
+      "rl_reset_step": 80,
+      "rl_reset_frame": "frames/step0080.png",
+      "rl_subtask": "pick(book) with a stable upright grasp and place it in the front compartment of the caddy",
+      "rl_success_check": "book inside the front compartment of the caddy, gripper open",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 80 the open gripper is above the upright book; at 100-120 it grips the book's top edge and lifts; by 140 the book is swinging to horizontal and at 160-200 it is held flat above the middle of the caddy. 240-320 the gripper is lowered into the middle column with the book sticking out horizontally over the dividers at rim height; 340-409 it lifts the book back out and holds it high, never releasing.",
+      "confidence": "medium",
+      "evidence": "evidence_book_carried_to_back_not_released.png"
+    }
+  ],
+  "notes": "Near-identical to task77_fail_init0 (instruction there is 'back'), suggesting pi0's motion ignores the front/back qualifier. From this camera angle I cannot tell whether the gripper targeted the front or the back cell of the middle column, so I did not record a wrong-destination failure; low-confidence suspicion that it aims at the back compartment (the trained libero_10 STUDY_SCENE1 destination)."
+}

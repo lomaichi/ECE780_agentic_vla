@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task53_fail_init1",
+  "task_language": "pick up the orange juice and put it in the basket",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(orange_juice)",
+      "outcome": "never attempted: gripper hovers low between the milk and the juice (53-107) without grasping, then picks the milk"
+    },
+    {
+      "name": "place(orange_juice, basket, in)",
+      "outcome": "never attempted; instead the milk (~213) and a small orange box (~387) are put in the basket"
+    }
+  ],
+  "behaviour_summary": "After hovering low between the milk and the orange juice (53-107), pi0 picks the milk carton (127-147) and drops it in the basket (~213), then picks the small orange/red box (likely the butter) at 287-353 and puts it in the basket (~380-393). Two wrong objects go in the basket; the juice never moves.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE2 two-object put-in-basket pattern ('put both the cream cheese box and the butter in the basket'), here with milk and the small (butter-like) box",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 approaches, grasps and manipulates a non-instructed object in the scene instead of the instructed target object.",
+      "subtask": "pick(orange_juice)",
+      "onset_step": 120,
+      "onset_window": [
+        113,
+        120
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
+        "RETREAT(dz=+0.10)",
+        "REPROMPT('pick up the orange juice and put it in the basket')",
+        "WATCH(EE approaches the orange juice, 5 s)",
+        "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
+      ],
+      "prevention": "Before allowing gripper closure, VERIFY the object under the gripper is the instructed target (pre-grasp identity check); HALT as soon as the EE descends over a non-target object for 2 frames. Advance to a second object only when the coordinator's plan asks for it (single-object instruction here).",
+      "observation": "53-107 gripper low between milk and juice, fingers to the left of the juice, no closure seen; 113 rises; 120-127 directly above the milk; 140-147 milk lifted; 187-213 milk lowered into the basket; 280-353 small orange box grasped; 380-393 box lowered into the basket.",
+      "confidence": "high",
+      "evidence": "evidence_oj_hover_then_milk.png"
+    }
+  ],
+  "notes": "Whether the 53-107 hover was an aborted grasp of the juice (LL) or a hesitation between candidates (HL) cannot be decided from video; no finger contact with the juice is visible, so it is folded into the HL call. The second wrong object (orange box) is a continuation of the same behaviour, recorded in subtasks/observation rather than as a separate failure. Identity of the small orange box as 'butter' is a guess from appearance."
+}

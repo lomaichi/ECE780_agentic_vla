@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task62_fail_init0",
+  "task_language": "pick up the salad dressing and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(salad_dressing)",
+      "outcome": "never attempted: bottle untouched"
+    },
+    {
+      "name": "place(salad_dressing, tray, in)",
+      "outcome": "never attempted (wrong object, chocolate pudding, placed in tray instead)"
+    }
+  ],
+  "behaviour_summary": "pi0 picked up the chocolate pudding instead of the salad dressing and placed it in the tray, then hovered above the tray until timeout.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_manipulated",
+      "mode_definition": "pi0 approaches, grasps and/or relocates a non-instructed object (often to the instructed destination) instead of the instructed target object.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "pick(salad_dressing)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "hl_remedy": [
+        "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
+        "REPROMPT 'pick up the salad dressing and place it in the tray'",
+        "WATCH 3 s for EE approach toward the target",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator VLM-checks which object the gripper is heading for in the first 2-3 frames and HALTs on a non-target approach before any grasp.",
+      "observation": "Step 40 gripper over the bowls; step 60-80 it heads to the pudding box at front right; pudding grasped ~100-220, lifted at 240 past the bottle, carried left 260-300 and set in the tray by 320-340; salad dressing bottle (back centre) never moves.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_pudding.png"
+    }
+  ],
+  "notes": "Wrong-object pick-and-place executed cleanly (no low-level problem). The pudding/tray motion is exactly what task61 asked for, suggesting the language-to-object binding for this scene is weak. Recovery after placement: the extra pudding in the tray likely does not violate the dressing-in-tray predicate, so a REPROMPT for the dressing could still succeed."
+}

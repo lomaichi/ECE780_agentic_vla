@@ -1,0 +1,39 @@
+{
+  "episode": "libero_90/task11_fail_init1",
+  "task_language": "open the top drawer of the cabinet",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "open(top_drawer)",
+      "outcome": "never attempted: gripper came near the cabinet top at 47-60 but turned away at 67 without touching a handle; all drawers closed at 409"
+    }
+  ],
+  "behaviour_summary": "pi0 moves toward the cabinet top (47-60), then swings to the bowls/plate area at 67 and hovers over the plate with the gripper pointed down for the remaining ~340 steps; no object or fixture is moved.",
+  "runs_trained_task": "libero_spatial 'pick up the black bowl ... and place it on the plate' (hovers over the plate as if placing); medium confidence",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual/trained-task behaviour instead of the instructed one, approaching a non-target object or fixture (and may destroy a precondition).",
+      "subtask": "open(top_drawer)",
+      "onset_step": 67,
+      "onset_window": [
+        60,
+        67
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> RETREAT(up 10 cm) -> REPROMPT 'open the top drawer of the cabinet' -> WATCH 3 s for an approach to the top handle -> VERIFY(top drawer open); retry once with a 15 cm retreat toward the cabinet, then ESCALATE",
+      "prevention": "Declare the plate/bowl area a non-target region for this task; HALT when the empty gripper heads into it over 2 frames.",
+      "observation": "Steps 47-60: gripper above the cabinet top near the top handle. Step 67: arm swings left onto the back bowl / plate area. Steps 100-393: gripper hovers just above the plate, pointing down, small motions only; back bowl and plate untouched. Zoom of the cabinet at 0/200/300/409 shows all three handles in line (drawers closed) throughout.",
+      "confidence": "medium",
+      "evidence": "evidence_abandon_drawer.png"
+    }
+  ],
+  "notes": "Could also be read as idling; classed HL-2 because the hover is over the libero_spatial destination (plate). Drawer state: evidence_drawer_closed.png."
+}

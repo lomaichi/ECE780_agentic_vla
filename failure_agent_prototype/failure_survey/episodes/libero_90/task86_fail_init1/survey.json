@@ -1,0 +1,76 @@
+{
+  "episode": "libero_90/task86_fail_init1",
+  "task_language": "pick up the book in the middle and place it on the cabinet shelf",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(middle_book)",
+      "outcome": "failed: grasped the robot-right (image-left) grey book instead of the black middle book"
+    },
+    {
+      "name": "place(middle_book, cabinet_shelf, on)",
+      "outcome": "never attempted: wrong book carried to the robot's left and pressed down onto/near the robot-left book"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the robot-right grey book (40-100), carries it right, presses down beside the robot-left book (220-320), tipping that book flat (340), and the picked book ends out of view.",
+  "runs_trained_task": "No libero_10 task exists in STUDY_SCENE4. The motion (grasp the image-left book, carry it to the robot's left / image right-back and set it down) resembles the STUDY_SCENE1 libero_10 task 'pick up the book and place it in the back compartment of the caddy', where the book starts on the image left and the caddy sits back-right; cross-scene transfer, low-medium confidence.",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "Grasps a different instance of the object category than the one singled out by the instruction's referring expression (position/ordinal/colour qualifier), typically a habitual or default instance.",
+      "subtask": "pick(middle_book)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
+        "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
+        "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
+        "VERIFY the referred book is between the fingers after closure",
+        "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the referring expression (left/middle/right are robot-frame, i.e. mirrored in the agent view) to an image location and VERIFYs the approach target before gripper closure; add a distinguishing attribute (e.g. colour) to the prompt when one exists.",
+      "observation": "At 40 the gripper is over the image-left grey book, lowers onto it at 60-80, lifts it at 100-140. The black middle book is never approached.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_book_grasp.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination_placement",
+      "mode_definition": "Transports the grasped object to a location other than the instructed destination fixture/region and releases or abandons it there.",
+      "subtask": "place(middle_book, cabinet_shelf, on)",
+      "onset_step": 140,
+      "onset_window": [
+        120,
+        140
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
+        "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
+        "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
+        "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares the destination region in image space and the FR agent HALTs on the first frames of transport heading elsewhere; pi0 has a strong scene-independent 'carry to robot-left/back' habit for books.",
+      "observation": "120: book lifted near the robot base; 140-180 carried to the image right; 220-320 the arm presses down at the robot-left book; never moves toward the image-left shelf.",
+      "confidence": "medium",
+      "evidence": "evidence_knock_over.png"
+    }
+  ],
+  "notes": "Robot-left grey book knocked flat between 320 and 340 (collateral knock-over). The picked book is not visible at 409 (out of frame or hidden under the arm path)."
+}

@@ -1,0 +1,48 @@
+{
+  "episode": "libero_90/task73_fail_init0",
+  "task_language": "pick up the book and place it in the front compartment of the caddy",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(book)",
+      "outcome": "success: book grasped at ~87-100"
+    },
+    {
+      "name": "place(book, caddy_front_compartment, in)",
+      "outcome": "failed: book placed upright in the middle-back compartment (the trained 'back compartment'), not the front one"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the book, carries it over the caddy and inserts it in the middle-back cell (127-180), keeps pushing it there until ~300, then probes the middle-front cell with an empty gripper until timeout.",
+  "runs_trained_task": "STUDY_SCENE1 libero_10: pick up the book and place it in the back compartment of the caddy",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "Runs the scene's habitual (trained) skill or destination instead of the instructed one.",
+      "subtask": "place(book, caddy_front_compartment, in)",
+      "onset_step": 133,
+      "onset_window": [
+        120,
+        133
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the held book descends toward a caddy cell other than the front one (VERIFY on caddy ROI)",
+        "RETREAT up 10 cm keeping the grasp",
+        "REPROMPT 'pick up the book and place it in the front compartment of the caddy'",
+        "WATCH 5 s; if pi0 again heads for the back cell, ESCALATE (trained-task bias likely to repeat)"
+      ],
+      "prevention": "Coordinator flags instructions that differ from a trained libero_10 task only in the destination and arms a destination-ROI VERIFY before release.",
+      "observation": "120: book above the back of the caddy; 133-147 lowered into the middle cell behind the divider; 160-260 standing upright there while the gripper adjusts it; ~300 it appears to lie inside the back cell; 340-409 gripper probes the middle-front cell empty.",
+      "confidence": "high",
+      "evidence": "evidence_back_compartment.png"
+    }
+  ],
+  "notes": "Black book on black caddy interior is hard to see; final book location (inside middle-back cell) is a visual judgement from evidence_caddy_geometry.png. Which cell LIBERO calls 'front compartment' is assumed to be the middle-front cell."
+}

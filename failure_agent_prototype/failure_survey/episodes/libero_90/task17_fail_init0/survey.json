@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task17_fail_init0",
+  "task_language": "stack the middle black bowl on the back black bowl",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(middle_black_bowl)",
+      "outcome": "success: grasped ~100 and lifted by 120"
+    },
+    {
+      "name": "stack(middle_black_bowl, back_black_bowl)",
+      "outcome": "failed: held bowl brought beside the back bowl (140-200), then drifts left and hovers holding it to the end; never placed on top"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct middle bowl and brings it alongside the back bowl at about the same height, then holds it beside/left of the back bowl for the rest of the episode without lifting over and releasing onto it.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "place_hover_offset_no_release",
+      "mode_definition": "pi0 carries the grasped object to the vicinity of the destination but stalls with a lateral offset beside or at the edge of it and never lowers and releases it onto the destination.",
+      "subtask": "stack(middle_black_bowl, back_black_bowl)",
+      "onset_step": 240,
+      "onset_window": [
+        200,
+        240
+      ],
+      "rl_reset_step": 120,
+      "rl_reset_frame": "frames/step0120.png",
+      "rl_subtask": "stack(middle_black_bowl, back_black_bowl)",
+      "rl_success_check": "middle bowl resting inside/on the back bowl (LIBERO On), gripper open and lifted clear",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Steps 80-100: gripper descends on the image-left (middle) bowl and lifts it. 140-200: held bowl side by side with the back bowl, at similar height (back bowl appears nudged slightly toward the front at ~100). 240: held bowl moved away to the left of the back bowl. 260-409: gripper with the bowl hovers left of/over the back bowl area; the stack is never made.",
+      "confidence": "medium",
+      "evidence": "evidence_stack_attempt.png"
+    }
+  ],
+  "notes": "From 260 on the gripper occludes the back bowl, so the exact offset at the end is not visible; there is no sign of a release. Grasp/transport: evidence_grasp_transport.png."
+}

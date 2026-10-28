@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task41_fail_init0",
+  "task_language": "put the frying pan on top of the cabinet",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(frying_pan)",
+      "outcome": "never attempted: gripper never approaches the pan; it picks the white bowl instead"
+    },
+    {
+      "name": "place(frying_pan, cabinet, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the small white bowl (step ~67), carries it back toward the robot base and loses it around step 140 (it lands behind the pan); it then spends steps 160-409 hovering over the bowl near the cabinet, nudging and tilting it in failed re-grasps. The frying pan is never touched.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 approaches, grasps and manipulates a non-instructed object in the scene instead of the instructed target object.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 53,
+      "onset_window": [
+        47,
+        53
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
+        "RETREAT(dz=+0.10)",
+        "REPROMPT('pick up the frying pan and place it on top of the cabinet')",
+        "WATCH(EE approaches the frying pan, 5 s)",
+        "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
+      ],
+      "prevention": "Before allowing gripper closure, VERIFY the object under the gripper is the instructed target (pre-grasp identity check); HALT as soon as the EE descends over a non-target object for 2 frames.",
+      "observation": "Steps 0-47 the arm lowers near its base. By step 53 the gripper is over the white bowl, closes on it at ~67 and lifts it by 93. The pan (large, handle to the left) is never approached in the whole episode.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_drop.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "grasp_slip_during_transport",
+      "mode_definition": "An object that was grasped and lifted falls out of the gripper while being carried, before reaching any destination.",
+      "subtask": "pick(white_bowl) [non-instructed object]",
+      "onset_step": 140,
+      "onset_window": [
+        133,
+        140
+      ],
+      "rl_reset_step": 60,
+      "rl_reset_frame": "frames/step0060.png",
+      "rl_subtask": "pick(white_bowl)",
+      "rl_success_check": "white bowl lifted >5 cm and still in the gripper after a 15 cm transport",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Bowl held under the gripper at 93-133 while the arm moves back toward the robot base; at 140 the bowl is in free fall/tumbling below the gripper, at 147 it rests upright behind the pan. Later re-grasps (333-387) tilt the bowl but never lift it. Recorded only as LL evidence; the object is not part of the instruction.",
+      "confidence": "low",
+      "evidence": "evidence_wrong_object_drop.png"
+    }
+  ],
+  "notes": "Could not tell whether the step-140 drop was a slip or a deliberate release in mid-air (no destination nearby, so a slip is more likely). Frames 167-409 show the arm repeatedly hovering low over the bowl beside the cabinet; no contact with the pan or the cabinet top."
+}

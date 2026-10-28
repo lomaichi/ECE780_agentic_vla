@@ -1,0 +1,39 @@
+{
+  "episode": "libero_90/task44_fail_init1",
+  "task_language": "turn on the stove",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "turn_on(stove)",
+      "outcome": "failed: knob reached but not turned; arm contorts onto it and leaves the workspace"
+    }
+  ],
+  "behaviour_summary": "Same as init0: pi0 approaches the knob with the gripper rotated sideways (100-180), the wrist comes down onto the knob at ~200, then the arm folds and swings left out of view (220-340) and stays out until timeout. Burner never turns on.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE3 'turn on the stove and put the moka pot on it' (stove-knob approach; the instructed task is its first subtask)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "fixture_approach_arm_contortion",
+      "mode_definition": "While approaching a small fixture (e.g. a knob), the arm folds into a twisted wrist/elbow configuration, contacts the fixture with the wrist body instead of the fingertips, then swings out of the workspace without completing the manipulation.",
+      "subtask": "turn_on(stove)",
+      "onset_step": 200,
+      "onset_window": [
+        180,
+        200
+      ],
+      "rl_reset_step": 180,
+      "rl_reset_frame": "frames/step0180.png",
+      "rl_subtask": "turn_on(stove)",
+      "rl_success_check": "stove burner shows the on state (glowing) / knob rotated to the on position",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "At 140-180 the gripper hangs above/behind the knob with fingers vertical. At 200 the wrist body sits on the knob with the forearm folded; at 220 the gripper points sideways/up; at 240-320 the arm swings left over the stove and out of the frame. Knob at 409 looks the same as at 140; no lit burner.",
+      "confidence": "medium",
+      "evidence": "evidence_knob_approach_wrist_flip.png"
+    }
+  ],
+  "notes": "Onset only ±20 steps at 1 fps; reproduces task44_fail_init0 almost exactly, so the mode looks systematic for this knob in KITCHEN_SCENE9."
+}

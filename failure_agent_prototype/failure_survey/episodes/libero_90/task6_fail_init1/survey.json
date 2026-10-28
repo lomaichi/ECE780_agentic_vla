@@ -1,0 +1,47 @@
+{
+  "episode": "libero_90/task6_fail_init1",
+  "task_language": "open the bottom drawer of the cabinet",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "open(bottom_drawer)",
+      "outcome": "failed: the middle drawer was opened instead (~187-220); the bottom drawer stayed closed"
+    }
+  ],
+  "behaviour_summary": "pi0 reached across the bowl to the cabinet, hooked the middle handle (~140-180) and pulled the middle drawer fully open (~187-220); it then picked the black bowl (~247-260) and lowered it into the open middle drawer (280-409).",
+  "runs_trained_task": "a libero_10 KITCHEN_SCENE4-like routine (put the black bowl in the bottom drawer of the cabinet and close it): open a drawer, then put the bowl into it, but on the middle drawer",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_fixture_instance",
+      "mode_definition": "The policy operates the correct kind of fixture but picks the wrong instance among several similar parts, e.g. a neighbouring drawer instead of the instructed one.",
+      "subtask": "open(bottom_drawer)",
+      "onset_step": 193,
+      "onset_window": [
+        180,
+        193
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10)",
+        "INSERT_SUBTASK('close the middle drawer of the cabinet') (optional, restores the scene)",
+        "REPROMPT('open the bottom drawer of the cabinet')",
+        "WATCH(EE descends to the lowest handle, 3 s)",
+        "VERIFY(bottom drawer front out, zoom)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "VERIFY on a zoomed crop that the gripper is on the lowest handle before the pull starts; HALT on any handle other than the target.",
+      "observation": "Steps 113-180: the gripper reaches horizontally over the bowl with its fingers at the middle handle (the bowl stays on the table under the arm). 187-193 the middle drawer starts sliding out; by 207-220 it is fully open. A 3x zoom shows the top handle still in place and the moved handle at the middle-handle height; the bottom handle is hidden under the pulled-out drawer. The episode did not end, consistent with the bottom drawer staying closed.",
+      "confidence": "high",
+      "evidence": "evidence_which_drawer.png"
+    }
+  ],
+  "notes": "After the wrong drawer was opened pi0 appended an uninstructed subtask: it picked the bowl (247-260) and put it into the open middle drawer (280-409). That is downstream and harmless to the (already failed) goal, so it is not recorded as a separate failure. The handle-hook pull while reaching past the bowl is unusual but worked."
+}

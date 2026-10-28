@@ -1,0 +1,55 @@
+{
+  "episode": "libero_90/task8_fail_init0",
+  "task_language": "open the top drawer of the cabinet and put the bowl in it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "open(top_drawer)",
+      "outcome": "never attempted: the gripper never approached the cabinet; all drawers stay closed through step 409"
+    },
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "success (out of order): bowl grasped and lifted by ~140"
+    },
+    {
+      "name": "place(black_bowl, top_drawer, in)",
+      "outcome": "failed: bowl placed on the plate (~260) instead"
+    }
+  ],
+  "behaviour_summary": "pi0 ignored the drawer, picked the black bowl and put it on the plate (by ~260), then kept adjusting it on the plate until timeout.",
+  "runs_trained_task": "libero_spatial: pick up the black bowl ... and place it on the plate",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "The policy runs the scene's habitual (trained) skill or task instead of the instructed one.",
+      "subtask": "open(top_drawer)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "if bowl in gripper: REPROMPT('put the black bowl on the table') or place it back, then RETREAT(dz=+0.10)",
+        "REPROMPT('open the top drawer of the cabinet')",
+        "WATCH(EE heads to the top handle, 3 s)",
+        "VERIFY(top drawer open, zoom)",
+        "REPROMPT('put the black bowl in the top drawer of the cabinet')",
+        "WATCH 5 s; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator issues one subtask at a time (open the drawer first) and HALTs when the empty gripper heads for the bowl before the drawer-open VERIFY passes.",
+      "observation": "step 60 gripper descends onto the bowl; 80-140 bowl grasped and lifted; 220-260 bowl lowered onto the plate (plate hidden under the bowl by 260); 300-409 pi0 re-grasps and fiddles with the bowl on the plate. The cabinet handles never move.",
+      "confidence": "high",
+      "evidence": "evidence_bowl_to_plate.png"
+    }
+  ],
+  "notes": "The plate is the libero_spatial destination; the instruction's destination (top drawer) is never touched. The bowl ends on the plate, so the pick/place motor skills themselves look fine."
+}

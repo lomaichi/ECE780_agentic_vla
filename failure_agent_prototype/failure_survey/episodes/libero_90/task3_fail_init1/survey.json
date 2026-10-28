@@ -1,0 +1,47 @@
+{
+  "episode": "libero_90/task3_fail_init1",
+  "task_language": "put the butter at the back in the top drawer of the cabinet and close it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(back_butter)",
+      "outcome": "never attempted"
+    },
+    {
+      "name": "place(back_butter, top_drawer, in)",
+      "outcome": "never attempted; destination drawer partly closed at ~120-160, then reopened 200-300"
+    },
+    {
+      "name": "close(top_drawer)",
+      "outcome": "never attempted as part of the task; drawer fully open at 409"
+    }
+  ],
+  "behaviour_summary": "pi0 pushes the open destination drawer part-way shut (60-160), pulls it open again (200-300), dips toward the bowl/drawer front at 300-320, then lifts the arm up and away (340-409). No butter is touched.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4 'put the black bowl in the bottom drawer of the cabinet and close it' (drawer close/open cycle near the bowl); medium-low confidence",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual/trained-task behaviour instead of the instructed one, approaching a non-target object or fixture (and may destroy a precondition).",
+      "subtask": "pick(back_butter)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer open); if closed INSERT_SUBTASK 'open the top drawer of the cabinet' -> REPROMPT 'pick up the butter at the back and place it in the top drawer of the cabinet' -> WATCH 5 s for an approach to the back butter -> VERIFY(butter in drawer) -> REPROMPT 'close the top drawer of the cabinet'; retry once with a 15 cm retreat, then ESCALATE",
+      "prevention": "Declare 'top drawer open' as a protected state until the butter is inside; HALT on the first violation or when the empty gripper heads for the drawer.",
+      "observation": "Step 40: gripper over the table moving toward the cabinet. 60-80: on the drawer front; 120-160: drawer partly closed (not flush). 200-240: gripper at the top handle, drawer pulled back out; fully open by 300. 300-320: hand over the bowl / drawer front. 340-409: arm raised out of view. Butters untouched; drawer ends fully open and empty.",
+      "confidence": "high",
+      "evidence": "evidence_drawer_close_reopen.png"
+    }
+  ],
+  "notes": "The partial (non-flush) close at 120-160 resembles LL-1 but is not recorded, since the close itself was not instructed at that point."
+}

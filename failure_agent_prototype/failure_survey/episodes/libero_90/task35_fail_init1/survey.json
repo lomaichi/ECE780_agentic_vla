@@ -1,0 +1,45 @@
+{
+  "episode": "libero_90/task35_fail_init1",
+  "task_language": "open the microwave",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "open(microwave)",
+      "outcome": "never attempted: door closed all episode, handle never grasped"
+    }
+  ],
+  "behaviour_summary": "pi0 went to the plate in front of the microwave instead, hovered over/around it with varied wrist rotations for most of the episode, briefly came near the microwave handle (~360) and ended above the plate; the microwave was never opened.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "target_never_approached",
+      "mode_definition": "pi0 wanders or hovers among non-target objects and fixtures for the whole episode and never approaches or grasps the instructed target.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "open(microwave)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "hl_remedy": [
+        "HALT after 3 frames with the gripper over a non-target object (plate)",
+        "RETREAT up 10 cm",
+        "REPROMPT 'open the door of the microwave'",
+        "WATCH 3 s for the EE to approach the microwave handle",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator VLM-checks after 2-3 frames that the EE is moving toward the instructed fixture's handle; on mismatch HALT early instead of waiting for timeout.",
+      "observation": "Step 60 gripper descends between plate and microwave; 80-120 it hovers directly above the plate; 140-340 it wanders around the plate with large wrist rotations, no grasp; 360 briefly near the handle side; 380-409 back above the plate. Microwave door closed throughout.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_target_plate.png"
+    }
+  ],
+  "notes": "Contrast with init0 of the same task, where pi0 did go to the handle: target selection is stochastic. The plate does not appear to be grasped or moved significantly."
+}

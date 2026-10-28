@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task59_fail_init1",
+  "task_language": "pick up the tomato sauce and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(tomato_sauce)",
+      "outcome": "partial: grasped and lifted only at ~400-409, after first moving the alphabet soup"
+    },
+    {
+      "name": "place(tomato_sauce, tray, in)",
+      "outcome": "never attempted (timeout while lifting)"
+    }
+  ],
+  "behaviour_summary": "pi0 dithers over the cream cheese and alphabet soup (~60-240), grasps the alphabet soup ~260, puts it in the tray ~280-340, then grasps the tomato sauce and is lifting it when the episode times out.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE2: put both the alphabet soup and the tomato sauce in the basket (tray used as the basket)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "The policy approaches, grasps or transports a non-instructed object (typically one used in a trained task of the same scene) instead of the object named in the instruction.",
+      "subtask": "pick(tomato_sauce)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT as soon as the EE descends on (or closes on) a non-target object",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
+        "REPROMPT 'pick up the tomato sauce and put it in the tray'",
+        "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator localizes the target object before execution and the FR agent VERIFYs at each descent that the EE is over the target ROI, HALTing on a distractor approach.",
+      "observation": "At 40 the EE is over the alphabet soup/ketchup pair, 80-100 over the cream cheese box, 120-240 hovering with a rotated wrist over the alphabet soup, grasp ~260, alphabet soup upright in the tray by 320. Only at 380-409 does it go to the tomato sauce, which is lifted in the gripper at 409.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_order.png"
+    }
+  ],
+  "notes": "pi0 follows the trained two-can order (alphabet soup first, tomato sauce second); the instructed object comes second and runs out of time. ~180 steps of dithering at 60-240 also contribute."
+}

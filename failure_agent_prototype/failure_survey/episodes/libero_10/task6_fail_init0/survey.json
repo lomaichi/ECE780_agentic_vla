@@ -1,0 +1,51 @@
+{
+  "episode": "libero_10/task6_fail_init0",
+  "task_language": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(white_mug)",
+      "outcome": "success: grasped ~step 87-100, lifted by 113"
+    },
+    {
+      "name": "place(white_mug, plate, on)",
+      "outcome": "success (visually): lowered onto plate 127-207, released ~213; mug rests slightly tilted with its base overhanging the plate's front rim"
+    },
+    {
+      "name": "pick(chocolate_pudding)",
+      "outcome": "failed: fingers descend onto the pudding ~260-273 and topple it; no successful grasp before timeout at 529"
+    },
+    {
+      "name": "place(chocolate_pudding, plate, right_of)",
+      "outcome": "never attempted (pudding never grasped)"
+    }
+  ],
+  "behaviour_summary": "pi0 executes its trained libero_10 task correctly for the mug (on plate by ~213), then moves over the pudding, knocks it from upright onto its side at ~267, and hovers just behind it with fingers open for the remaining ~260 steps without regrasping.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "grasp_approach_topples_object",
+      "mode_definition": "The gripper descends onto a small object slightly misaligned, so the fingers strike and topple or rotate it instead of enclosing it, and no successful grasp follows.",
+      "subtask": "pick(chocolate_pudding)",
+      "onset_step": 267,
+      "onset_window": [
+        260,
+        273
+      ],
+      "rl_reset_step": 253,
+      "rl_reset_frame": "frames/step0253.png",
+      "rl_subtask": "pick(chocolate_pudding)",
+      "rl_success_check": "pudding enclosed by both fingers and lifted clear of the table",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Pudding stands upright through 260 with the open gripper just above/behind it; by 273 it lies on its side, rotated ~45 deg. From 280 to 529 the gripper stays parked just behind the pudding with fingers open, making tiny adjustments, and never closes on it (no lift visible in any frame). Pudding ends behind (toward robot) and to the image-left of the plate, not in the right-of-plate region.",
+      "confidence": "medium",
+      "evidence": "evidence_pudding_grasp_attempts.png"
+    }
+  ],
+  "notes": "In-distribution task (libero_10). The mug placement looks acceptable but tilted on the plate rim (evidence_mug_place_and_pudding_hover.png); if the 'on' predicate fails for a tilted mug that would be a second LL failure, not decidable from video. The ~260-step hover after toppling may also deserve an HL stall detector (no progress, gripper open, target in view). Exact contact at 267 is inside a \u00b17 step window."
+}

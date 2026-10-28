@@ -1,0 +1,45 @@
+{
+  "episode": "libero_90/task39_fail_init1",
+  "task_language": "turn off the stove",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "turn_off(stove)",
+      "outcome": "never attempted: the knob is never approached; the burner is still red at the end"
+    }
+  ],
+  "behaviour_summary": "pi0 ignores the stove knob (image-right, behind the stove), sweeps to the far image-left moka pot and tries to pick it; the gripper comes down on the image-left pot at ~200 and it falls onto its side by 220. The arm then leaves the camera view (~260-300) and the scene stays static to the timeout.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE8: put both moka pots on the stove (pick phase)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained-task) skill instead of the instructed one.",
+      "subtask": "turn_off(stove)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT up 10 cm and away from the pots",
+        "REPROMPT \"turn off the stove\"",
+        "WATCH 5 s for an approach to the stove knob",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares 'moka pots untouched' as a protected state for this instruction; FR agent HALTs when the EE heads to a pot instead of the knob.",
+      "observation": "Step 20 the arm is still at home; at 40 it is already moving to the image-left, away from the stove and knob; 60-180 it travels over to the far image-left pot and descends on it; the gripper comes down on the image-left pot at ~200 and it falls onto its side by 220. Burner and knob look identical at step 0 and 409.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_target_pot.png"
+    }
+  ],
+  "notes": "The knocked-over pot is an off-task LL contact (grasp near the top of a tall object); not recorded as a task failure, but useful evidence of a top-heavy grasp issue. Stove state in evidence_stove_still_on.png. pi0 has never been trained on a knob-turning task in this scene."
+}

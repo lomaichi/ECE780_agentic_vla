@@ -1,0 +1,47 @@
+{
+  "episode": "libero_90/task1_fail_init1",
+  "task_language": "close the top drawer of the cabinet and put the black bowl on top of it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "close(top_drawer)",
+      "outcome": "success: handles in line by step 100"
+    },
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "never attempted: gripper hovers over the cabinet from 100 to 409"
+    },
+    {
+      "name": "place(black_bowl, cabinet_top, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 closes the top drawer by ~100, then hovers above the cabinet with the gripper open for ~300 steps without moving toward the bowl.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-1",
+      "mode_name": "subtask_handoff_stall",
+      "mode_definition": "pi0 finishes subtask k of a compound instruction, then idles and never starts subtask k+1.",
+      "subtask": "pick(black_bowl)",
+      "onset_step": 120,
+      "onset_window": [
+        100,
+        120
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "VERIFY(top drawer closed) -> HALT -> RETREAT(up 10 cm) -> REPROMPT 'pick up the black bowl and place it on top of the cabinet' -> WATCH 3 s for an approach to the bowl; retry once, then ESCALATE",
+      "prevention": "The coordinator issues one subtask at a time and advances on VERIFY.",
+      "observation": "Steps 60-80: drawer being pushed. 100: all three handles in line (closed). 120-409: gripper hovers above the cabinet top / handles with almost no motion; the bowl and the boxes stay untouched.",
+      "confidence": "high",
+      "evidence": "evidence_closed_then_idle.png"
+    }
+  ],
+  "notes": "Consistent with the PoC call (HL-1, ~100). 'Closed' is a visual judgement (handles in line)."
+}

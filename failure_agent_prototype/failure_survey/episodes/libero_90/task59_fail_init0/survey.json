@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task59_fail_init0",
+  "task_language": "pick up the tomato sauce and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(tomato_sauce)",
+      "outcome": "never attempted"
+    },
+    {
+      "name": "place(tomato_sauce, tray, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 first moves over the alphabet soup (~40), then swings to the cream cheese box and parks its rotated gripper beside it from ~80 to 409, making small oscillations without ever grasping anything.",
+  "runs_trained_task": "unclear; possibly LIVING_ROOM_SCENE2 (alphabet soup / cream cheese are both trained-task objects)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "The policy approaches, grasps or transports a non-instructed object (typically one used in a trained task of the same scene) instead of the object named in the instruction.",
+      "subtask": "pick(tomato_sauce)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT as soon as the EE descends on (or closes on) a non-target object",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
+        "REPROMPT 'pick up the tomato sauce and put it in the tray'",
+        "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator localizes the target object before execution and the FR agent VERIFYs at each descent that the EE is over the target ROI, HALTing on a distractor approach.",
+      "observation": "Tomato sauce (red/green can) is at the left near the tray. At 40 the EE is over the alphabet soup, at 60 it descends toward the cream cheese box, and from 80 to 409 the gripper sits beside the box (left of it in the image) with the wrist rotated, never closing on it and never moving toward the tomato sauce.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_stuck.png"
+    }
+  ],
+  "notes": "The long freeze next to the box (330 steps) could also be read as a stall/deadlock after a wrong-object approach; recorded under wrong_target_object because the target was never approached."
+}

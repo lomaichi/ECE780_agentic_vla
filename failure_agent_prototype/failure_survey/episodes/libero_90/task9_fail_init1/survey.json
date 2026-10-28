@@ -1,0 +1,78 @@
+{
+  "episode": "libero_90/task9_fail_init1",
+  "task_language": "put the black bowl on the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "partial: rim grasp by ~80; the bowl is held but not clearly lifted until late"
+    },
+    {
+      "name": "place(black_bowl, plate, on)",
+      "outcome": "failed: never moved toward the plate; bowl carried toward the cabinet at the end"
+    }
+  ],
+  "behaviour_summary": "pi0 grasped the bowl rim early, then froze holding it at the pick location for ~250 steps and finally carried it toward the cabinet instead of the plate.",
+  "runs_trained_task": "possibly a cabinet-destination routine (bowl on/into the cabinet, cf. libero_90 task10 / libero_10 KITCHEN_SCENE4); not the libero_spatial bowl-to-plate task it should resemble",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "grasp_hold_stall",
+      "mode_definition": "After grasping the target object the policy holds it at or near the pick location for many steps without moving toward any destination.",
+      "subtask": "place(black_bowl, plate, on)",
+      "onset_step": 120,
+      "onset_window": [
+        100,
+        120
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "VERIFY(bowl in gripper, zoom)",
+        "RETREAT(dz=+0.10) with bowl",
+        "REPROMPT('pick up the black bowl and place it on the plate')",
+        "WATCH(EE moves toward plate, 3 s)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator watches EE displacement after a closed-gripper grasp; < 1 cm over 3 frames with the object still at the pick spot triggers HALT and a re-prompt.",
+      "observation": "Step 60-80 gripper closes on the bowl rim; from 100 to ~300 the arm stays almost still holding the bowl at the pick spot, never heading toward the plate.",
+      "confidence": "medium",
+      "evidence": "evidence_stall_then_cabinet.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination_transport",
+      "mode_definition": "The policy carries the correctly grasped object toward a non-instructed fixture or region.",
+      "subtask": "place(black_bowl, plate, on)",
+      "onset_step": 320,
+      "onset_window": [
+        300,
+        320
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10) keeping the bowl",
+        "REPROMPT('pick up the black bowl and place it on the plate')",
+        "WATCH(EE heads toward plate, 3 s)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares the destination region and HALTs when the loaded gripper moves toward a different fixture.",
+      "observation": "At 300-409 the grasped bowl is carried toward the cabinet and ends against the cabinet front near the handles; the plate is never approached.",
+      "confidence": "medium",
+      "evidence": "evidence_stall_then_cabinet.png"
+    }
+  ],
+  "notes": "From the top view I cannot tell whether the bowl is lifted during the stall; it looks rim-held at or near table height (shifted slightly toward the camera). If it was not lifted, the stall could partly be an LL lift problem, but the later transport shows the grasp holds. Both inits behave almost identically."
+}

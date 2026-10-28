@@ -1,0 +1,51 @@
+{
+  "episode": "libero_10/task4_fail_init1",
+  "task_language": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(white_mug)",
+      "outcome": "success: grasped ~67-93"
+    },
+    {
+      "name": "place(white_mug, left_plate, on)",
+      "outcome": "success (visually): on the robot-left (image right) plate by ~240, released ~247; plate partly out of frame"
+    },
+    {
+      "name": "pick(yellow_and_white_mug)",
+      "outcome": "success: grasped ~300-313"
+    },
+    {
+      "name": "place(yellow_and_white_mug, right_plate, on)",
+      "outcome": "partial (visually): set on the robot-right (image left) plate ~353-393, but the plate is partly outside the frame and the mug sits off-centre toward that edge"
+    }
+  ],
+  "behaviour_summary": "pi0 executes both pick-and-place subtasks in the correct order and to the correct plates by ~393, then lifts the arm out of view and idles to timeout without the task registering success.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "placement_region_overhang",
+      "mode_definition": "The object is released on the destination but off-centre, with part of its base over the rim or edge, so the 'on' predicate is not satisfied even though it looks placed.",
+      "subtask": "place(yellow_and_white_mug, right_plate, on)",
+      "onset_step": 373,
+      "onset_window": [
+        353,
+        393
+      ],
+      "rl_reset_step": 333,
+      "rl_reset_frame": "frames/step0333.png",
+      "rl_subtask": "place(yellow_and_white_mug, right_plate, on)",
+      "rl_success_check": "yellow and white mug fully on the right plate, base inside the plate rim, gripper open",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "333: yellow mug carried above the image-left plate; 353-373 lowered onto the plate's image-right part with its base near the rim; 393-529 mug static, plate visible only on the mug's right/front, the rest of the plate out of frame. White mug on the other plate also sits off-centre toward the frame edge (247-529).",
+      "confidence": "low",
+      "evidence": "evidence_yellow_mug_right_plate.png"
+    }
+  ],
+  "notes": "In-distribution task (libero_10). Both mugs look on their correct plates in every final frame; the failure cause is not visible because both plates are cut by the frame edges. It may instead be the white mug (evidence_white_mug_left_plate.png) that fails the predicate. Treat this episode as 'apparent success, predicate failed' and check with the trace before using it as an RL reset."
+}

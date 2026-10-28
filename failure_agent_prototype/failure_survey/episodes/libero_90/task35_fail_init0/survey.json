@@ -1,0 +1,39 @@
+{
+  "episode": "libero_90/task35_fail_init0",
+  "task_language": "open the microwave",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "open(microwave)",
+      "outcome": "partial: door swung partly open (~step 200-220) then stalled short of open"
+    }
+  ],
+  "behaviour_summary": "pi0 went to the microwave handle by step ~60, hovered at it until ~180, pulled the door partly open around 200-220, then stayed at the handle with the door only partly open (and slightly swung back) until timeout.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "door_pull_stall",
+      "mode_definition": "pi0 hooks a hinged door's handle and swings the door partly open, then stops pulling and holds or hovers at the handle with the door short of the open threshold.",
+      "subtask": "open(microwave)",
+      "onset_step": 260,
+      "onset_window": [
+        220,
+        260
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "open(microwave)",
+      "rl_success_check": "microwave door swung open past the LIBERO 'open' threshold (door clearly perpendicular-ish to the front, not just ajar)",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Steps 60-160 gripper at the handle, door closed. Step 200 the door starts to swing; step 220 it is at its widest (roughly 30-40 deg); 260-409 door stays partly open at a slightly smaller angle with the gripper hovering at the handle and no further pull.",
+      "confidence": "medium",
+      "evidence": "evidence_door_pull.png"
+    }
+  ],
+  "notes": "Door angle judged visually from a 1.5x crop; at 1 fps the exact peak opening is uncertain (\u00b120 steps). The 100-step hesitation at the handle before pulling (60-180) is noted but not a separate failure. Correct fixture and skill: purely a motor-execution shortfall. Guide demo candidates: libero_10 KITCHEN_SCENE6 microwave successes (close only, so weak) - a dedicated open-door demo may be needed."
+}

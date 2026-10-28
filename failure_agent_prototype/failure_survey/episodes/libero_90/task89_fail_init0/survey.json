@@ -1,0 +1,48 @@
+{
+  "episode": "libero_90/task89_fail_init0",
+  "task_language": "pick up the book on the right and place it under the cabinet shelf",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(right_book)",
+      "outcome": "success: robot-right book grasped at 60-100"
+    },
+    {
+      "name": "place(right_book, cabinet_shelf, under)",
+      "outcome": "failed: carried to the robot's left and set down there; shelf never approached"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct book, carries it to the robot's left (120-200), releases it near the robot-left book, knocks that book flat (260-280), tips the black book (340), and ends lifting a grey book high at the image top-right.",
+  "runs_trained_task": "No libero_10 task exists in STUDY_SCENE4. The motion (grasp the image-left book, carry it to the robot's left / image right-back and set it down) resembles the STUDY_SCENE1 libero_10 task 'pick up the book and place it in the back compartment of the caddy', where the book starts on the image left and the caddy sits back-right; cross-scene transfer, low-medium confidence.",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination_placement",
+      "mode_definition": "Transports the grasped object to a location other than the instructed destination fixture/region and releases or abandons it there.",
+      "subtask": "place(right_book, cabinet_shelf, under)",
+      "onset_step": 120,
+      "onset_window": [
+        100,
+        120
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
+        "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
+        "REPROMPT 'pick up the book on the right and place it under the cabinet shelf'",
+        "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares the destination region in image space and the FR agent HALTs on the first frames of transport heading elsewhere; pi0 has a strong scene-independent 'carry to robot-left/back' habit for books.",
+      "observation": "100: book lifted near the robot base; 120-200 moved to the image right; ~220-240 gripper empty over the robot-left book; 260-280 that book is knocked flat; 340-360 gripper again holds a grey book, lifted out of frame.",
+      "confidence": "medium",
+      "evidence": "evidence_knock_and_wander.png"
+    }
+  ],
+  "notes": "Collateral: robot-left book knocked flat at 260-280 and black book tipped at ~340. Shelf assumed to be the dark furniture on the image left."
+}

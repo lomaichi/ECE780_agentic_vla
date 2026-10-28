@@ -1,0 +1,47 @@
+{
+  "episode": "libero_90/task3_fail_init0",
+  "task_language": "put the butter at the back in the top drawer of the cabinet and close it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(back_butter)",
+      "outcome": "never attempted: no butter is touched"
+    },
+    {
+      "name": "place(back_butter, top_drawer, in)",
+      "outcome": "never attempted; the destination drawer is closed by ~80-100 and reopened ~240"
+    },
+    {
+      "name": "close(top_drawer)",
+      "outcome": "never attempted as part of the task (closed only before the place, wrongly)"
+    }
+  ],
+  "behaviour_summary": "pi0 goes straight to the open destination drawer and pushes it shut (40-100), then grabs the top handle and pulls it open again (160-240), and finally rests its fingertips on the black bowl rim (240-409). The butters are never approached.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4 'put the black bowl in the bottom drawer of the cabinet and close it' (drawer manipulation plus going for the bowl); medium-low confidence",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual/trained-task behaviour instead of the instructed one, approaching a non-target object or fixture (and may destroy a precondition).",
+      "subtask": "pick(back_butter)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer open); if closed INSERT_SUBTASK 'open the top drawer of the cabinet' -> REPROMPT 'pick up the butter at the back and place it in the top drawer of the cabinet' -> WATCH 5 s for an approach to the back butter -> VERIFY(butter in drawer) -> REPROMPT 'close the top drawer of the cabinet'; retry once with a 15 cm retreat, then ESCALATE",
+      "prevention": "Declare 'top drawer open' as a protected state until the butter is inside; HALT on the first violation or when the empty gripper heads for the drawer.",
+      "observation": "Step 40: gripper above the table heading to the cabinet. 60-80: on the drawer, pushing it shut; by 80-120 it is (nearly) closed. 160-200: gripper at the top handle; by 240 the drawer is pulled open again. 240-409: fingertips on the black bowl rim beside the cabinet (wrong object; possibly the bowl of the trained libero_10 task). Butters and pudding untouched.",
+      "confidence": "high",
+      "evidence": "evidence_drawer_close_reopen.png"
+    }
+  ],
+  "notes": "The bowl approach after the reopen is treated as part of the same trained-task replay rather than a separate failure. Whether the bowl was actually grasped cannot be told at 1 fps."
+}

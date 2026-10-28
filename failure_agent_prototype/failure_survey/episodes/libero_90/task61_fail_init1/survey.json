@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task61_fail_init1",
+  "task_language": "pick up the chocolate pudding and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(chocolate_pudding)",
+      "outcome": "never attempted: pudding untouched"
+    },
+    {
+      "name": "place(chocolate_pudding, tray, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 moved to the robot's-left bowl (image right) by step 60 and then froze there with the gripper down over/around the bowl from step ~80 to the timeout (409), never lifting anything.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_manipulated",
+      "mode_definition": "pi0 approaches, grasps and/or relocates a non-instructed object (often to the instructed destination) instead of the instructed target object.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "pick(chocolate_pudding)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "hl_remedy": [
+        "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
+        "REPROMPT 'pick up the chocolate pudding and place it in the tray'",
+        "WATCH 3 s for EE approach toward the target",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator VLM-checks which object the gripper is heading for in the first 2-3 frames and HALTs on a non-target approach before any grasp.",
+      "observation": "Step 20 arm at home; step 40 gripper descending directly above the image-right bowl; 60 onward the gripper sits on that bowl (bowl occluded) and the pose is essentially identical from 80 to 409. Pudding at front right and tray never touched.",
+      "confidence": "high",
+      "evidence": "evidence_stall_over_bowl.png"
+    }
+  ],
+  "notes": "Secondary behaviour not recorded as a separate failure: after reaching the wrong bowl pi0 freezes for ~330 steps (no lift, no regrasp). Cannot tell from frames whether the bowl was grasped (fingers hidden) - if grasped, this is also a lift that never starts. Freeze is likely a consequence of the out-of-distribution target choice."
+}

@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task31_fail_init1",
+  "task_language": "put the black bowl on top of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "never attempted: gripper hovers over the open top drawer front for the whole episode"
+    },
+    {
+      "name": "place(black_bowl, cabinet, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 moves straight to the open top drawer (by step 40) and hovers there with the fingers down at the drawer front/handle until timeout, with small sways (320-409); it neither closes the drawer nor approaches the bowl.",
+  "runs_trained_task": "drawer-closing habit of this cabinet scene (libero_90 'close the top drawer of the cabinet'; libero_10 KITCHEN_SCENE4 drawer close) rather than the instructed pick",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual skill (going to / pushing the open drawer) instead of the instructed one.",
+      "subtask": "pick(black_bowl)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10, dx=0.05 away from the drawer)",
+        "REPROMPT('pick up the black bowl and place it on top of the cabinet')",
+        "WATCH(EE approaches the black bowl, 5 s)",
+        "on no approach: retry once with a 15 cm retreat, then ESCALATE"
+      ],
+      "prevention": "HALT when the empty gripper dwells over a non-target fixture for 2 frames; issue the object-first prompt from a pose away from the drawer.",
+      "observation": "At 40 the gripper is above the drawer front with fingers down at the lip; 80-260 essentially static there; 320-409 small sways toward the handle. Drawer extension at 409 matches step 20 (not pushed shut). Bowl untouched throughout.",
+      "confidence": "medium",
+      "evidence": "evidence_hover_at_drawer.png"
+    }
+  ],
+  "notes": "Unlike the seed HL-2 instance, the drawer is not actually pushed; the behaviour is an approach-and-idle at the habitual fixture, so it also resembles an idle stall. Kept as HL-2 because the target is the scene's default fixture rather than the instructed object."
+}

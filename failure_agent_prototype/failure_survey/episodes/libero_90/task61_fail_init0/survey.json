@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task61_fail_init0",
+  "task_language": "pick up the chocolate pudding and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(chocolate_pudding)",
+      "outcome": "never attempted: pudding (front, image right) untouched all episode"
+    },
+    {
+      "name": "place(chocolate_pudding, tray, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 went to the robot's-left bowl (image right, beside the salad dressing), grasped it around steps 140-200, carried it over to the tray and left it in the tray by ~step 380, then held still above the tray.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_manipulated",
+      "mode_definition": "pi0 approaches, grasps and/or relocates a non-instructed object (often to the instructed destination) instead of the instructed target object.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "pick(chocolate_pudding)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "hl_remedy": [
+        "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
+        "REPROMPT 'pick up the chocolate pudding and place it in the tray'",
+        "WATCH 3 s for EE approach toward the target",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator VLM-checks which object the gripper is heading for in the first 2-3 frames and HALTs on a non-target approach before any grasp.",
+      "observation": "Step 40 gripper still at the back centre; step 60-120 it descends over the image-right bowl; bowl in gripper 140-200, lifted 240-260, carried left; bowl visible inside the tray at 380-409. Pudding box at front right never moves.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_bowl.png"
+    }
+  ],
+  "notes": "Bowl-into-container pattern resembles libero_spatial 'pick up the black bowl ... and place it on the plate'; LIVING_ROOM_SCENE4 has no trained libero_10 task. Not verified that the bowl rests fully inside the tray, but irrelevant to the failure."
+}

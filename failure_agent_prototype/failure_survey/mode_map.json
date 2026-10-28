@@ -1,0 +1,216 @@
+{
+  "note": "Unified taxonomy. 'aliases' maps surveyor mode_names onto IDs; 'overrides' re-files single episodes where the same surveyor name meant different things across batches (key: '<episode>::<surveyor mode_name>'). Merge rule: HL-2 = wrong skill/fixture; HL-3 = wrong object category; HL-4 = wrong instance picked via a qualifier; HL-6 = right object, wrong destination/relation.",
+  "modes": {
+    "HL-1": {
+      "level": "high",
+      "name": "subtask_handoff_stall",
+      "definition": "pi0 completes a subtask (a fixture action or a successful grasp) and then idles; the next subtask never starts.",
+      "aliases": [
+        "subtask_handoff_stall",
+        "grasp_hold_stall"
+      ],
+      "remedy": "VERIFY(prev done) -> HALT -> RETREAT 10 cm (back into view) -> REPROMPT next-subtask sentence -> WATCH 3 s; retry once -> ESCALATE",
+      "prevention": "one subtask per prompt, advance only on VERIFY",
+      "status": "proposed"
+    },
+    "HL-2": {
+      "level": "high",
+      "name": "scene_default_skill_override",
+      "definition": "pi0 runs the scene's habitual skill or fixture interaction (usually from a trained libero_10/libero_spatial task) instead of the instructed skill.",
+      "aliases": [
+        "scene_default_skill_override"
+      ],
+      "remedy": "HALT -> RETREAT 10 cm + 5 cm from attractor -> INSERT_SUBTASK to restore any broken protected state -> POINT_APPROACH(target) -> REPROMPT object-first sentence -> WATCH 5 s; retry 15 cm -> ESCALATE",
+      "prevention": "declare protected states; POINT_APPROACH fixtures before the first pi0 step",
+      "status": "proposed"
+    },
+    "HL-3": {
+      "level": "high",
+      "name": "wrong_object_category",
+      "definition": "pi0 grasps/manipulates an object of a different category than the instructed target, typically an object from a trained task in the same scene.",
+      "aliases": [
+        "wrong_object_selected",
+        "wrong_object_manipulated",
+        "wrong_object_distractor",
+        "wrong_target_object"
+      ],
+      "remedy": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE",
+      "prevention": "list trained-task objects as distractors; pre-grasp VERIFY on every pick",
+      "status": "proposed"
+    },
+    "HL-4": {
+      "level": "high",
+      "name": "referring_expression_instance_error",
+      "definition": "pi0 picks the right kind of object or fixture but the wrong instance; the qualifier (left/right/middle/back, colour, top/bottom drawer) is ignored or mirrored.",
+      "aliases": [
+        "wrong_instance_spatial_qualifier",
+        "wrong_fixture_instance",
+        "wrong_fixture_part"
+      ],
+      "remedy": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE",
+      "prevention": "coordinator resolves qualifiers in the robot frame (robot-left = image-right) and passes a pointed target",
+      "status": "proposed"
+    },
+    "HL-5": {
+      "level": "high",
+      "name": "intermediate_subtask_skipped",
+      "definition": "In a multi-step instruction, pi0 skips a middle subtask (e.g. the stack) and carries a single object straight to the final destination.",
+      "aliases": [
+        "intermediate_subtask_skipped"
+      ],
+      "remedy": "HALT before the single object reaches the container -> stack in place if base already in container, else POINT_APPROACH(top) + REPROMPT stack sentence -> VERIFY(stacked) -> REPROMPT place sentence for the base",
+      "prevention": "split stack and place into two VERIFY-gated prompts",
+      "status": "proposed"
+    },
+    "HL-6": {
+      "level": "high",
+      "name": "destination_misgrounding",
+      "definition": "pi0 holds the correct object but carries it to, hovers at, or places it in a non-instructed destination/relation (often the trained task's destination), or wanders without committing to the instructed one.",
+      "aliases": [
+        "wrong_destination",
+        "wrong_destination_transport",
+        "wrong_destination_placement",
+        "transport_destination_indecision",
+        "place_relation_mirrored",
+        "placement_abandoned_at_destination"
+      ],
+      "remedy": "HALT keeping grasp -> RETREAT up 10 cm -> POINT_APPROACH(destination point) -> REPROMPT place sentence or scripted lower-and-release -> VERIFY(on/in); retry -> ESCALATE",
+      "prevention": "coordinator converts relation/compartment words into a destination point before the carry",
+      "status": "proposed"
+    },
+    "HL-7": {
+      "level": "high",
+      "name": "target_never_approached",
+      "definition": "pi0 hovers or wanders among other objects and fixtures for the whole episode and never approaches the instructed target.",
+      "aliases": [
+        "target_never_approached"
+      ],
+      "remedy": "early heading check (2-3 frames) -> HALT -> RETREAT -> POINT_APPROACH(target) -> REPROMPT -> WATCH 3 s -> ESCALATE",
+      "prevention": "VLM heading check in the first 2-3 frames",
+      "status": "proposed"
+    },
+    "HL-8": {
+      "level": "high",
+      "name": "grasp_loss_unnoticed",
+      "definition": "After a missed or slipped grasp, pi0 continues the transport/place motion with an empty gripper instead of re-grasping.",
+      "aliases": [
+        "empty_handed_transport",
+        "empty_gripper_continuation"
+      ],
+      "remedy": "post-grasp VERIFY(object between fingers, width > 0) fails -> HALT -> RETREAT 10 cm -> POINT_APPROACH(object) -> INVOKE_RL(rl/pick) or REPROMPT pick sentence -> VERIFY; retry -> ESCALATE",
+      "prevention": "VERIFY grasp after every pick before transport",
+      "status": "proposed"
+    },
+    "LL-1": {
+      "level": "low",
+      "name": "drawer_push_stall",
+      "definition": "While closing a drawer, the push stalls 1/2-2/3 of the way and the hand rests on the drawer front.",
+      "aliases": [
+        "drawer_push_stall"
+      ],
+      "rl_subtask": "rl/close_drawer",
+      "status": "RL not run"
+    },
+    "LL-2": {
+      "level": "low",
+      "name": "hinged_door_pull_stall",
+      "definition": "pi0 hooks a hinged door's handle and swings it partly open, then stops pulling short of the open threshold.",
+      "aliases": [
+        "door_pull_stall"
+      ],
+      "rl_subtask": "rl/open_door",
+      "status": "RL not run"
+    },
+    "LL-3": {
+      "level": "low",
+      "name": "knob_approach_contortion",
+      "definition": "Approaching a small fixture (stove knob), the wrist/elbow folds into a twisted configuration, touches the knob with the wrist body instead of the fingertips, and the arm swings away without turning it.",
+      "aliases": [
+        "fixture_approach_arm_contortion"
+      ],
+      "rl_subtask": "rl/turn_knob",
+      "status": "RL not run"
+    },
+    "LL-4": {
+      "level": "low",
+      "name": "unstable_grasp_slip",
+      "definition": "The grasp closes on a rim, edge or handle; during lift or transport the object tilts, pivots or slips out of the gripper.",
+      "aliases": [
+        "edge_grasp_slip_on_lift",
+        "grasp_slip_during_transport",
+        "grasp_slip_object_dragged",
+        "object_pivots_in_grasp",
+        "handled_object_swing_during_lift"
+      ],
+      "rl_subtask": "rl/pick",
+      "status": "RL not run"
+    },
+    "LL-5": {
+      "level": "low",
+      "name": "pregrasp_contact_disturbance",
+      "definition": "A misaligned descent or reach knocks over, pushes or tips the target (or a neighbouring receptacle) before a grasp is formed.",
+      "aliases": [
+        "grasp_approach_topples_object",
+        "object_knocked_over_on_approach",
+        "grasp_miss_pushes_object",
+        "receptacle_snag_tipover"
+      ],
+      "rl_subtask": "rl/pick",
+      "status": "RL not run"
+    },
+    "LL-6": {
+      "level": "low",
+      "name": "placement_instability",
+      "definition": "The object is released off-centre, at an edge or tilted, so it falls off the support, tips over, or overhangs the region and the predicate fails.",
+      "aliases": [
+        "placement_falls_off_support",
+        "placement_region_overhang",
+        "release_tipover_on_placement"
+      ],
+      "rl_subtask": "rl/place",
+      "status": "RL not run"
+    },
+    "LL-7": {
+      "level": "low",
+      "name": "place_release_stall",
+      "definition": "The object is brought to (or just beside) the correct destination but pi0 keeps adjusting and never lowers/releases it before timeout.",
+      "aliases": [
+        "release_stall_at_destination",
+        "place_hover_offset_no_release"
+      ],
+      "rl_subtask": "rl/place",
+      "status": "RL not run"
+    },
+    "LL-8": {
+      "level": "low",
+      "name": "pregrasp_hesitation",
+      "definition": "The gripper hovers next to the correct target with small adjustments for many seconds before (or instead of) closing, exhausting the step budget.",
+      "aliases": [
+        "pre_grasp_hover_hesitation",
+        "slow_pregrasp_hesitation"
+      ],
+      "rl_subtask": "rl/pick",
+      "status": "RL not run"
+    }
+  },
+  "overrides": {
+    "libero_90/task86_fail_init0::wrong_target_object": "HL-4",
+    "libero_90/task86_fail_init1::wrong_target_object": "HL-4",
+    "libero_90/task87_fail_init0::wrong_target_object": "HL-4",
+    "libero_90/task87_fail_init1::wrong_target_object": "HL-4",
+    "libero_90/task71_fail_init0::scene_default_skill_override": "HL-4",
+    "libero_90/task71_fail_init1::scene_default_skill_override": "HL-4",
+    "libero_90/task69_fail_init0::scene_default_skill_override": "HL-3",
+    "libero_90/task69_fail_init1::scene_default_skill_override": "HL-3",
+    "libero_90/task21_fail_init1::scene_default_skill_override": "HL-3",
+    "libero_90/task49_fail_init0::scene_default_skill_override": "HL-3",
+    "libero_90/task49_fail_init1::scene_default_skill_override": "HL-3",
+    "libero_90/task73_fail_init0::scene_default_skill_override": "HL-6",
+    "libero_90/task73_fail_init1::scene_default_skill_override": "HL-6",
+    "libero_90/task34_fail_init0::scene_default_skill_override": "HL-6",
+    "libero_90/task34_fail_init1::scene_default_skill_override": "HL-6"
+  },
+  "new_primitives": {
+    "POINT_APPROACH": "POINT_APPROACH(x): VLM points at x in the agentview frame, back-project onto the table/fixture plane with the camera calibration, scripted OSC move to 7 cm above, then hand to pi0"
+  }
+}

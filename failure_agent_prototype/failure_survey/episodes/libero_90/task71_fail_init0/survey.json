@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task71_fail_init0",
+  "task_language": "put the red mug on the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(red_mug)",
+      "outcome": "never attempted: the white mug was picked instead"
+    },
+    {
+      "name": "place(red_mug, plate, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the white mug instead of the red mug, places it on the plate (~160-340), then moves toward the chocolate pudding; the red mug is never touched.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE6: put the white mug on the plate and put the chocolate pudding to the right of the plate",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained) skill or task instead of the instructed one, e.g. manipulating the trained task's object rather than the instructed object.",
+      "subtask": "pick(red_mug)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends on the white mug",
+        "RETREAT up 10 cm",
+        "REPROMPT 'pick up the red mug and place it on the plate'",
+        "WATCH 3 s for approach to the red mug",
+        "VERIFY red mug grasped; retry once, then ESCALATE"
+      ],
+      "prevention": "Before pi0 closes the gripper, the FR agent VERIFYs (VLM on the 1 fps frame) that the object under the gripper is the coordinator's target; the coordinator also lists the scene's trained-task objects as distractors to watch for.",
+      "observation": "20: red mug (back-left of white mug) and white mug both visible; 40-60 arm moves past the red mug to the white mug and grasps it (60-80); 120-180 white mug lowered onto the plate; held until ~320, released ~340; 360-409 arm moves toward the pudding (the trained task's second subtask). Red mug never touched.",
+      "confidence": "high",
+      "evidence": "evidence_white_mug_instead_of_red.png"
+    }
+  ],
+  "notes": "Red mug ends where it started. Long hold (~160 steps) before releasing the white mug, as in task69_fail_init1."
+}

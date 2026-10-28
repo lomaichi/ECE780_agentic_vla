@@ -1,0 +1,71 @@
+{
+  "episode": "libero_90/task25_fail_init1",
+  "task_language": "put the black bowl on top of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "partial: rim grasp at ~180, lifted ~200, then bowl tilts and drops ~320-340"
+    },
+    {
+      "name": "place(black_bowl, cabinet_top, on)",
+      "outcome": "failed: bowl carried over the open bottom drawer (not the cabinet top) and dropped onto the floor in front of the drawer"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the bowl by its rim, carries it over the open bottom drawer (the trained destination) instead of the cabinet top, hovers there with the bowl increasingly tilted, and the bowl falls out in front of the drawer ~340; the hand then hovers empty until timeout.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4: put the black bowl in the bottom drawer of the cabinet and close it (partial)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "transport_destination_indecision",
+      "mode_definition": "After a successful grasp, the policy carries the object and hovers near (but never over) the instructed destination, often drifting toward a trained-task destination, without lowering or releasing it until timeout.",
+      "subtask": "place(black_bowl, cabinet_top, on)",
+      "onset_step": 260,
+      "onset_window": [
+        220,
+        260
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT once the EE has been near-stationary for 3 frames with the object held",
+        "VERIFY bowl still in gripper",
+        "RETREAT up 10 cm",
+        "REPROMPT 'put the black bowl on top of the cabinet'",
+        "WATCH 3 s for the EE moving over the cabinet top ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator marks the trained destination (bottom drawer) as a distractor; FR agent checks the carry path ends over the instructed destination ROI.",
+      "observation": "After lifting at ~200 the bowl is carried to the right of the cabinet and from 220-320 it is held low over the open bottom drawer, never moved over the cabinet top surface.",
+      "confidence": "medium",
+      "evidence": "evidence_bowl_drop.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "grasp_slip_during_transport",
+      "mode_definition": "An object held in an insecure edge/rim grasp tilts in the gripper during transport and falls out away from both source and destination.",
+      "subtask": "pick(black_bowl)",
+      "onset_step": 340,
+      "onset_window": [
+        320,
+        340
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "pick up the black bowl with a stable grasp and place it on top of the cabinet",
+      "rl_success_check": "bowl rests on the cabinet top surface, upright, gripper released",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Bowl is pinched at one rim point; it is visibly tilted in the gripper at 260, 300 and 320, and at 340 it lies upright on the floor in front of the drawer while the empty hand stays above the drawer.",
+      "confidence": "high",
+      "evidence": "evidence_bowl_drop.png"
+    }
+  ],
+  "notes": "The drop is recorded as independent of the destination error: the insecure rim grasp would have risked a drop on any carry. rl_reset_step 160 is the gripper above the bowl before the grasp closes."
+}

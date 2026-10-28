@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task53_fail_init0",
+  "task_language": "pick up the orange juice and put it in the basket",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(orange_juice)",
+      "outcome": "never attempted: gripper parks over the blue cream-cheese-like box in front of the juice carton and finally lifts that box"
+    },
+    {
+      "name": "place(orange_juice, basket, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 lowers the gripper at ~60 over the flat blue box in front of the orange juice and holds that pose almost motionless until ~380 (≈320 steps), then grasps and lifts the blue box (400-409). The orange juice carton is never touched.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE2 'put both the cream cheese box and the butter in the basket' (goes for the cream-cheese-like box)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 approaches, grasps and manipulates a non-instructed object in the scene instead of the instructed target object.",
+      "subtask": "pick(orange_juice)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10)",
+        "REPROMPT('pick up the orange juice and put it in the basket')",
+        "WATCH(EE approaches the orange juice, 5 s)",
+        "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
+      ],
+      "prevention": "Before allowing gripper closure, VERIFY the object under the gripper is the instructed target (pre-grasp identity check); HALT as soon as the EE descends over a non-target object for 2 frames. Also HALT on a >3-frame dwell with the gripper open and low over a non-target object.",
+      "observation": "At 40 the gripper is above the cluster (milk, can, juice); at 60 it is lowered with fingers straddling the front end of the blue box; it stays there (60-380) with only small motion; at 400 the blue box is in the gripper and lifted, and the juice carton stands untouched to its right.",
+      "confidence": "medium",
+      "evidence": "evidence_hover_then_grasp_wrong_box.png"
+    }
+  ],
+  "notes": "Object identities are from appearance (blue flat box = cream cheese, orange/white carton = orange juice). The ~320-step dwell before the grasp is part of the same wrong-object behaviour and was not recorded separately; onset timing of the wrong target is less certain than the outcome (wrong box lifted at 400)."
+}

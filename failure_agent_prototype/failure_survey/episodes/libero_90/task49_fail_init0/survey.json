@@ -1,0 +1,65 @@
+{
+  "episode": "libero_90/task49_fail_init0",
+  "task_language": "pick up the tomato sauce and put it in the basket",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(tomato_sauce)",
+      "outcome": "never attempted: the alphabet soup can is picked instead (60-80)"
+    },
+    {
+      "name": "place(tomato_sauce, basket, in)",
+      "outcome": "never attempted; basket overturned at ~220 and stays upside down/on its side"
+    }
+  ],
+  "behaviour_summary": "pi0 executes the trained libero_10 task of this scene: it picks the alphabet soup and drops it in the basket (60-140), then reaches toward the cream cheese next to the basket, catches the basket rim and flips the basket over (200-260), and ends pushing on the overturned basket.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE1 'put both the alphabet soup and the cream cheese box in the basket'",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual/trained-task behaviour instead of the instructed one, approaching a non-target object or fixture (and may destroy a precondition).",
+      "subtask": "pick(tomato_sauce)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> RETREAT(up 10 cm) -> REPROMPT 'pick up the tomato sauce and place it in the basket' -> WATCH 3 s that the EE heads for the tomato sauce -> VERIFY(tomato sauce in basket); retry once with a 15 cm retreat, then ESCALATE",
+      "prevention": "Before the first descent VERIFY that the gripper is above the named object; HALT when the empty gripper descends on a trained-task object (alphabet soup / cream cheese) in this scene.",
+      "observation": "Step 40: gripper above the blue alphabet soup can. 60-80: descends and grasps it. 100-120: carried over the basket. 140: soup can inside the basket. The tomato sauce and the ketchup bottle are never approached.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_soup.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "receptacle_snag_tipover",
+      "mode_definition": "while reaching for an object adjacent to a receptacle, the gripper catches the receptacle's rim and lifts or tips it over, displacing it and possibly spilling its contents.",
+      "subtask": "pick(cream_cheese) [not part of this task]",
+      "onset_step": 220,
+      "onset_window": [
+        200,
+        220
+      ],
+      "rl_reset_step": 180,
+      "rl_reset_frame": "frames/step0180.png",
+      "rl_subtask": "pick up an object adjacent to the basket without disturbing the basket",
+      "rl_success_check": "object lifted clear of the table and basket still upright at its original pose",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 180-200: gripper comes down at the basket's right rim, next to the cream cheese. 220: basket lifted and tilting with the soup still inside. 240-260: basket turned over in the air. 280-409: basket upside down/on its side on the table, gripper pressing on it; cream cheese never grasped.",
+      "confidence": "medium",
+      "evidence": "evidence_basket_tipped.png"
+    }
+  ],
+  "notes": "Object identification: blue can = alphabet soup, small blue box = cream cheese, red/green-label can = tomato sauce (most likely), red bottle = ketchup. Neither the red can nor the bottle moves, so the call does not depend on which is the tomato sauce. The basket tip-over happens inside the wrong (trained-task) subtask; it is recorded as extra low-level evidence."
+}

@@ -1,0 +1,48 @@
+{
+  "episode": "libero_90/task89_fail_init1",
+  "task_language": "pick up the book on the right and place it under the cabinet shelf",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(right_book)",
+      "outcome": "success: robot-right book grasped at 60-100"
+    },
+    {
+      "name": "place(right_book, cabinet_shelf, under)",
+      "outcome": "failed: book held at the shelf's front-right edge 160-200, never released, lifted away at 220-240"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct book, carries it to the shelf and holds it upright against the shelf's front-right edge (160-200), then lifts it back (220), carries it across to the robot's left (240-300) and wanders with it near the robot base until timeout.",
+  "runs_trained_task": "No libero_10 task exists in STUDY_SCENE4. The motion (grasp the image-left book, carry it to the robot's left / image right-back and set it down) resembles the STUDY_SCENE1 libero_10 task 'pick up the book and place it in the back compartment of the caddy', where the book starts on the image left and the caddy sits back-right; cross-scene transfer, low-medium confidence.",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "placement_abandoned_at_destination",
+      "mode_definition": "Brings the grasped object to or toward the instructed destination, never releases it there, then carries it away from the destination.",
+      "subtask": "place(right_book, cabinet_shelf, under)",
+      "onset_step": 240,
+      "onset_window": [
+        220,
+        240
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "VERIFY the object is held at the destination (zoom ROI on the shelf)",
+        "HALT as soon as the EE starts moving away from the destination with the object still in hand",
+        "REPROMPT 'pick up the book on the right and place it under the cabinet shelf'",
+        "WATCH 5 s for a release at the destination; if pi0 again withdraws, ESCALATE (candidate for an RL place-on/under-shelf subtask)"
+      ],
+      "prevention": "pi0 has never seen this shelf; coordinator should treat placements on/under unseen fixtures as high risk and keep the FR agent watching the destination ROI at the release moment.",
+      "observation": "140-200 book lowered vertically at the shelf's front-right edge, gripper over the shelf top; no release; 220 lifted back; 240 carried toward the image right; 300 still in hand; 320-409 near the base with the book.",
+      "confidence": "medium",
+      "evidence": "evidence_under_shelf_closeup.png"
+    }
+  ],
+  "notes": "The under-shelf opening is not visible from this camera, so it is unclear whether pi0 tried and failed to insert (which would be LL) or simply abandoned; no visible collision or slip. See also evidence_shelf_approach_abort.png and evidence_late_wander.png. The other two books are untouched."
+}

@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task85_fail_init0",
+  "task_language": "pick up the white mug and place it to the right of the caddy",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(white_mug)",
+      "outcome": "failed: rim grasp at ~187-207 (one finger inside the mug), mug tilts and drops back by 213"
+    },
+    {
+      "name": "place(white_mug, caddy, right_of)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 hovered over the left end of the caddy for ~100 steps, then dipped a finger into the white mug and tried a rim grasp; the mug tilted and slipped back (207-213). pi0 then left the mug and worked at the black book standing in front of the caddy and the caddy's front compartment until timeout.",
+  "runs_trained_task": "libero_10 STUDY_SCENE1: pick up the book and place it in the back compartment of the caddy (after the mug slip)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "edge_grasp_slip_on_lift",
+      "mode_definition": "The gripper closes on an object's rim or edge; when the lift starts the object tilts, slips out and falls back to the table.",
+      "subtask": "pick(white_mug)",
+      "onset_step": 207,
+      "onset_window": [
+        200,
+        207
+      ],
+      "rl_reset_step": 180,
+      "rl_reset_frame": "frames/step0180.png",
+      "rl_subtask": "pick(white_mug)",
+      "rl_success_check": "white mug lifted clear of the table (> 5 cm) and still in the closed gripper 1 s later",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 180 open gripper just above and behind the mug; 187-200 fingertip enters the mug opening (rim pinch); 207 mug tilted and partly raised; 213 mug back upright on the table, shifted slightly, gripper rising; 220-240 gripper leaves.",
+      "confidence": "medium",
+      "evidence": "evidence_mug_rim_attempt.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "The policy runs the scene's habitual (trained) skill or task instead of the instructed one.",
+      "subtask": "pick(white_mug)",
+      "onset_step": 247,
+      "onset_window": [
+        233,
+        247
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10, away from caddy)",
+        "REPROMPT('pick up the white mug and place it to the right of the caddy')",
+        "WATCH(EE descends to the white mug, 3 s)",
+        "INVOKE_RL(rl/pick_mug) if the grasp slips again",
+        "ESCALATE"
+      ],
+      "prevention": "Coordinator HALTs when the gripper heads to a non-target object (book) or into the caddy before the mug is VERIFIED in hand.",
+      "observation": "From 247 to 409 the gripper is over the caddy's front compartment and the black book standing in front of it, fingers repeatedly at the book's top edge; the book does not move noticeably and the mug is never revisited.",
+      "confidence": "medium",
+      "evidence": "evidence_book_hover.png"
+    }
+  ],
+  "notes": "Steps 60-170: the gripper hovers above the left end of the caddy behind the mug before committing; possibly hesitation between mug and caddy. 'Right of the caddy' is image left (robot's right); pi0 never got that far."
+}

@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task37_fail_init0",
+  "task_language": "put the white bowl to the right of the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(white_bowl)",
+      "outcome": "never attempted: bowl stays on top of the microwave all episode"
+    },
+    {
+      "name": "place(white_bowl, plate, right_of)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 hovered over the plate (60-100), then moved around the space between the plate and the microwave handle, rose toward the back, and ended with the gripper parked next to the microwave handle; it never reached for the bowl on the microwave top.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "target_never_approached",
+      "mode_definition": "pi0 wanders or hovers among non-target objects and fixtures for the whole episode and never approaches or grasps the instructed target.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "pick(white_bowl)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "hl_remedy": [
+        "HALT after 3 frames with no EE progress toward the bowl",
+        "RETREAT up 10 cm",
+        "REPROMPT 'pick up the white bowl on top of the microwave and place it to the right of the plate'",
+        "WATCH 3 s for the EE to approach the bowl",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the target's location (elevated, on top of a fixture) and VLM-checks EE heading in the first frames; HALT on mismatch.",
+      "observation": "Step 40 gripper heads down toward the plate; 60-100 hovers above the plate and microwave handle area; 140-180 near the handle; 200-220 rises to the back; 240-409 hovers between plate and handle, finally parked at the handle. Bowl on microwave top never touched.",
+      "confidence": "high",
+      "evidence": "evidence_target_never_approached.png"
+    }
+  ],
+  "notes": "The bowl sits on top of the microwave (elevated, an unusual source location in pi0's training data). pi0's attraction to the plate and the microwave handle may come from libero_spatial plate placements and KITCHEN_SCENE6 microwave behaviour (hypothesis)."
+}

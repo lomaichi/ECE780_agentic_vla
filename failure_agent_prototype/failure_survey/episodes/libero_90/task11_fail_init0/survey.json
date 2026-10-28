@@ -1,0 +1,39 @@
+{
+  "episode": "libero_90/task11_fail_init0",
+  "task_language": "open the top drawer of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "open(top_drawer)",
+      "outcome": "failed: pi0 grasped the middle drawer handle (~160-180) and pulled the middle drawer fully open by step 200; the top drawer stays closed to the end"
+    }
+  ],
+  "behaviour_summary": "pi0 goes to the cabinet, grabs the handle one below the top one and pulls that drawer open (~200). It then goes to the bowls, grabs the image-left bowl and carries/pushes it off the left edge of the frame (220-360), and ends with the arm parked at the image left.",
+  "runs_trained_task": "possibly libero_spatial 'pick up the black bowl ... and place it on the plate' after the drawer (bowl pick at 220-320), but the bowl is carried off-frame, not to the plate; low confidence",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_fixture_part",
+      "mode_definition": "pi0 operates the correct kind of fixture but the wrong instance or part of it (e.g. a different drawer of the same cabinet than the one named).",
+      "subtask": "open(top_drawer)",
+      "onset_step": 180,
+      "onset_window": [
+        160,
+        180
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer closed, which drawer is open) -> REPROMPT 'open the top drawer of the cabinet' -> WATCH 3 s that the gripper approaches the topmost handle -> VERIFY(top drawer open); retry once, then ESCALATE",
+      "prevention": "When the gripper is within ~5 cm of the cabinet front, VERIFY that it is level with the topmost handle before allowing the grasp; HALT on contact with any other handle.",
+      "observation": "Step 0: three handles stacked on the cabinet front, all drawers closed. Step 160: gripper at the handles. Step 180 (zoom): the top handle is still in place on the cabinet face while the gripper holds the next handle down. Steps 200-409: one drawer fully pulled out, and the top handle is still visible flush on the cabinet face above it, so the opened drawer is the middle one. After that pi0 grabs the image-left black bowl (~260-320) and carries it off the left edge of the frame (360); only two bowls remain visible at 400.",
+      "confidence": "medium",
+      "evidence": "evidence_which_drawer.png"
+    }
+  ],
+  "notes": "Reading of which drawer is open rests on the top handle staying on the cabinet face at 409 (evidence_which_drawer.png, evidence_drawer_state.png). It could be argued as a low-level handle-targeting error (handles are a few cm apart); classified HL because pi0 cleanly executes a full open on the wrong drawer. The bowl removal after 220 does not affect the predicate but changes the scene (evidence_bowl_carry.png)."
+}

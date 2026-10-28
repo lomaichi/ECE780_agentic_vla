@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task14_fail_init1",
+  "task_language": "put the middle black bowl on the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(middle_black_bowl)",
+      "outcome": "success: middle (image-left) bowl grasped ~80-100 and lifted by 120"
+    },
+    {
+      "name": "place(middle_black_bowl, plate, on)",
+      "outcome": "failed: bowl held at the front-left edge of the plate from ~180 to 409 and never released onto it"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct middle bowl and carries it toward the plate, briefly tipping the front bowl (160), then hovers with the bowl over the front-left rim of the plate for ~230 steps without lowering or releasing it.",
+  "runs_trained_task": "libero_spatial 'pick up the black bowl ... and place it on the plate' (correct behaviour in this case)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "place_hover_offset_no_release",
+      "mode_definition": "pi0 carries the grasped object to the vicinity of the destination but stalls with a lateral offset beside or at the edge of it and never lowers and releases it onto the destination.",
+      "subtask": "place(middle_black_bowl, plate, on)",
+      "onset_step": 220,
+      "onset_window": [
+        180,
+        220
+      ],
+      "rl_reset_step": 120,
+      "rl_reset_frame": "frames/step0120.png",
+      "rl_subtask": "place(middle_black_bowl, plate, on)",
+      "rl_success_check": "bowl resting on the plate (LIBERO On(bowl, plate)), gripper open and lifted clear",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Steps 60-100: gripper descends on and grasps the image-left (middle) bowl. 120: bowl lifted, carried right. 160: bowl in gripper next to the plate, and the front bowl tipped on its side (it settles flat again by 200). 180-409: bowl held under the gripper over the front-left edge of the plate; only a sliver of the pink plate rim shows behind it; no release and no further approach.",
+      "confidence": "medium",
+      "evidence": "evidence_place_hover.png"
+    }
+  ],
+  "notes": "The front bowl was knocked at ~160 but recovered by 200, so it is not recorded as a failure (evidence_drop_and_regrasp.png). Without depth it is not certain whether the bowl touches the plate rim; the run fails, so it is not On the plate. Grasp sequence: evidence_grasp_sequence.png."
+}

@@ -1,0 +1,77 @@
+{
+  "episode": "libero_90/task69_fail_init0",
+  "task_language": "put the chocolate pudding to the left of the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(chocolate_pudding)",
+      "outcome": "partial: delayed ~200 steps by the wrong-object detour; pudding apparently grasped ~300-320"
+    },
+    {
+      "name": "place(chocolate_pudding, plate, left_of)",
+      "outcome": "failed: pudding brought to the plate's robot-right side (image left), the trained-task relation, not left_of"
+    }
+  ],
+  "behaviour_summary": "pi0 runs the scene's libero_10 task: picks the white mug (40-160), puts it on the plate (~200), then takes the pudding and moves it to the image-left (robot-right) of the plate, knocking the mug off the plate and shoving the plate on the way (340-409).",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE6: put the white mug on the plate and put the chocolate pudding to the right of the plate",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained) skill or task instead of the instructed one, e.g. manipulating the trained task's object rather than the instructed object.",
+      "subtask": "pick(chocolate_pudding)",
+      "onset_step": 40,
+      "onset_window": [
+        20,
+        40
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends toward the white mug (not the target)",
+        "RETREAT up 10 cm",
+        "REPROMPT 'pick up the chocolate pudding and place it to the left of the plate'",
+        "WATCH 3 s for approach to the pudding",
+        "VERIFY pudding grasped; retry once, then ESCALATE"
+      ],
+      "prevention": "Before pi0 closes the gripper, the FR agent VERIFYs (VLM on the 1 fps frame) that the object under the gripper is the coordinator's target; the coordinator also lists the scene's trained-task objects as distractors to watch for.",
+      "observation": "At 20 the arm is still centred; by 40 it is over the white mug and at 60-80 the white mug is grasped, then carried to the plate (160-200). Only after releasing the mug (~220) does the arm go to the pudding.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_then_pudding.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "place_relation_mirrored",
+      "mode_definition": "The object is placed on the opposite side of the reference object from the instructed relation (e.g. right instead of left), typically matching the relation of the scene's trained task.",
+      "subtask": "place(chocolate_pudding, plate, left_of)",
+      "onset_step": 340,
+      "onset_window": [
+        320,
+        340
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT once the carried object moves toward the wrong side of the reference",
+        "RETREAT up 5 cm keeping the grasp",
+        "REPROMPT 'put the chocolate pudding to the left of the plate'",
+        "WATCH 3 s; VERIFY placement side using image-left = robot-right convention",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator gives the relation explicitly and the FR agent VERIFYs carry direction relative to the reference before release.",
+      "observation": "With the pudding in hand (320) pi0 moves it to the image-left/front of the plate (robot's right), i.e. the libero_10 'right of the plate' target; in doing so the arm topples the white mug off the plate (340-360) and pushes the plate (380-409).",
+      "confidence": "medium",
+      "evidence": "evidence_wrong_object_then_pudding.png"
+    }
+  ],
+  "notes": "The mug knock-over is collateral, not part of this instruction. Whether the pudding was released at the end is unclear (gripper still on it at 409). The relation error is arguably the same trained-task override continuing; recorded separately because it needs a different VERIFY."
+}

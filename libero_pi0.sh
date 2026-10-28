@@ -26,6 +26,7 @@ INIT_CMD="
 	export XDG_RUNTIME_DIR=/tmp/runtime-root
 	mkdir -p \$XDG_RUNTIME_DIR
 	chmod 700 \$XDG_RUNTIME_DIR
+	ldconfig
 
 	cd /home/DockerShared/ECE780
 
@@ -49,11 +50,31 @@ done
 # on the host first so it is owned by you
 mkdir -p "$HOME/DockerShared/.cache/openpi"
 
+# GPU access: use the NVIDIA CDI spec when the host has one. Otherwise
+# (no nvidia-container-toolkit, /etc/cdi empty) pass the device nodes and
+# bind-mount the host driver libraries read-only; INIT_CMD runs ldconfig.
+GPU_ARGS=()
+if ls /etc/cdi/nvidia*.yaml /var/run/cdi/nvidia*.yaml >/dev/null 2>&1; then
+	GPU_ARGS+=(--device=nvidia.com/gpu=all)
+else
+	for dev in /dev/nvidia0 /dev/nvidiactl /dev/nvidia-uvm /dev/nvidia-uvm-tools /dev/nvidia-modeset; do
+		[ -e "$dev" ] && GPU_ARGS+=(--device="$dev")
+	done
+	LIB=/usr/lib/x86_64-linux-gnu
+	for f in "$LIB"/libcuda.so* "$LIB"/libnvidia-ml.so* "$LIB"/libnvidia-ptxjitcompiler.so* \
+		"$LIB"/libnvidia-nvvm*.so* "$LIB"/libEGL_nvidia.so* "$LIB"/libnvidia-eglcore.so* \
+		"$LIB"/libnvidia-glcore.so* "$LIB"/libnvidia-glsi.so* "$LIB"/libnvidia-tls.so* \
+		"$LIB"/libnvidia-gpucomp.so* "$LIB"/libGLX_nvidia.so* \
+		/usr/share/glvnd/egl_vendor.d/10_nvidia.json /usr/bin/nvidia-smi; do
+		[ -e "$f" ] && GPU_ARGS+=(-v "$f:$f:ro")
+	done
+fi
+
 podman run -it \
 	--rm \
 	--network=host \
 	--ipc=host \
-	--device=nvidia.com/gpu=all \
+	"${GPU_ARGS[@]}" \
 	--device=/dev/dri \
 	"${CAM_DEVICES[@]}" \
 	--env=DISPLAY \

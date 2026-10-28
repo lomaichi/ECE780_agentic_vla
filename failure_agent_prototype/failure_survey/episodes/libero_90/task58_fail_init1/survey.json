@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task58_fail_init1",
+  "task_language": "pick up the ketchup and put it in the tray",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(ketchup)",
+      "outcome": "never attempted (bottle briefly brushed while lifting the adjacent can ~93, stays standing)"
+    },
+    {
+      "name": "place(ketchup, tray, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the alphabet soup next to the ketchup (~60-93), carries it to the tray and sets it down (~127-260), then tries to grasp the tomato sauce (~280-409), tilting it but not lifting it before timeout.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE2: put both the alphabet soup and the tomato sauce in the basket (tray used as the basket)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "The policy approaches, grasps or transports a non-instructed object (typically one used in a trained task of the same scene) instead of the object named in the instruction.",
+      "subtask": "pick(ketchup)",
+      "onset_step": 53,
+      "onset_window": [
+        47,
+        53
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT as soon as the EE descends on (or closes on) a non-target object",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
+        "REPROMPT 'pick up the ketchup and put it in the tray'",
+        "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator localizes the target object before execution and the FR agent VERIFYs at each descent that the EE is over the target ROI, HALTing on a distractor approach.",
+      "observation": "At 33-47 the EE comes down between the ketchup and the alphabet soup; by 53-60 it is centred on the alphabet soup can, closes on it ~73-87 and lifts at 93. The can is in the tray by ~200 and left there ~260. From 280 the EE goes to the tomato sauce; the can tilts at 307-313 and is under the gripper but not lifted at 409.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object.png"
+    }
+  ],
+  "notes": "At 3 fps the switch between ketchup and alphabet soup is visible: the approach starts ambiguous and resolves to the can. Same two-can sequence as init0."
+}

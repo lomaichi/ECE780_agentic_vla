@@ -1,0 +1,47 @@
+{
+  "episode": "libero_10/task2_fail_init1",
+  "task_language": "turn on the stove and put the moka pot on it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "turn_on(stove)",
+      "outcome": "success: burner red by ~100"
+    },
+    {
+      "name": "pick(moka_pot)",
+      "outcome": "failed: grasp at the pot's top/handle 200-280 does not hold; pot only dragged a few cm toward the stove (300-320)"
+    },
+    {
+      "name": "place(moka_pot, stove, on)",
+      "outcome": "failed: pot ends against the stove's right edge, not on the burner"
+    }
+  ],
+  "behaviour_summary": "pi0 turns the stove on, goes to the moka pot and works at its lid/handle for ~100 steps, drags the pot ~3 cm toward the stove, then sweeps its empty hand over the burner in a contorted pose and leaves the frame (440-529).",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "grasp_slip_object_dragged",
+      "mode_definition": "The gripper closes on the object at a poor grasp point, so on lift the object slips out and is only dragged or nudged along the table while the arm continues the transport motion empty.",
+      "subtask": "pick(moka_pot)",
+      "onset_step": 300,
+      "onset_window": [
+        280,
+        300
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "pick up the moka pot and place it on the stove",
+      "rl_success_check": "moka pot upright on the stove's cooking region",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "160-180 gripper descends at the moka pot; 200-280 fingers at the pot's top/handle with the wrist tilting; 300 pot shifted toward the stove; 320 pot at the stove's right edge while the hand is already over the burner without it; 340-400 arm sweeps across the stove empty in a contorted pose; 440-529 arm out of view, pot static at stove edge.",
+      "confidence": "medium",
+      "evidence": "evidence_moka_grasp.png"
+    }
+  ],
+  "notes": "In-distribution task (libero_10). Whether the fingers ever closed around the handle is not visible at 1 fps (could be a push rather than a slipped grasp). After the failure pi0 never retries; the arm goes to an extreme out-of-view pose for the last ~90 steps. Second strip: evidence_moka_final.png."
+}

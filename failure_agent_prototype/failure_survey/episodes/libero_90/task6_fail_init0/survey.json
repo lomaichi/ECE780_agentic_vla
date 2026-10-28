@@ -1,0 +1,75 @@
+{
+  "episode": "libero_90/task6_fail_init0",
+  "task_language": "open the bottom drawer of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "open(bottom_drawer)",
+      "outcome": "failed: gripper reached the handle column at ~120 with fingers on the middle handle's lower end, no drawer was pulled open (at most a faint gap on the middle drawer after ~200), then the cabinet was abandoned"
+    }
+  ],
+  "behaviour_summary": "pi0 went to the cabinet and put its fingers around the middle handle (step ~120), pulled nothing open, backed off by ~200, then drifted over the bowl (240-280) and the plate (300-409), tipping the plate edge at the end.",
+  "runs_trained_task": "partly: after leaving the cabinet it drifts to the libero_spatial bowl/plate behaviour (pick up the black bowl ... and place it on the plate) without completing it",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_fixture_instance",
+      "mode_definition": "The policy operates the correct kind of fixture but picks the wrong instance among several similar parts, e.g. a neighbouring drawer instead of the instructed one.",
+      "subtask": "open(bottom_drawer)",
+      "onset_step": 120,
+      "onset_window": [
+        100,
+        120
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10)",
+        "VERIFY(all drawers closed, cabinet ROI zoom)",
+        "REPROMPT('open the bottom drawer of the cabinet')",
+        "WATCH(EE descends to the lowest handle, 3 s)",
+        "VERIFY(bottom drawer front moved out, zoom)",
+        "retry once with RETREAT 15 cm, then ESCALATE"
+      ],
+      "prevention": "Before any pull, VERIFY on a 3x zoom that the gripper is aligned with the lowest (bottom) handle; HALT if it is on the middle handle.",
+      "observation": "Step 100 gripper near the cabinet; step 120 fingers closed around the middle handle near its lower post (3x zoom); 140 hand drops below the handle column without any drawer moving; 160-200 hand moves away; 200-409 handles in their initial positions, only a faint gap line on the middle drawer front. The same-task init1 rollout clearly grabs and opens the middle drawer, which supports a wrong-instance reading here.",
+      "confidence": "low",
+      "evidence": "evidence_handle_target.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "The policy runs the scene's habitual (trained) skill or task instead of the instructed one.",
+      "subtask": "open(bottom_drawer)",
+      "onset_step": 240,
+      "onset_window": [
+        220,
+        240
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10, away from bowl/plate)",
+        "REPROMPT('open the bottom drawer of the cabinet')",
+        "WATCH(EE heads to cabinet, 3 s)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator HALTs when the empty gripper heads to a non-target object (bowl/plate) during a drawer subtask.",
+      "observation": "After abandoning the cabinet (~200) the gripper hovers over the bowl (240-280) and then pushes into the plate region (300-409); at 409 the plate is tipped on its edge by the arm.",
+      "confidence": "medium",
+      "evidence": "evidence_cabinet_approach.png"
+    }
+  ],
+  "notes": "1 fps cannot tell whether the step-120 contact targeted the middle handle or was a slightly high miss of the bottom handle (an LL handle-grasp miss); the fingers sit between the two. The wrong-instance call relies partly on task6 init1. A faint line on the middle drawer front after ~200 suggests it may be ajar by a few mm. The plate is tipped by the arm at the end (side effect)."
+}

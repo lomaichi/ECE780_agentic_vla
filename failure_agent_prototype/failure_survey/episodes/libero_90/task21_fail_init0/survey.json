@@ -1,0 +1,69 @@
+{
+  "episode": "libero_90/task21_fail_init0",
+  "task_language": "turn on the stove and put the frying pan on it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "turn_on(stove)",
+      "outcome": "success: burner red by ~100"
+    },
+    {
+      "name": "pick(frying_pan)",
+      "outcome": "partial: gripper hovers at the pan/moka handles 160-280, then grasps the pan near its handle ~300; pan swings up toward vertical while lifted"
+    },
+    {
+      "name": "place(frying_pan, stove, on)",
+      "outcome": "failed: never transported toward the stove; arm swings away (right/up) and times out at 409"
+    }
+  ],
+  "behaviour_summary": "pi0 turns the stove on, hesitates ~120 steps around the pan and moka-pot handles, then lifts the pan by its handle; the pan pivots to near-vertical and the arm swings away from the stove until timeout.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "handled_object_swing_during_lift",
+      "mode_definition": "An object grasped by a long handle pivots in the grasp during lift (tilting toward vertical), and the arm never reaches a controlled carry to the destination.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 300,
+      "onset_window": [
+        280,
+        300
+      ],
+      "rl_reset_step": 280,
+      "rl_reset_frame": "frames/step0280.png",
+      "rl_subtask": "pick up the frying pan and place it on the stove",
+      "rl_success_check": "frying pan resting flat on the stove's cooking region",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "280: gripper at the pan handle, pan flat; 300-340 pan raised and tilted (larger, elliptical rim facing camera); 360-380 pan near vertical beside the arm; 400 arm swings to image right-front; 409 arm high at centre, pan no longer visible on the table (likely held up or swung behind the arm). Arm never moves toward the stove (image left).",
+      "confidence": "low",
+      "evidence": "evidence_pan_handle_lift.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "pre_grasp_hover_hesitation",
+      "mode_definition": "The gripper hovers near the target object for many seconds making small adjustments without closing on it, consuming the step budget.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 200,
+      "onset_window": [
+        180,
+        200
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "pick(frying_pan)",
+      "rl_success_check": "frying pan grasped and lifted clear of the table",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "180-280 gripper sits between the moka pot handle and the pan handle with only small motions (~100 steps) before any grasp; moka pot never moves.",
+      "confidence": "low",
+      "evidence": "evidence_pan_attempt.png"
+    }
+  ],
+  "notes": "Horizon 400 steps: the hesitation plus the stove (~100 steps) leaves little time. What happens to the pan at 409 is unclear (out of view). The first second of hesitation could also be pi0 deciding between moka pot (trained) and pan."
+}

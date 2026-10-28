@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task58_fail_init0",
+  "task_language": "pick up the ketchup and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(ketchup)",
+      "outcome": "never attempted"
+    },
+    {
+      "name": "place(ketchup, tray, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the alphabet soup (~80-120), places it in the tray (~180-200), then goes for the tomato sauce (~280-409), tilting/partly grasping it at timeout; the ketchup is never touched.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE2: put both the alphabet soup and the tomato sauce in the basket (tray used as the basket)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "The policy approaches, grasps or transports a non-instructed object (typically one used in a trained task of the same scene) instead of the object named in the instruction.",
+      "subtask": "pick(ketchup)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT as soon as the EE descends on (or closes on) a non-target object",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
+        "REPROMPT 'pick up the ketchup and put it in the tray'",
+        "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator localizes the target object before execution and the FR agent VERIFYs at each descent that the EE is over the target ROI, HALTing on a distractor approach.",
+      "observation": "Ketchup bottle stands at the back right next to the alphabet soup. At 60 the EE is centred over the alphabet soup can, grasps it at 80, lifts it by 120 and places it upright in the tray by 200. It then returns and descends on the tomato sauce (280-360), which is tilted in the gripper at 409.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object.png"
+    }
+  ],
+  "notes": "Second wrong object (tomato sauce) is the same mode repeating as the trained two-can sequence, so not recorded separately; see evidence_second_grasp.png. Can identities from LIBERO asset textures (alphabet soup = blue/yellow can, tomato sauce = red/green can)."
+}

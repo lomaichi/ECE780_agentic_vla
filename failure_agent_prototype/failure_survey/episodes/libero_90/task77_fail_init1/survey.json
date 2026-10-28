@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task77_fail_init1",
+  "task_language": "pick up the book and place it in the back compartment of the caddy",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(book)",
+      "outcome": "never attempted: pi0 went for the mug; book never touched"
+    },
+    {
+      "name": "place(book, caddy_back_compartment, in)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the mug instead of the book, carries it over the caddy and puts it into the middle-back compartment, still holding it at the timeout.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_distractor",
+      "mode_definition": "The policy grasps a different-category distractor object instead of the instructed object and runs the transport/place motion with it.",
+      "subtask": "pick(book)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT up 10 cm",
+        "if the mug ended up in the back compartment: INSERT_SUBTASK \"pick up the mug and place it on the table\"",
+        "REPROMPT \"pick up the book and place it in the back compartment of the caddy\"",
+        "WATCH 5 s for an approach to the book",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the target object before running pi0 and the FR agent HALTs when the EE descends on a non-target object; a dark book standing against the dark caddy may need an explicit VERIFY of the target's location.",
+      "observation": "At 40 the arm is above the caddy; at 60-80 it moves to the image-left and descends on the mug; 100-140 the mug is grasped and lifted; 160-240 carried to the back of the caddy; 260-409 the mug is lowered into the middle-back compartment with the gripper still around it. The book, standing upright against the caddy front, never moves.",
+      "confidence": "high",
+      "evidence": "evidence_mug_instead_of_book.png"
+    }
+  ],
+  "notes": "Interesting: the instruction is word-for-word the libero_10 STUDY_SCENE1 task, yet in this STUDY_SCENE2 layout pi0 takes the mug. The book here stands flush against the caddy front and is dark-on-dark, which may make it hard to see. The destination (back compartment) is right, only the object is wrong."
+}

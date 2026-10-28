@@ -1,0 +1,47 @@
+{
+  "episode": "libero_90/task1_fail_init0",
+  "task_language": "close the top drawer of the cabinet and put the black bowl on top of it",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "close(top_drawer)",
+      "outcome": "partial: pushed from ~80, motion stops by 160 with the drawer roughly 1/2-2/3 closed, not flush"
+    },
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "never attempted"
+    },
+    {
+      "name": "place(black_bowl, cabinet_top, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 pushes the open top drawer from above; it closes part way by 140-160 and then the hand rests on the drawer front near the handle until timeout. The bowl is never approached.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "LL-1",
+      "mode_name": "drawer_push_stall",
+      "mode_definition": "pi0 pushes the drawer from above; it travels 1/2-2/3 of the way, then pi0 rests its fingers on the drawer front and applies no further push.",
+      "subtask": "close(top_drawer)",
+      "onset_step": 160,
+      "onset_window": [
+        140,
+        160
+      ],
+      "rl_reset_step": 60,
+      "rl_reset_frame": "frames/step0060.png",
+      "rl_subtask": "close(top_drawer)",
+      "rl_success_check": "top drawer front flush with the cabinet (handles in line); LIBERO Close(top drawer)",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 0: top drawer fully open. 80-140: gripper pushing down/in on the drawer; the top handle moves right relative to the bottom handle. 160-409: top handle stops ~25 px left of the bottom handle (zoomed), drawer still visibly protruding, fingers resting on the drawer front by the handle. Bowl untouched throughout.",
+      "confidence": "high",
+      "evidence": "evidence_drawer_push.png"
+    }
+  ],
+  "notes": "Consistent with the PoC call for this episode (LL-1, ~160)."
+}

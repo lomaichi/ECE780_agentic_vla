@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task69_fail_init1",
+  "task_language": "put the chocolate pudding to the left of the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(chocolate_pudding)",
+      "outcome": "failed: arm only reaches the pudding at ~360-409, after a white-mug detour; no grasp before timeout"
+    },
+    {
+      "name": "place(chocolate_pudding, plate, left_of)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 runs the libero_10 scene task: grasps the white mug (60-80), sets it on the plate (~160), holds it there until ~320, releases ~340, then heads for the pudding and times out at 409.",
+  "runs_trained_task": "libero_10 LIVING_ROOM_SCENE6: put the white mug on the plate and put the chocolate pudding to the right of the plate",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained) skill or task instead of the instructed one, e.g. manipulating the trained task's object rather than the instructed object.",
+      "subtask": "pick(chocolate_pudding)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends toward the white mug",
+        "RETREAT up 10 cm",
+        "REPROMPT 'pick up the chocolate pudding and place it to the left of the plate'",
+        "WATCH 3 s for approach to the pudding",
+        "VERIFY; retry once, then ESCALATE"
+      ],
+      "prevention": "Before pi0 closes the gripper, the FR agent VERIFYs (VLM on the 1 fps frame) that the object under the gripper is the coordinator's target; the coordinator also lists the scene's trained-task objects as distractors to watch for.",
+      "observation": "40: arm moving right toward the white mug; 60: gripper around the white mug; 80-160 mug carried and set on plate; 160-320 gripper keeps holding the mug on the plate (~160 steps); 340 released; 360-409 arm over the pudding, no grasp by timeout.",
+      "confidence": "high",
+      "evidence": "evidence_mug_first_then_timeout.png"
+    }
+  ],
+  "notes": "The long hold of the mug on the plate (160-320) before release mirrors the release stall seen in task72_fail_init1; here it only cost time."
+}

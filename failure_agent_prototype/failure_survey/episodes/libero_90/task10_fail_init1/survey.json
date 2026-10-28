@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task10_fail_init1",
+  "task_language": "put the black bowl on top of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "failed: rim grasp at ~60-80 tilts the bowl, which falls back by 100; retries at ~120-140 and ~220-240 do not lift it"
+    },
+    {
+      "name": "place(black_bowl, cabinet_top, on)",
+      "outcome": "never attempted with the bowl: empty gripper goes to the cabinet top/handles from ~300"
+    }
+  ],
+  "behaviour_summary": "pi0 grasped the bowl rim and began lifting; the bowl tipped and slipped back (80-100). Two further approaches (~140, ~240) failed to pick it, then the empty gripper went over the cabinet and stayed there until timeout.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "edge_grasp_slip_on_lift",
+      "mode_definition": "The gripper closes on an object's rim or edge; when the lift starts the object tilts, slips out and falls back to the table.",
+      "subtask": "pick(black_bowl)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "rl_reset_step": 40,
+      "rl_reset_frame": "frames/step0040.png",
+      "rl_subtask": "pick(black_bowl)",
+      "rl_success_check": "black bowl lifted clear of the table (> 5 cm) and still in the closed gripper 1 s later",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 40 open gripper above the bowl; 60 fingers at the rim; 80 bowl tilted and partly raised on one side; 100 bowl flat on the table again, gripper open above it. Retry at 120-140 (fingers above the bowl, no lift) and an angled approach at 220-240 also leave the bowl on the table.",
+      "confidence": "high",
+      "evidence": "evidence_bowl_grasp_miss.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "empty_handed_transport",
+      "mode_definition": "After a failed grasp the policy gives up on the object and moves to (and idles at) a destination-like location with an empty gripper instead of re-grasping.",
+      "subtask": "pick(black_bowl)",
+      "onset_step": 300,
+      "onset_window": [
+        280,
+        300
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "VERIFY(gripper empty, bowl on table, zoom)",
+        "RETREAT(dz=+0.10)",
+        "INVOKE_RL(rl/pick_bowl) or REPROMPT('pick up the black bowl and place it on top of the cabinet')",
+        "WATCH(EE descends to bowl, 3 s)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "After each grasp attempt, VERIFY the object is in the gripper before allowing transport; count retries and INVOKE_RL after the first slip.",
+      "observation": "After the third failed approach (220-260) the gripper rises and moves over the cabinet (300-409), hovering empty near the top handle with the bowl still on the table.",
+      "confidence": "high",
+      "evidence": null
+    }
+  ],
+  "notes": "At 1 fps the retries at ~140 and ~240 may be aborted approaches rather than real closes; either way no lift. Similar to task10 init0: pick failure first, then empty-handed move to the destination."
+}

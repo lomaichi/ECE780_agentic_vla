@@ -1,0 +1,179 @@
+{
+  "survey": "failure survey proof-of-concept, libero_90, first 5 failed episodes in meta.json order",
+  "inputs_used": "rollout video only (plus task_language/folder/video name from meta.json); trace/ never opened",
+  "step_convention": "video is 20 fps, one frame per control step incl. 10 wait steps: step = round(20 * t_video)",
+  "random_seed": 664752799,
+  "episodes": [
+    {
+      "folder": "task0_fail_init0",
+      "task_language": "close the top drawer of the cabinet",
+      "survey_fps": 1,
+      "step_resolution": 20,
+      "subtasks": [
+        {
+          "name": "close(top_drawer)",
+          "outcome": "partial: drawer pushed about 2/3 of the way, never flush"
+        }
+      ],
+      "failures": [
+        {
+          "level": "low",
+          "mode": "LL-1 drawer push stalls before closure",
+          "subtask": "close(top_drawer)",
+          "onset_step": 160,
+          "onset_window": [
+            160,
+            180
+          ],
+          "observation": "Gripper reaches the open drawer by about step 60 and pushes it in with its fingertips and underside (steps 60-160). Drawer travel stops around step 160-180 with the front still sticking out past the cabinet body. The hand then pitches its fingers down and rests against the drawer front near the handle with no further closing motion until timeout (step 409).",
+          "rl_candidate": true,
+          "library_entry": "LL-1"
+        }
+      ]
+    },
+    {
+      "folder": "task0_fail_init1",
+      "task_language": "close the top drawer of the cabinet",
+      "survey_fps": 1,
+      "step_resolution": 20,
+      "subtasks": [
+        {
+          "name": "close(top_drawer)",
+          "outcome": "partial: drawer pushed most of the way, never flush"
+        }
+      ],
+      "failures": [
+        {
+          "level": "low",
+          "mode": "LL-1 drawer push stalls before closure",
+          "subtask": "close(top_drawer)",
+          "onset_step": 180,
+          "onset_window": [
+            160,
+            180
+          ],
+          "observation": "Almost the same as init0. Pushes from above between steps 80 and 160. At about step 180 the fingers pitch down in front of the drawer front and the drawer stops just short of flush. The hand stays there, barely moving, until timeout.",
+          "rl_candidate": true,
+          "library_entry": "LL-1"
+        }
+      ]
+    },
+    {
+      "folder": "task1_fail_init0",
+      "task_language": "close the top drawer of the cabinet and put the black bowl on top of it",
+      "survey_fps": 1,
+      "step_resolution": 20,
+      "subtasks": [
+        {
+          "name": "close(top_drawer)",
+          "outcome": "partial: drawer about 1/2 to 2/3 closed"
+        },
+        {
+          "name": "pick(black_bowl)",
+          "outcome": "never attempted"
+        },
+        {
+          "name": "place(black_bowl, on top of cabinet)",
+          "outcome": "never attempted"
+        }
+      ],
+      "failures": [
+        {
+          "level": "low",
+          "mode": "LL-1 drawer push stalls before closure",
+          "subtask": "close(top_drawer)",
+          "onset_step": 160,
+          "onset_window": [
+            140,
+            160
+          ],
+          "observation": "Drawer travel stops at about step 160. From 160 to 240 the gripper presses down on top of the drawer instead of pushing along the closing direction. From about 300 the fingers pitch down in front of the face, as in task0. The drawer is still clearly open at timeout, so the bowl subtasks never start (a downstream consequence, not a separate failure).",
+          "rl_candidate": true,
+          "library_entry": "LL-1"
+        }
+      ]
+    },
+    {
+      "folder": "task1_fail_init1",
+      "task_language": "close the top drawer of the cabinet and put the black bowl on top of it",
+      "survey_fps": 1,
+      "step_resolution": 20,
+      "subtasks": [
+        {
+          "name": "close(top_drawer)",
+          "outcome": "success (visually): all three drawer handles line up on the cabinet front by step 100"
+        },
+        {
+          "name": "pick(black_bowl)",
+          "outcome": "never attempted"
+        },
+        {
+          "name": "place(black_bowl, on top of cabinet)",
+          "outcome": "never attempted"
+        }
+      ],
+      "failures": [
+        {
+          "level": "high",
+          "mode": "HL-1 stalls after finishing the first subtask (no switch to the next one)",
+          "subtask": "pick(black_bowl)",
+          "onset_step": 100,
+          "onset_window": [
+            80,
+            100
+          ],
+          "observation": "The drawer is closed between step 80 and 100. The arm then hovers above the cabinet top with the gripper open for about 300 steps and never moves toward the bowl, which is 10-15 cm away and in plain view. Grasping was never tried, so this is not a grasp-precision problem. The second half of the instruction was simply never executed.",
+          "rl_candidate": false,
+          "proposed_solution": "See skill_library/library.json entry HL-1 (recovery, prevention, instance binding).",
+          "library_entry": "HL-1"
+        }
+      ]
+    },
+    {
+      "folder": "task2_fail_init0",
+      "task_language": "put the black bowl in the top drawer of the cabinet",
+      "survey_fps": 5,
+      "step_resolution": 4,
+      "subtasks": [
+        {
+          "name": "pick(black_bowl)",
+          "outcome": "never attempted (bowl untouched for the whole episode)"
+        },
+        {
+          "name": "place(black_bowl, in top drawer)",
+          "outcome": "never attempted; destination drawer half-closed by the robot"
+        }
+      ],
+      "failures": [
+        {
+          "level": "high",
+          "mode": "HL-2 runs the scene's default skill (close drawer) instead of the instructed one",
+          "subtask": "pick(black_bowl)",
+          "onset_step": 44,
+          "onset_window": [
+            40,
+            44
+          ],
+          "observation": "Starting state is the same as in task0/task1: top drawer open, bowl in front of it. After the 10 wait steps the arm moves straight to the drawer front (step ~44), not the bowl. Pushing starts around step 68-76. This is the close-drawer behaviour seen in task0/task1, and it is wrong here because the open drawer is the place destination. The bowl is never approached.",
+          "rl_candidate": false,
+          "proposed_solution": "See skill_library/library.json entry HL-2 (recovery, prevention, instance binding).",
+          "library_entry": "HL-2"
+        },
+        {
+          "level": "low",
+          "mode": "LL-1 drawer push stalls before closure (in the wrong subtask)",
+          "subtask": "close(top_drawer) (not part of this task)",
+          "onset_step": 136,
+          "onset_window": [
+            136,
+            148
+          ],
+          "observation": "The wrong close-drawer behaviour also stalls: travel stops at about step 136-148 with the drawer about 2/3 closed, and the gripper rests at the drawer front until timeout. Recorded as more evidence for LL-1; not a cause of this task's failure.",
+          "rl_candidate": false,
+          "library_entry": "LL-1"
+        }
+      ]
+    }
+  ],
+  "library": "skill_library/library.json"
+}

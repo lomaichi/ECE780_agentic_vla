@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task72_fail_init1",
+  "task_language": "put the white mug on the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(white_mug)",
+      "outcome": "success: grasped ~60-80"
+    },
+    {
+      "name": "place(white_mug, plate, on)",
+      "outcome": "failed: mug lowered onto the plate by ~180-200 but never released; held, tilted, until timeout at 409"
+    }
+  ],
+  "behaviour_summary": "pi0 picks the correct white mug and brings it down onto the plate by ~200, then keeps gripping it for 200+ steps while slowly rotating/tilting the wrist, never opening the gripper.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "release_stall_at_destination",
+      "mode_definition": "The held object is brought onto or just above its destination but the gripper never opens; the policy keeps making small wrist adjustments until timeout.",
+      "subtask": "place(white_mug, plate, on)",
+      "onset_step": 220,
+      "onset_window": [
+        200,
+        240
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "place(white_mug, plate, on)",
+      "rl_success_check": "mug upright on the plate, gripper open and clear of the mug",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "160: mug carried above the plate; 180-200 mug base at the plate; 240-409 the gripper still holds the mug, the wrist keeps rotating and the mug tilts with its base on the plate's back half; no release in any later frame.",
+      "confidence": "medium",
+      "evidence": "evidence_mug_held_over_plate.png"
+    }
+  ],
+  "notes": "Could also be read as pi0 never being satisfied with the mug pose (tilted mug) so it keeps adjusting; cannot tell from video whether the mug base actually contacts the plate. Same scene's other episodes show 150-200 step holds before release, so this looks like an extreme of that habit."
+}

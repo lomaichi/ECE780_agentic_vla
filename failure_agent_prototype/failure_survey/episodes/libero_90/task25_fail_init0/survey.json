@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task25_fail_init0",
+  "task_language": "put the black bowl on top of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(black_bowl)",
+      "outcome": "success: side/rim grasp with the hand rotated ~90 deg, lifted by ~180"
+    },
+    {
+      "name": "place(black_bowl, cabinet_top, on)",
+      "outcome": "failed: bowl carried near the cabinet but held over the open bottom drawer area until timeout, never released"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the bowl, brings it to the cabinet's right edge at ~200, then drifts back and hovers holding the bowl above the open bottom drawer / beside the cabinet from 220 to 409 without lowering or releasing it.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4: put the black bowl in the bottom drawer of the cabinet and close it (partial: carries bowl toward the open bottom drawer but never commits)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "transport_destination_indecision",
+      "mode_definition": "After a successful grasp, the policy carries the object and hovers near (but never over) the instructed destination, often drifting toward a trained-task destination, without lowering or releasing it until timeout.",
+      "subtask": "place(black_bowl, cabinet_top, on)",
+      "onset_step": 220,
+      "onset_window": [
+        200,
+        220
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT once the EE has been near-stationary for 3 frames with the object held",
+        "VERIFY bowl still in gripper",
+        "RETREAT up 10 cm",
+        "REPROMPT 'put the black bowl on top of the cabinet'",
+        "WATCH 3 s for the EE moving over the cabinet top ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator marks the trained destination (bottom drawer) as a distractor and the FR agent watches that the carried object's EE path ends over the instructed destination ROI.",
+      "observation": "At 200 the bowl is near the cabinet's right top edge; at 220 it moves back right over the open bottom drawer, and from 220 to 409 it is held at roughly the same height in front of/right of the cabinet, never over the cabinet top and never lowered into the drawer either. Gripper stays closed on the rim throughout.",
+      "confidence": "medium",
+      "evidence": "evidence_hover_with_bowl.png"
+    }
+  ],
+  "notes": "Unclear whether pi0 is torn between the trained destination (bottom drawer) and the instructed one (cabinet top) or simply cannot reach a stable height above the cabinet; the bowl never goes above the cabinet top surface. Grasp is unusual (hand rotated sideways) but holds."
+}

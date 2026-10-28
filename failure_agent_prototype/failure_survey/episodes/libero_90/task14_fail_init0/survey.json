@@ -1,0 +1,43 @@
+{
+  "episode": "libero_90/task14_fail_init0",
+  "task_language": "put the middle black bowl on the plate",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(middle_black_bowl)",
+      "outcome": "never attempted: the middle (image-left) bowl is never approached"
+    },
+    {
+      "name": "place(middle_black_bowl, plate, on)",
+      "outcome": "never attempted; the plate itself is grasped and held tilted on edge from step 120 to the end"
+    }
+  ],
+  "behaviour_summary": "pi0 descends between the back bowl and the plate, closes on the plate's back rim (~80-100), and lifts the plate onto its edge, holding it tilted for the rest of the episode while pushing the back bowl aside.",
+  "runs_trained_task": "libero_spatial 'pick up the black bowl ... and place it on the plate' (mis-targeted at the plate/back bowl); low confidence",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 descends on and grasps an object other than the instructed target (a distractor or the destination itself) when the target is identified by a referring expression.",
+      "subtask": "pick(middle_black_bowl)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": "HALT -> VERIFY(plate flat on the table; if not, ESCALATE) -> RETREAT(up 10 cm) -> REPROMPT 'pick up the middle black bowl and place it on the plate' -> WATCH 3 s that the gripper moves toward the middle bowl -> VERIFY(bowl in gripper); retry once, then ESCALATE",
+      "prevention": "Before the first descent, VERIFY that the gripper is above the referred object (middle bowl); HALT if the descent target is the destination.",
+      "observation": "Step 60: gripper over the gap between the back bowl and the plate. Step 80: fingers come down on the plate's back rim. Steps 100-120: plate lifted and tilting. Step 140: plate standing on edge, back bowl pushed to the image right. 140-409: plate held tilted; around 280 it leans against the front bowl. The image-left (middle) bowl is never approached.",
+      "confidence": "medium",
+      "evidence": "evidence_plate_grab.png"
+    }
+  ],
+  "notes": "It is unclear whether pi0 meant to grasp the back bowl and slipped onto the plate rim (which would be a low-level misalignment on a still-wrong object) or targeted the plate. Either way the middle bowl was never chosen. 'Middle' is taken as the bowl at middle depth (image-left)."
+}

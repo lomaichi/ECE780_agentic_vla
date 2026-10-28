@@ -1,0 +1,75 @@
+{
+  "episode": "libero_90/task21_fail_init1",
+  "task_language": "turn on the stove and put the frying pan on it",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "turn_on(stove)",
+      "outcome": "success: knob turned, burner red by 127 (slow: gripper over knob from ~67)"
+    },
+    {
+      "name": "pick(frying_pan)",
+      "outcome": "failed: gripper hovers over the pan rim 207-333 without grasping, then picks the moka pot instead (340)"
+    },
+    {
+      "name": "place(frying_pan, stove, on)",
+      "outcome": "never attempted; the moka pot is placed on the stove instead and tips over (380-409)"
+    }
+  ],
+  "behaviour_summary": "After turning the stove on, pi0 hovers over the frying pan for ~120 steps, then grabs the moka pot (its trained libero_10 object), carries it onto the burner, and the pot tips over on the stove at timeout.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE3: turn on the stove and put the moka pot on it",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained) skill or task instead of the instructed one, e.g. manipulating the trained task's object rather than the instructed object.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 340,
+      "onset_window": [
+        333,
+        340
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper closes on / lifts the moka pot",
+        "RETREAT: put the moka pot back down, then up 10 cm",
+        "REPROMPT 'pick up the frying pan and place it on the stove'",
+        "WATCH 3 s for approach to the pan handle",
+        "VERIFY pan grasped; retry once, then ESCALATE"
+      ],
+      "prevention": "Before pi0 closes the gripper, the FR agent VERIFYs (VLM on the 1 fps frame) that the object under the gripper is the coordinator's target; the coordinator also lists the scene's trained-task objects as distractors to watch for.",
+      "observation": "333: gripper at the moka pot's handle beside the pan; 340: moka pot gripped; 347-353 moka pot lifted and moved left; 360-373 lowered onto the burner; 380-409 the pot tips over on the stove while the arm pulls away. The frying pan never moves.",
+      "confidence": "high",
+      "evidence": "evidence_moka_instead_of_pan.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "pre_grasp_hover_hesitation",
+      "mode_definition": "The gripper hovers near the target object for many seconds making small adjustments without closing on it, consuming the step budget.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 227,
+      "onset_window": [
+        213,
+        227
+      ],
+      "rl_reset_step": 200,
+      "rl_reset_frame": "frames/step0200.png",
+      "rl_subtask": "pick(frying_pan)",
+      "rl_success_check": "frying pan grasped and lifted clear of the table",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "207-333 gripper descends over the pan's back rim/handle root (the handle is tucked behind the moka pot) and stays there with small motions for ~120 steps, never closing on the pan.",
+      "confidence": "low",
+      "evidence": "evidence_moka_instead_of_pan.png"
+    }
+  ],
+  "notes": "The pan handle is occluded behind the moka pot in this init; the hesitation may be a grasp-point perception problem that then hands control to the trained moka-pot behaviour. Moka pot tipping (evidence_moka_tipped_on_stove.png) is collateral. Knob turn also took ~60 steps (67-127)."
+}

@@ -1,0 +1,144 @@
+{
+  "name": "pi0 failure recovery skill library",
+  "version": "0.1-poc",
+  "built_from": "failure_survey_test (5 libero_90 failures, video only)",
+  "status_legend": {
+    "proposed": "derived from the survey, not yet run in closed loop",
+    "validated": "recovery succeeded when replayed from the recorded onset state"
+  },
+  "observation_budget": "FR agent sees the agentview frame at 1 fps plus proprioception (EE pose, gripper width); no privileged sim state",
+
+  "primitives": {
+    "HALT":           {"args": [], "effect": "stop forwarding pi0 action chunks; send zero-delta actions to hold the EE pose"},
+    "RETREAT":        {"args": ["dz_m=0.10", "dx_m=0.0", "dy_m=0.0"], "effect": "scripted closed-loop OSC delta move of the EE in base frame using proprio only; gripper unchanged. Clears the contact/visual context that keeps pi0 stuck"},
+    "REPROMPT":       {"args": ["instruction"], "effect": "resume pi0 with a new language instruction (pi0 replans every 5 steps, so it takes effect within 5 steps)"},
+    "INSERT_SUBTASK": {"args": ["subtask", "position"], "effect": "edit the coordinator plan, e.g. put open(drawer) before place()"},
+    "VERIFY":         {"args": ["predicate", "roi", "k=2"], "effect": "VLM yes/no on a zoomed crop of the latest frame; true only if k consecutive 1 fps frames agree"},
+    "WATCH":          {"args": ["cue", "window_s"], "effect": "keep monitoring at 1 fps for a cue; returns fired/not fired"},
+    "INVOKE_RL":      {"args": ["policy_id"], "effect": "hand control to an RL-finetuned subtask policy (low-level entries only, once trained)"},
+    "ESCALATE":       {"args": ["reason"], "effect": "give up on this entry: log it and ask the coordinator to replan"}
+  },
+
+  "prompt_templates": {
+    "note": "pi0_libero has seen full LIBERO sentences, not bare atomic verbs. A bare 'pick up X' is out of distribution, so pick subtasks are phrased as complete pick-and-place sentences in the libero_spatial / libero_10 style.",
+    "pick_place_on": "pick up the {obj} and place it on the {dest}",
+    "pick_place_in": "pick up the {obj} and place it in the {receptacle}",
+    "put_in":        "put the {obj} in the {receptacle}",
+    "close_fixture": "close the {fixture}",
+    "open_fixture":  "open the {fixture}"
+  },
+
+  "entries": [
+    {
+      "id": "HL-1",
+      "level": "high",
+      "name": "subtask_handoff_stall",
+      "summary": "pi0 finishes subtask k of a compound instruction and then idles; subtask k+1 never starts.",
+      "applies_when": "compound instruction (A and B / A then B); subtask k verified done; next target visible and not being approached",
+      "slots": ["done_subtask", "next_obj", "next_dest"],
+      "detect": {
+        "proprio": "EE displacement < 1 cm across 3 consecutive 1 fps frames (60 steps), gripper open",
+        "visual": "VERIFY(done_subtask complete) == true AND EE is not moving toward next_obj",
+        "earliest_fire_s": 3,
+        "distinguish_from": "LL-1 / any low-level stall: there the current subtask is NOT verified complete and the EE is in contact with its target"
+      },
+      "recovery": [
+        {"do": "VERIFY", "args": {"predicate": "{done_subtask} is complete", "roi": "fixture of done_subtask"}, "on_false": "not HL-1: re-classify"},
+        {"do": "HALT"},
+        {"do": "RETREAT", "args": {"dz_m": 0.10}, "why": "lift off the finished fixture so pi0's observation no longer looks like the mid-push scene"},
+        {"do": "REPROMPT", "args": {"instruction": "pick_place_on(next_obj, next_dest)"}},
+        {"do": "WATCH", "args": {"cue": "EE moves toward next_obj", "window_s": 3}, "on_not_fired": "repeat RETREAT + REPROMPT once with pick_place_in or the original remaining clause, then ESCALATE"}
+      ],
+      "prevention": "Coordinator issues one subtask at a time and moves to the next only on VERIFY. Never hand pi0 the compound sentence and expect it to sequence the steps.",
+      "success_check": "VERIFY(next_obj grasped) within 10 s of REPROMPT",
+      "instances": [
+        {"episode": "libero_90/task1_fail_init1", "onset_step": 100,
+         "bindings": {"done_subtask": "close(top_drawer)", "next_obj": "black bowl", "next_dest": "top of the cabinet"},
+         "reprompt": "pick up the black bowl and place it on the cabinet"}
+      ],
+      "status": "proposed"
+    },
+
+    {
+      "id": "HL-2",
+      "level": "high",
+      "name": "scene_default_skill_override",
+      "summary": "pi0 runs the habitual skill for the scene's most salient affordance (e.g. pushing an open drawer shut) instead of the instructed subtask. It may wreck a precondition, such as closing the destination.",
+      "applies_when": "current subtask targets obj X, but within the first few seconds the EE heads for a different fixture/object Y; worst case when Y is the destination of a later subtask",
+      "slots": ["target_obj", "wrong_fixture", "destination", "protected_state"],
+      "detect": {
+        "proprio": "EE path over 2 consecutive 1 fps frames brings it closer to wrong_fixture and farther from target_obj, gripper still empty",
+        "visual": "VLM: 'is the gripper approaching {target_obj}?' == no AND 'is it touching/pushing {wrong_fixture}?' == yes",
+        "protected_state_check": "VERIFY({protected_state}) every frame, e.g. 'top drawer is open'",
+        "earliest_fire_s": 2,
+        "distinguish_from": "a legitimate approach detour: pi0 often moves up first; only fire when the EE moves toward the wrong fixture, not just away from the target"
+      },
+      "recovery": [
+        {"do": "HALT"},
+        {"do": "RETREAT", "args": {"dz_m": 0.10, "dx_m": "-0.05 (away from wrong_fixture)"}, "why": "remove the attractor: pi0's choice of skill is driven by what the gripper sees near itself"},
+        {"do": "VERIFY", "args": {"predicate": "{protected_state}"}, "on_false": {"do": "INSERT_SUBTASK", "args": {"subtask": "open_fixture(destination)", "position": "before place()"}}},
+        {"do": "REPROMPT", "args": {"instruction": "pick_place_in(target_obj, destination)"}, "why": "object-first phrasing; the original 'put X in Y' sentence already lost to the scene prior"},
+        {"do": "WATCH", "args": {"cue": "EE moves toward wrong_fixture again", "window_s": 5}, "on_fired": "repeat HALT + RETREAT once with a larger dz (0.15), then ESCALATE (candidate for coordinator-provided target pointing)"}
+      ],
+      "prevention": "Before running pi0, the coordinator lists protected states (destination open, target reachable). The FR agent checks them every frame and HALTs on the first violation instead of waiting for the episode to time out.",
+      "success_check": "VERIFY(gripper is over/at {target_obj}) within 5 s AND protected_state still true",
+      "instances": [
+        {"episode": "libero_90/task2_fail_init0", "onset_step": 44,
+         "bindings": {"target_obj": "black bowl", "wrong_fixture": "top drawer front", "destination": "top drawer of the cabinet", "protected_state": "top drawer is open"},
+         "reprompt": "pick up the black bowl and place it in the top drawer of the cabinet"}
+      ],
+      "observed_context": "In the task0-2 scene (open top drawer, bowl in front) pi0 pushes the drawer in all 5 episodes, whatever the instruction says",
+      "status": "proposed"
+    },
+
+    {
+      "id": "LL-1",
+      "level": "low",
+      "name": "drawer_push_stall",
+      "summary": "While closing a drawer, pi0 pushes from above with its fingertips/hand underside. The drawer travels 1/2-2/3 of the way, then the hand pitches its fingers down and rests on the drawer front without pushing further.",
+      "applies_when": "subtask close(drawer); drawer front not flush; EE at the drawer front",
+      "slots": ["drawer"],
+      "detect": {
+        "proprio": "EE displacement along the closing direction < 1 cm across 2 consecutive 1 fps frames while EE is at the drawer",
+        "visual": "VERIFY('{drawer} front is flush with the cabinet body', roi=cabinet, 2x zoom) == false. Zoom is required: at 256 px, 2/3-closed and flush look alike",
+        "earliest_fire_s": 2,
+        "distinguish_from": "HL-1: there the drawer is already flush"
+      },
+      "recovery": [
+        {"do": "INVOKE_RL", "args": {"policy_id": "rl/close_drawer"}, "available": false},
+        {"do": "fallback_until_rl", "steps": [
+          {"do": "HALT"},
+          {"do": "RETREAT", "args": {"dz_m": 0.05, "dx_m": "-0.05 (back out toward the open side)"}},
+          {"do": "REPROMPT", "args": {"instruction": "close_fixture(drawer)"}},
+          {"do": "WATCH", "args": {"cue": "drawer flush", "window_s": 5}, "on_not_fired": "ESCALATE"}
+        ], "status": "proposed, expected weak (it re-runs the same pi0 behaviour)"}
+      ],
+      "rl_spec": {
+        "subtask": "close(top_drawer)",
+        "method": "SimpleVLA-RL on pi0",
+        "env_and_reward": "libero_90 task0 'close the top drawer of the cabinet': its LIBERO success predicate is exactly this subtask, giving a binary reward",
+        "reset_states": [
+          {"episode": "libero_90/task0_fail_init0", "step": 160},
+          {"episode": "libero_90/task0_fail_init1", "step": 180},
+          {"episode": "libero_90/task1_fail_init0", "step": 160},
+          {"episode": "libero_90/task2_fail_init0", "step": 136},
+          {"note": "plus the original init states 0/1 of task0, so the policy also learns the whole push"}
+        ],
+        "reset_state_source": "trace/states.npy[step] of that episode (only needed when building the RL env; see state_convention in meta.json)",
+        "guide_demos": [
+          {"episode": "libero_10/task3_success_init0", "why": "'put the black bowl in the bottom drawer of the cabinet and close it': pi0 closes the drawer at steps ~210-238 by dropping its hand beside the drawer front, fingers down, and pushing horizontally along the closing direction. This is the motion missing in LL-1"},
+          {"episode": "libero_10/task3_success_init1", "why": "same task, second init"},
+          {"episode": "libero_10/task9_success_init0", "why": "'... in the microwave and close it': hinged close, a looser analogue"}
+        ],
+        "horizon_steps": 120
+      },
+      "instances": [
+        {"episode": "libero_90/task0_fail_init0", "onset_step": 160},
+        {"episode": "libero_90/task0_fail_init1", "onset_step": 180},
+        {"episode": "libero_90/task1_fail_init0", "onset_step": 160},
+        {"episode": "libero_90/task2_fail_init0", "onset_step": 136, "note": "inside the wrong HL-2 behaviour"}
+      ],
+      "status": "proposed (RL not started)"
+    }
+  ]
+}

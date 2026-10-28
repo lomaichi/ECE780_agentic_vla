@@ -1,0 +1,76 @@
+{
+  "episode": "libero_90/task87_fail_init0",
+  "task_language": "pick up the book on the left and place it on top of the shelf",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(left_book)",
+      "outcome": "failed: grasped the robot-right (image-left) book; later hovered fingertips on the correct robot-left book (240-293) without grasping"
+    },
+    {
+      "name": "place(left_book, shelf, on)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the robot-right book (47-93), carries it to the robot's left, loses/releases it near the robot-left book around 200-220, rests its fingertips on top of the robot-left book (240-293) without grasping, then wanders out of frame.",
+  "runs_trained_task": "No libero_10 task exists in STUDY_SCENE4. The motion (grasp the image-left book, carry it to the robot's left / image right-back and set it down) resembles the STUDY_SCENE1 libero_10 task 'pick up the book and place it in the back compartment of the caddy', where the book starts on the image left and the caddy sits back-right; cross-scene transfer, low-medium confidence.",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "Grasps a different instance of the object category than the one singled out by the instruction's referring expression (position/ordinal/colour qualifier), typically a habitual or default instance.",
+      "subtask": "pick(left_book)",
+      "onset_step": 47,
+      "onset_window": [
+        40,
+        47
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
+        "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
+        "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
+        "VERIFY the referred book is between the fingers after closure",
+        "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator grounds the referring expression (left/middle/right are robot-frame, i.e. mirrored in the agent view) to an image location and VERIFYs the approach target before gripper closure; add a distinguishing attribute (e.g. colour) to the prompt when one exists.",
+      "observation": "At 47 the gripper is centred over the image-left (robot-right) book, descends 53-80, lifts it at 87-107 while the target (image-right = robot-left grey book) is untouched.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_book_grasp.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_destination_placement",
+      "mode_definition": "Transports the grasped object to a location other than the instructed destination fixture/region and releases or abandons it there.",
+      "subtask": "place(left_book, shelf, on)",
+      "onset_step": 107,
+      "onset_window": [
+        100,
+        107
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
+        "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
+        "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
+        "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator declares the destination region in image space and the FR agent HALTs on the first frames of transport heading elsewhere; pi0 has a strong scene-independent 'carry to robot-left/back' habit for books.",
+      "observation": "From 107 the held book is carried to the image right / robot's left (away from the shelf on the image left), still visible in the gripper at 193-200, gone by 220; the gripper then sits with fingertips on top of the robot-left book 240-293 and leaves at ~307.",
+      "confidence": "medium",
+      "evidence": "evidence_hover_closeup.png"
+    }
+  ],
+  "notes": "Where the wrong book went after ~213 is unclear: possibly released behind the robot-left book or out of frame. The fingertip contact on the correct book (240-293) does not look like a grasp attempt (no descent around it, book does not move); not recorded as an LL grasp miss. Robot-left book remains standing."
+}

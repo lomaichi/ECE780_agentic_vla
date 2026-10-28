@@ -1,0 +1,72 @@
+{
+  "episode": "libero_90/task42_fail_init1",
+  "task_language": "put the frying pan under the cabinet shelf",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(frying_pan)",
+      "outcome": "never attempted: gripper briefly hovers over the pan's back rim (80-100) without descending or closing, then picks the white bowl"
+    },
+    {
+      "name": "place(frying_pan, cabinet_shelf, under)",
+      "outcome": "never attempted"
+    }
+  ],
+  "behaviour_summary": "pi0 hovers over the bowl (60), drifts briefly over the back rim of the pan (80-100), then returns to and grasps the white bowl (160-200), lifts it, loses it around step 260, and re-grasps and lifts it again by 380-409. The pan is never grasped.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_object_selected",
+      "mode_definition": "pi0 approaches, grasps and manipulates a non-instructed object in the scene instead of the instructed target object.",
+      "subtask": "pick(frying_pan)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
+        "RETREAT(dz=+0.10)",
+        "REPROMPT('pick up the frying pan and place it under the cabinet shelf')",
+        "WATCH(EE approaches the frying pan, 5 s)",
+        "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
+      ],
+      "prevention": "Before allowing gripper closure, VERIFY the object under the gripper is the instructed target (pre-grasp identity check); HALT as soon as the EE descends over a non-target object for 2 frames.",
+      "observation": "Gripper above the white bowl at 60; at 80-100 it shifts forward over the back rim of the pan (fingers open, no descent); at 120-160 it is back over the bowl and grasps it at ~180-200.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object_choice.png"
+    },
+    {
+      "primary": false,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "grasp_slip_during_transport",
+      "mode_definition": "An object that was grasped and lifted falls out of the gripper while being carried, before reaching any destination.",
+      "subtask": "pick(white_bowl) [non-instructed object]",
+      "onset_step": 260,
+      "onset_window": [
+        240,
+        260
+      ],
+      "rl_reset_step": 160,
+      "rl_reset_frame": "frames/step0160.png",
+      "rl_subtask": "pick(white_bowl)",
+      "rl_success_check": "white bowl lifted >5 cm and still in the gripper after a 15 cm transport",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Bowl held and lifted at 200-240; at 260 it is tumbling in the air near the stove knob with the gripper far above; at 280 it rests on the table behind the pan. Re-grasped at 360-380 and lifted at 400-409. Recorded as LL evidence on a non-instructed object.",
+      "confidence": "medium",
+      "evidence": "evidence_bowl_drop.png"
+    }
+  ],
+  "notes": "The 80-100 hover over the pan rim could be a weak attempt at the pan, but no descent or closure is visible at 1 fps. Same bowl-drop-while-moving-back pattern as task41_fail_init0 (step ~140)."
+}

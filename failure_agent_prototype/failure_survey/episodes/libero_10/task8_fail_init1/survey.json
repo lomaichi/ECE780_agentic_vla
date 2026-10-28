@@ -1,0 +1,51 @@
+{
+  "episode": "libero_10/task8_fail_init1",
+  "task_language": "put both moka pots on the stove",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "pick(moka_pot_center)",
+      "outcome": "success: grasped ~step 107-127"
+    },
+    {
+      "name": "place(moka_pot_center, stove, on)",
+      "outcome": "success (visual): on the stove at step 200, released by ~227"
+    },
+    {
+      "name": "pick(moka_pot_left_in_image)",
+      "outcome": "partial/late: arm reaches the pot by ~267 but hovers and adjusts for ~170 steps; grasp closes ~433-447, lift at 460"
+    },
+    {
+      "name": "place(moka_pot_left_in_image, stove, on)",
+      "outcome": "failed (timeout): pot is being lowered onto the crowded stove against pot 1 from step 487; still held in the gripper at 529"
+    }
+  ],
+  "behaviour_summary": "pi0 puts the first pot on the stove efficiently (done by ~227), reaches the second pot by ~267, then spends ~170 steps hovering beside it before grasping; it carries it over and is still pressing it down next to pot 1 when the episode times out at 529.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "slow_pregrasp_hesitation",
+      "mode_definition": "The gripper hovers next to the target and makes repeated small adjustments for many seconds before committing to a grasp, using up the episode time budget.",
+      "subtask": "pick(moka_pot_left_in_image)",
+      "onset_step": 340,
+      "onset_window": [
+        273,
+        340
+      ],
+      "rl_reset_step": 260,
+      "rl_reset_frame": "frames/step0260.png",
+      "rl_subtask": "pick(moka_pot) from pre-grasp pose and place it on the stove",
+      "rl_success_check": "second moka pot grasped and lifted within ~60 steps of reset, then resting on the stove cook region with the gripper open",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Step 260-273 the open gripper is above-right of the second pot. Steps 287-420 it descends slowly toward the pot's handle/lid side with small back-and-forth corrections and no closure; the fingers close around the pot body only at ~433-447 and the pot lifts at 460. The ~170-step delay leaves too little time for the place: at 487-529 the pot is being lowered beside pot 1 on the stove and is still held at the timeout.",
+      "confidence": "medium",
+      "evidence": "evidence_pot2_pregrasp_hover.png"
+    }
+  ],
+  "notes": "Timeout-driven failure on an in-distribution libero_10 task. The final placement (evidence_pot2_place_at_timeout.png) looks cramped: pot 2 overlaps pot 1 on the stove and may not fit in the cook region even with more time; I did not record it as a separate failure because the episode ends mid-place. At 3 fps the hover phase is clearly visible; at 1 fps it would look like a stall."
+}

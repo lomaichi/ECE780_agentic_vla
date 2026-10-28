@@ -1,0 +1,39 @@
+{
+  "episode": "libero_90/task44_fail_init0",
+  "task_language": "turn on the stove",
+  "survey_fps": 3,
+  "step_resolution": 7,
+  "subtasks": [
+    {
+      "name": "turn_on(stove)",
+      "outcome": "failed: knob reached but not turned; the arm contorts onto the knob and then leaves the workspace"
+    }
+  ],
+  "behaviour_summary": "pi0 moves to the stove knob (40-173) with the gripper rotated sideways, then the wrist/forearm folds down onto the knob (180-193), the arm flips and swings left out of the camera view (200-260) and stays out of view until timeout. The knob orientation and the unlit burner are unchanged at the end.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE3 'turn on the stove and put the moka pot on it' (stove-knob approach; the instructed task is its first subtask)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "NEW",
+      "mode_name": "fixture_approach_arm_contortion",
+      "mode_definition": "While approaching a small fixture (e.g. a knob), the arm folds into a twisted wrist/elbow configuration, contacts the fixture with the wrist body instead of the fingertips, then swings out of the workspace without completing the manipulation.",
+      "subtask": "turn_on(stove)",
+      "onset_step": 180,
+      "onset_window": [
+        173,
+        180
+      ],
+      "rl_reset_step": 167,
+      "rl_reset_frame": "frames/step0167.png",
+      "rl_subtask": "turn_on(stove)",
+      "rl_success_check": "stove burner shows the on state (glowing) / knob rotated to the on position",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "Gripper hovers just above and behind the knob at 160-173 with fingers vertical. At 180-187 the wrist body comes down onto the knob, at 193-213 the arm folds with the gripper pointing sideways/upward, and at 220-260 the arm sweeps left over the stove and exits the frame. 2x/4x zoom of the knob at 0, 147, 240, 300, 409 shows no visible change in knob angle and no lit burner.",
+      "confidence": "medium",
+      "evidence": "evidence_knob_approach_wrist_flip.png"
+    }
+  ],
+  "notes": "Reflections on the stove top at 213-360 come from the arm out of view, not a lit burner. Could also be read as a kinematic/IK-limit issue of the action chunk rather than a perception error; either way the right fixture was targeted, so LL."
+}

@@ -1,0 +1,54 @@
+{
+  "episode": "libero_90/task63_fail_init0",
+  "task_language": "stack the left bowl on the right bowl and place them in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(left_bowl)",
+      "outcome": "never attempted: pi0 picked the right bowl (the base) instead"
+    },
+    {
+      "name": "stack(left_bowl, right_bowl)",
+      "outcome": "never attempted"
+    },
+    {
+      "name": "place(stacked_bowls, tray, in)",
+      "outcome": "partial: the right (base) bowl alone was placed in the tray"
+    }
+  ],
+  "behaviour_summary": "pi0 grasped the robot's-right bowl (image left, nearest the tray), carried it straight into the tray by ~step 160, then hovered over the tray until timeout; the left bowl never moved.",
+  "runs_trained_task": null,
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "intermediate_subtask_skipped",
+      "mode_definition": "In a multi-step instruction, pi0 skips an intermediate subtask (e.g. stacking one object on another) and carries a single object straight to the final destination, then never completes the remaining steps.",
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "subtask": "stack(left_bowl, right_bowl)",
+      "onset_step": 60,
+      "onset_window": [
+        40,
+        60
+      ],
+      "hl_remedy": [
+        "HALT once a single bowl is carried toward the tray before the stack VERIFY passes",
+        "if the base (right) bowl already sits in the tray: REPROMPT 'pick up the left bowl and place it on the right bowl'",
+        "otherwise RETREAT up 10 cm and REPROMPT 'pick up the left bowl and place it on the right bowl'",
+        "VERIFY left bowl rests in right bowl",
+        "if the stack is not yet in the tray: REPROMPT 'pick up the right bowl and place it in the tray'",
+        "WATCH 5 s; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator issues the stack and the place as two separate prompts and advances only after a VERIFY that the top bowl rests inside the base bowl.",
+      "observation": "Step 40 gripper descends on the image-left bowl (= robot's right, the stacking base); 60-80 that bowl is grasped and lifted; 100-140 carried left and lowered into the tray; 160-409 bowl in tray, gripper hovering/still above it. Image-right (left) bowl never touched.",
+      "confidence": "high",
+      "evidence": "evidence_skip_stack.png"
+    }
+  ],
+  "notes": "Two errors in one decision: wrong bowl chosen first (base instead of top) and the stack step skipped; recorded as one HL failure. After the placement pi0 idles over the tray (HL-1-like) rather than fetching the second bowl; treated as a consequence of the collapsed plan. Since the base bowl is already in the tray, stacking the left bowl onto it in place would plausibly satisfy the goal."
+}

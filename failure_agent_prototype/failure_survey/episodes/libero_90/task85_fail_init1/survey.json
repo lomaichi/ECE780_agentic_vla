@@ -1,0 +1,50 @@
+{
+  "episode": "libero_90/task85_fail_init1",
+  "task_language": "pick up the white mug and place it to the right of the caddy",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(white_mug)",
+      "outcome": "never attempted: gripper hovers above/behind the mug (60-160) without descending"
+    },
+    {
+      "name": "place(white_mug, caddy, right_of)",
+      "outcome": "never attempted; the empty gripper is put into the caddy's left compartment instead (220-409)"
+    }
+  ],
+  "behaviour_summary": "pi0 hovered high over the mug and the caddy's left end, never descended to the mug, then rotated the gripper and repeatedly lowered its fingers into the caddy's left compartment, empty, until timeout.",
+  "runs_trained_task": "libero_10 STUDY_SCENE1: pick up the book and place it in the back compartment of the caddy (placement-into-caddy motion without an object)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "The policy runs the scene's habitual (trained) skill or task instead of the instructed one.",
+      "subtask": "pick(white_mug)",
+      "onset_step": 180,
+      "onset_window": [
+        160,
+        180
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT",
+        "RETREAT(dz=+0.10, away from caddy)",
+        "REPROMPT('pick up the white mug and place it to the right of the caddy')",
+        "WATCH(EE descends to the white mug, 3 s)",
+        "VERIFY(mug in gripper)",
+        "retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator HALTs when an empty gripper enters a container/fixture region before the pick VERIFY passes.",
+      "observation": "Steps 60-140: gripper hovers high over the left end of the caddy just behind the mug, no descent and no contact. 160-180: rises back over the caddy. 200-409: gripper turned vertical, fingers lowered into the caddy's left compartment repeatedly, empty. Mug, book and red mug stay put.",
+      "confidence": "medium",
+      "evidence": "evidence_caddy_probe.png"
+    }
+  ],
+  "notes": "No grasp attempt on the mug is visible at 1 fps; a very brief one between samples cannot be ruled out, but the mug never moves."
+}

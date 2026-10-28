@@ -1,0 +1,48 @@
+{
+  "episode": "libero_90/task34_fail_init0",
+  "task_language": "put the yellow and white mug to the front of the white mug",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(yellow_white_mug)",
+      "outcome": "success: grasped by the rim/handle side at ~120-140"
+    },
+    {
+      "name": "place(yellow_white_mug, white_mug, front_of)",
+      "outcome": "failed: carried back-left to the closed microwave and held against its door until timeout"
+    }
+  ],
+  "behaviour_summary": "pi0 grasps the yellow and white mug and carries it toward the microwave (the libero_10 destination), holding it lifted against the closed microwave door from ~200 to the end; the white mug is never approached.",
+  "runs_trained_task": "KITCHEN_SCENE6 libero_10: put the yellow and white mug in the microwave and close it",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "Runs the scene's habitual (trained) skill or destination instead of the instructed one.",
+      "subtask": "place(yellow_white_mug, white_mug, front_of)",
+      "onset_step": 140,
+      "onset_window": [
+        120,
+        140
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the held mug moves toward the microwave instead of the white mug (VERIFY on image ROI)",
+        "RETREAT up 5 cm and 10 cm away from the microwave keeping the grasp",
+        "REPROMPT 'pick up the yellow and white mug and place it in front of the white mug'",
+        "WATCH 5 s for motion toward the white mug; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator flags the trained-task conflict in KITCHEN_SCENE6 and declares 'mug moves away from the microwave' as the expected transport direction.",
+      "observation": "100-120 grasp at the mug; 140 mug lifted and moved back-left toward the microwave; 200-409 held up against the closed microwave door with no further progress; white mug untouched.",
+      "confidence": "high",
+      "evidence": "evidence_microwave_carry.png"
+    }
+  ],
+  "notes": "Microwave door stays closed throughout, so the trained behaviour itself also stalls; no door-opening attempt seen."
+}

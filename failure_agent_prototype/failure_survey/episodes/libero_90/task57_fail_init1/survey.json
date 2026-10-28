@@ -1,0 +1,49 @@
+{
+  "episode": "libero_90/task57_fail_init1",
+  "task_language": "pick up the cream cheese and put it in the tray",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "pick(cream_cheese)",
+      "outcome": "never attempted: EE passes near the cream cheese ~60-80 but never grasps it"
+    },
+    {
+      "name": "place(cream_cheese, tray, in)",
+      "outcome": "never attempted (butter carried to the tray instead)"
+    }
+  ],
+  "behaviour_summary": "pi0 wanders over the cream cheese and the alphabet soup (~60-140), then grasps the butter box (~180), carries it to the tray and holds it at the tray's right rim until timeout.",
+  "runs_trained_task": "possibly libero_10 LIVING_ROOM_SCENE2: put both the cream cheese box and the butter in the basket (picks butter first)",
+  "failures": [
+    {
+      "primary": true,
+      "level": "high",
+      "mode_id": "NEW",
+      "mode_name": "wrong_target_object",
+      "mode_definition": "The policy approaches, grasps or transports a non-instructed object (typically one used in a trained task of the same scene) instead of the object named in the instruction.",
+      "subtask": "pick(cream_cheese)",
+      "onset_step": 160,
+      "onset_window": [
+        140,
+        160
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT as soon as the EE descends on (or closes on) a non-target object",
+        "RETREAT up 10 cm",
+        "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
+        "REPROMPT 'pick up the cream cheese and put it in the tray'",
+        "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator localizes the target object before execution and the FR agent VERIFYs at each descent that the EE is over the target ROI, HALTing on a distractor approach.",
+      "observation": "Objects identified against the LIBERO asset textures: cream cheese = blue/white box (front right), butter = orange/red 'Farm Fresh Butter' box (front left). EE is near the cream cheese at 60-80, moves over the alphabet soup at 100-120, then commits to the butter at 160, grasps it ~180, carries it to the tray by 240 and holds it at the tray's right rim from 240 to 409.",
+      "confidence": "high",
+      "evidence": "evidence_wrong_object.png"
+    }
+  ],
+  "notes": "Butter appears still held at 409, resting on/at the tray rim, not clearly released. Object identity from the asset textures; evidence_objects.png shows the initial layout, evidence_approach.png the dithering approach."
+}

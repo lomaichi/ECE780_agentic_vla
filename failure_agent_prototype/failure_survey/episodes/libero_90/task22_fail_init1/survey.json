@@ -1,0 +1,66 @@
+{
+  "episode": "libero_90/task22_fail_init1",
+  "task_language": "close the bottom drawer of the cabinet",
+  "survey_fps": 1,
+  "step_resolution": 20,
+  "subtasks": [
+    {
+      "name": "close(bottom_drawer)",
+      "outcome": "failed: push started ~280-300, drawer stalls roughly half to two-thirds closed from ~320 to the 409 timeout"
+    }
+  ],
+  "behaviour_summary": "pi0 executes its trained KITCHEN_SCENE4 task: picks the black bowl (~80-160), places it in the open bottom drawer (~200-280), then pushes the drawer, which stalls well short of flush until timeout.",
+  "runs_trained_task": "libero_10 KITCHEN_SCENE4: put the black bowl in the bottom drawer of the cabinet and close it",
+  "failures": [
+    {
+      "primary": true,
+      "level": "low",
+      "mode_id": "LL-1",
+      "mode_name": "drawer_push_stall",
+      "mode_definition": "pi0 pushes a drawer toward closed but stops short of flush and rests against the drawer front without further closing motion.",
+      "subtask": "close(bottom_drawer)",
+      "onset_step": 340,
+      "onset_window": [
+        320,
+        340
+      ],
+      "rl_reset_step": 280,
+      "rl_reset_frame": "frames/step0280.png",
+      "rl_subtask": "close(bottom_drawer)",
+      "rl_success_check": "bottom drawer front flush with the cabinet face (all drawer handles in line)",
+      "hl_remedy": null,
+      "prevention": null,
+      "observation": "After dropping the bowl into the bottom drawer at ~280, the hand pushes the drawer front; between 300 and 320 the drawer moves in a little, then from 320 to 409 the drawer front stays in the same place with the bowl still visible inside and the drawer clearly proud of the cabinet face.",
+      "confidence": "medium",
+      "evidence": "evidence_push_stall.png"
+    },
+    {
+      "primary": false,
+      "level": "high",
+      "mode_id": "HL-2",
+      "mode_name": "scene_default_skill_override",
+      "mode_definition": "pi0 runs the scene's habitual (trained libero_10) skill sequence instead of, or before, the instructed one.",
+      "subtask": "close(bottom_drawer)",
+      "onset_step": 80,
+      "onset_window": [
+        60,
+        80
+      ],
+      "rl_reset_step": null,
+      "rl_reset_frame": null,
+      "rl_subtask": null,
+      "rl_success_check": null,
+      "hl_remedy": [
+        "HALT when the EE heads for the bowl with the gripper empty",
+        "RETREAT up 10 cm",
+        "REPROMPT 'close the bottom drawer of the cabinet'",
+        "WATCH 3 s for the EE approaching the drawer front; retry once, then ESCALATE"
+      ],
+      "prevention": "Coordinator flags non-target objects as 'do not touch' and the FR agent HALTs on any approach to them.",
+      "observation": "Instead of closing the drawer directly, pi0 descends on the black bowl at ~80, lifts it ~160 and places it in the bottom drawer ~200-280, consuming ~280 of 400 steps on un-instructed subtasks before the close starts.",
+      "confidence": "high",
+      "evidence": "evidence_drawer_close.png"
+    }
+  ],
+  "notes": "Primary chosen as LL-1 because the close attempt itself stalls for ~90 steps before timeout; the HL-2 detour cost time but is not by itself the cause. It is possible the bowl inside the drawer obstructs closure (bowl rim against the cabinet face); cannot tell from video."
+}
