@@ -102,6 +102,25 @@ RUN mkdir -p "${LIBERO_CONFIG_PATH}" && B=/opt/openpi/third_party/libero/libero/
     "assets: ${B}/assets" \
     > "${LIBERO_CONFIG_PATH}/config.yaml"
 
+# ---------------------------------------------------------------------------
+# SimpleVLA-RL (OpenVLA-OFT RL on LIBERO), isolated venv /opt/simplevla/.venv:
+#   - torch 2.7.1+cu128 (RTX 5090 / sm_120 needs CUDA >= 12.8)
+#   - robosuite 1.4.1 for LIBERO (system Python keeps robosuite 1.5.2)
+#   - no vllm (pins torch 2.4; LIBERO script uses rollout.name=hf)
+# See SimpleVLA-RL/DEPENDENCY_CHANGES.md.
+#
+# Run the container with --pids-limit=-1: Ray exceeds the default 2048 pids
+# (the RAY_*prestart* env vars in the run script are only a workaround).
+# ---------------------------------------------------------------------------
+COPY SimpleVLA-RL/requirements-5090.lock.txt /tmp/simplevla-requirements.txt
+RUN uv venv --python 3.10 /opt/simplevla/.venv \
+    && VIRTUAL_ENV=/opt/simplevla/.venv uv pip install -r /tmp/simplevla-requirements.txt \
+        --extra-index-url https://download.pytorch.org/whl/cu128 \
+        --index-strategy unsafe-best-match \
+    && VIRTUAL_ENV=/opt/simplevla/.venv uv pip install --no-deps -e /opt/openpi/third_party/libero \
+    && rm /tmp/simplevla-requirements.txt \
+    && uv cache clean
+
 # Checkpoints (several GB) go to the mounted share so they persist across --rm runs
 ENV PYTHONPATH=/opt/openpi/third_party/libero \
     MUJOCO_GL=egl \
