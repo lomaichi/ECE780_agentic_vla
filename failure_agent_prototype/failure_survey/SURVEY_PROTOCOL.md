@@ -19,7 +19,7 @@ This is the protocol every surveyor follows, one batch of failed pi0 rollouts at
 ## Inputs: video only
 - Use only `episodes/<suite>/<folder>/sheetNN.png` (contact sheets, step labelled on each tile) and `episodes/<suite>/<folder>/frames/stepNNNN.png`. These are the sampled frames of the rollout video.
 - **Never open anything under `Documentation/pi0_LIBERO_rollouts/*/<folder>/trace/`**. Do not read meta.json either; your batch list gives the instruction. Do not decode extra frames from the .mp4, because the sampling rate (1 fps or 3 fps) is part of the experiment.
-- Zoom: `python3 failure_agent_prototype/failure_survey/zoom_frames.py <episode_dir> <s1,s2,...> x0,y0,x1,y1 <scale> <out.png>`. It crops the same box from several sampled frames (256x256 px each) and stacks them side by side. Run it from the repo root `/home/DockerShared/ECE780`. Use it whenever a call depends on small detail: gripper contact, drawer flush, knob position, an object on vs. beside its destination. Save the strips you base a call on as `<episode_dir>/evidence_<short_name>.png`.
+- Zoom: `python3 failure_agent_prototype/tools/frame_manipulation/zoom_frames.py <episode_dir> <s1,s2,...> x0,y0,x1,y1 <scale> <out.png>`. It crops the same box from several sampled frames (256x256 px each) and stacks them side by side. Run it from the repo root `/home/DockerShared/ECE780`. Use it whenever a call depends on small detail: gripper contact, drawer flush, knob position, an object on vs. beside its destination. Save the strips you base a call on as `<episode_dir>/evidence_<short_name>.png`.
 
 ## Conventions
 - step = control step, including 10 wait steps (steps 0-9 are static). The video is 20 fps, one frame per step.

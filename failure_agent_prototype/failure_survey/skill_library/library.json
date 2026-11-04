@@ -1,7 +1,7 @@
 {
   "name": "pi0 failure recovery skill library",
   "version": "0.2",
-  "built_from": "failure_agent_prototype/failure_survey (87 failures: libero_10 x5, libero_90 x82 from the 45-task survey split; video only)",
+  "built_from": "failure_agent_prototype/failure_survey (87 failures: libero_10 x5, libero_90 x82 from the 45-task survey split; video only). Per-episode detail: documentation/survey_results.json",
   "supersedes": "0.1-poc (Documentation/failure_survey_test/skill_library); HL-1, HL-2, LL-1 keep their IDs and meaning",
   "split_guard": {
     "note": "only survey-split libero_90 tasks may be used for RL envs, reset states or demos",
@@ -58,6 +58,11 @@
     "validated": "recovery succeeded when replayed from the recorded onset state"
   },
   "observation_budget": "FR agent sees the agentview frame at 1 fps plus proprioception (EE pose, gripper width); no privileged sim state",
+  "levels": {
+    "high": "Reasoning error: wrong object, wrong destination, wrong skill or fixture, wrong spatial relation, wrong subtask order, or idling/never starting the next subtask. Recovered with primitives (HALT, RETREAT, POINT_APPROACH, REPROMPT, ...).",
+    "low": "Fine motor control or fine spatial perception: grasp misalignment, missed or slipped grasp, drop, a push/pull that stalls, a knob not turned far enough, an imprecise placement, knocking objects over. Recovered with an RL subtask policy (INVOKE_RL); instances carry onset and reset steps for rebuilding the scene from trace/states.npy."
+  },
+  "disambiguation": "HL-2 = wrong skill/fixture; HL-3 = wrong object category; HL-4 = right category, wrong instance (qualifier ignored); HL-6 = right object, wrong destination/relation. Each entry's detect.distinguish_from separates the remaining look-alikes.",
   "camera_convention": "agentview faces the robot: robot-left = IMAGE RIGHT, front = lower in the image (verified on libero_10/task4_success_init0)",
   "primitives": {
     "HALT": {
@@ -368,7 +373,7 @@
       "id": "HL-1",
       "level": "high",
       "name": "subtask_handoff_stall",
-      "summary": "pi0 completes a subtask (a fixture action or a successful grasp) and then idles; the next subtask never starts.",
+      "definition": "pi0 completes a subtask (a fixture action or a successful grasp) and then idles; the next subtask never starts.",
       "applies_when": "compound instruction, or a grasp that should be followed by transport; subtask k verified done; next target visible and not being approached",
       "slots": [
         "done_subtask",
@@ -381,6 +386,7 @@
         "earliest_fire_s": 3,
         "distinguish_from": "LL-7/LL-8 hesitation: there the EE is next to the *current* target making small adjustments; LL-1: current subtask not complete"
       },
+      "remedy_brief": "VERIFY(prev done) -> HALT -> RETREAT 10 cm (back into view) -> REPROMPT next-subtask sentence -> WATCH 3 s; retry once -> ESCALATE",
       "recovery": [
         {
           "do": "VERIFY",
@@ -427,15 +433,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(moka_pot_left_in_image)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "VERIFY first moka pot is on the stove (2x zoom of stove ROI)",
-            "HALT",
-            "RETREAT up 10 cm and back toward the workspace centre (EE is out of view)",
-            "REPROMPT \"pick up the moka pot and place it on the stove\" (the remaining pot is the only one off the stove)",
-            "WATCH 3 s for an approach to the remaining pot",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task1_fail_init1",
@@ -447,8 +445,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(black_bowl)",
-          "confidence": "high",
-          "episode_remedy": "VERIFY(top drawer closed) -> HALT -> RETREAT(up 10 cm) -> REPROMPT 'pick up the black bowl and place it on top of the cabinet' -> WATCH 3 s for an approach to the bowl; retry once, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task9_fail_init0",
@@ -460,15 +457,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(black_bowl, plate, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "VERIFY(bowl in gripper, zoom)",
-            "RETREAT(dz=+0.10) with bowl",
-            "REPROMPT('pick up the black bowl and place it on the plate')",
-            "WATCH(EE moves toward plate, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task9_fail_init1",
@@ -480,15 +469,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(black_bowl, plate, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "VERIFY(bowl in gripper, zoom)",
-            "RETREAT(dz=+0.10) with bowl",
-            "REPROMPT('pick up the black bowl and place it on the plate')",
-            "WATCH(EE moves toward plate, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task23_fail_init0",
@@ -500,14 +481,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "VERIFY bottom drawer flush",
-            "HALT",
-            "RETREAT up 10 cm and 5 cm away from the cabinet",
-            "REPROMPT 'open the top drawer of the cabinet'",
-            "WATCH 3 s for the EE approaching the top drawer handle; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task23_fail_init1",
@@ -519,14 +493,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "VERIFY bottom drawer flush",
-            "HALT",
-            "RETREAT up 10 cm and 5 cm away from the cabinet",
-            "REPROMPT 'open the top drawer of the cabinet'",
-            "WATCH 3 s for the EE approaching the top drawer handle; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         }
       ],
       "status": "proposed"
@@ -535,7 +502,7 @@
       "id": "HL-2",
       "level": "high",
       "name": "scene_default_skill_override",
-      "summary": "pi0 runs the scene's habitual skill or fixture interaction (usually from a trained libero_10/libero_spatial task) instead of the instructed skill, e.g. pushes the open drawer shut, grabs a moka pot when told to turn the knob, skips the drawer and puts the bowl on the plate.",
+      "definition": "pi0 runs the scene's habitual skill or fixture interaction (usually from a trained libero_10/libero_spatial task) instead of the instructed skill, e.g. pushes the open drawer shut, grabs a moka pot when told to turn the knob, skips the drawer and puts the bowl on the plate.",
       "applies_when": "current subtask is skill S on target X, but the EE heads for a different fixture/object Y that belongs to a trained task in this scene",
       "slots": [
         "target",
@@ -550,6 +517,7 @@
         "earliest_fire_s": 2,
         "distinguish_from": "HL-3: there the *skill* is right (pick-place) but the object is wrong"
       },
+      "remedy_brief": "HALT -> RETREAT 10 cm + 5 cm from attractor -> INSERT_SUBTASK to restore any broken protected state -> POINT_APPROACH(target) -> REPROMPT object-first sentence -> WATCH 5 s; retry 15 cm -> ESCALATE",
       "recovery": [
         {
           "do": "HALT"
@@ -609,8 +577,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(back_butter)",
-          "confidence": "high",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer open); if closed INSERT_SUBTASK 'open the top drawer of the cabinet' -> REPROMPT 'pick up the butter at the back and place it in the top drawer of the cabinet' -> WATCH 5 s for an approach to the back butter -> VERIFY(butter in drawer) -> REPROMPT 'close the top drawer of the cabinet'; retry once with a 15 cm retreat, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task3_fail_init1",
@@ -622,8 +589,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(back_butter)",
-          "confidence": "high",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer open); if closed INSERT_SUBTASK 'open the top drawer of the cabinet' -> REPROMPT 'pick up the butter at the back and place it in the top drawer of the cabinet' -> WATCH 5 s for an approach to the back butter -> VERIFY(butter in drawer) -> REPROMPT 'close the top drawer of the cabinet'; retry once with a 15 cm retreat, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task6_fail_init0",
@@ -635,14 +601,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "open(bottom_drawer)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10, away from bowl/plate)",
-            "REPROMPT('open the bottom drawer of the cabinet')",
-            "WATCH(EE heads to cabinet, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task8_fail_init0",
@@ -654,16 +613,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "if bowl in gripper: REPROMPT('put the black bowl on the table') or place it back, then RETREAT(dz=+0.10)",
-            "REPROMPT('open the top drawer of the cabinet')",
-            "WATCH(EE heads to the top handle, 3 s)",
-            "VERIFY(top drawer open, zoom)",
-            "REPROMPT('put the black bowl in the top drawer of the cabinet')",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task8_fail_init1",
@@ -675,16 +625,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "if bowl in gripper: REPROMPT('put the black bowl on the table') or place it back, then RETREAT(dz=+0.10)",
-            "REPROMPT('open the top drawer of the cabinet')",
-            "WATCH(EE heads to the top handle, 3 s)",
-            "VERIFY(top drawer open, zoom)",
-            "REPROMPT('put the black bowl in the top drawer of the cabinet')",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task11_fail_init1",
@@ -696,8 +637,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "medium",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm) -> REPROMPT 'open the top drawer of the cabinet' -> WATCH 3 s for an approach to the top handle -> VERIFY(top drawer open); retry once with a 15 cm retreat toward the cabinet, then ESCALATE"
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task22_fail_init1",
@@ -709,13 +649,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "close(bottom_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the EE heads for the bowl with the gripper empty",
-            "RETREAT up 10 cm",
-            "REPROMPT 'close the bottom drawer of the cabinet'",
-            "WATCH 3 s for the EE approaching the drawer front; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task23_fail_init0",
@@ -727,13 +661,7 @@
           "step_resolution": 7,
           "primary": false,
           "subtask": "close(bottom_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the EE heads for the bowl with the gripper empty",
-            "RETREAT up 10 cm",
-            "REPROMPT 'close the bottom drawer of the cabinet'",
-            "WATCH 3 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task23_fail_init1",
@@ -745,13 +673,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "close(bottom_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the EE heads for the bowl with the gripper empty",
-            "RETREAT up 10 cm",
-            "REPROMPT 'close the bottom drawer of the cabinet'",
-            "WATCH 3 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task31_fail_init1",
@@ -763,14 +685,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(black_bowl)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10, dx=0.05 away from the drawer)",
-            "REPROMPT('pick up the black bowl and place it on top of the cabinet')",
-            "WATCH(EE approaches the black bowl, 5 s)",
-            "on no approach: retry once with a 15 cm retreat, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task39_fail_init0",
@@ -782,14 +697,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "turn_off(stove)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm and away from the pots",
-            "REPROMPT \"turn off the stove\"",
-            "WATCH 5 s for an approach to the stove knob",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task39_fail_init1",
@@ -801,14 +709,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "turn_off(stove)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm and away from the pots",
-            "REPROMPT \"turn off the stove\"",
-            "WATCH 5 s for an approach to the stove knob",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task85_fail_init0",
@@ -820,15 +721,7 @@
           "step_resolution": 7,
           "primary": false,
           "subtask": "pick(white_mug)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10, away from caddy)",
-            "REPROMPT('pick up the white mug and place it to the right of the caddy')",
-            "WATCH(EE descends to the white mug, 3 s)",
-            "INVOKE_RL(rl/pick_mug) if the grasp slips again",
-            "ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task85_fail_init1",
@@ -840,15 +733,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(white_mug)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10, away from caddy)",
-            "REPROMPT('pick up the white mug and place it to the right of the caddy')",
-            "WATCH(EE descends to the white mug, 3 s)",
-            "VERIFY(mug in gripper)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         }
       ],
       "status": "proposed"
@@ -857,7 +742,7 @@
       "id": "HL-3",
       "level": "high",
       "name": "wrong_object_category",
-      "summary": "pi0 grasps/moves an object of a different category than the target, typically one from a trained task in the same scene (alphabet soup instead of tomato sauce, white bowl instead of frying pan, mug instead of book).",
+      "definition": "pi0 grasps/moves an object of a different category than the target, typically one from a trained task in the same scene (alphabet soup instead of tomato sauce, white bowl instead of frying pan, mug instead of book).",
       "applies_when": "subtask pick(target); gripper descending on / closing on an object",
       "slots": [
         "target",
@@ -870,6 +755,7 @@
         "earliest_fire_s": 2,
         "distinguish_from": "HL-4: same category, wrong instance (qualifier ignored)"
       },
+      "remedy_brief": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE",
       "recovery": [
         {
           "do": "HALT"
@@ -923,8 +809,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(middle_black_bowl)",
-          "confidence": "medium",
-          "episode_remedy": "HALT -> VERIFY(plate flat on the table; if not, ESCALATE) -> RETREAT(up 10 cm) -> REPROMPT 'pick up the middle black bowl and place it on the plate' -> WATCH 3 s that the gripper moves toward the middle bowl -> VERIFY(bowl in gripper); retry once, then ESCALATE"
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task21_fail_init1",
@@ -936,14 +821,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(frying_pan)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper closes on / lifts the moka pot",
-            "RETREAT: put the moka pot back down, then up 10 cm",
-            "REPROMPT 'pick up the frying pan and place it on the stove'",
-            "WATCH 3 s for approach to the pan handle",
-            "VERIFY pan grasped; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task31_fail_init0",
@@ -955,14 +833,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(black_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the black bowl and place it on top of the cabinet')",
-            "WATCH(EE approaches the black bowl, 5 s)",
-            "on no approach: retry once, then ESCALATE (the ketchup in the drawer does not block the task and can be left)"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task41_fail_init0",
@@ -974,15 +845,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(frying_pan)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the frying pan and place it on top of the cabinet')",
-            "WATCH(EE approaches the frying pan, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task41_fail_init1",
@@ -994,15 +857,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(frying_pan)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the frying pan and place it on top of the cabinet')",
-            "WATCH(EE approaches the frying pan, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task42_fail_init0",
@@ -1014,15 +869,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(frying_pan)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the frying pan and place it under the cabinet shelf')",
-            "WATCH(EE approaches the frying pan, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task42_fail_init1",
@@ -1034,15 +881,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(frying_pan)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the frying pan and place it under the cabinet shelf')",
-            "WATCH(EE approaches the frying pan, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task49_fail_init0",
@@ -1054,8 +893,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(tomato_sauce)",
-          "confidence": "high",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm) -> REPROMPT 'pick up the tomato sauce and place it in the basket' -> WATCH 3 s that the EE heads for the tomato sauce -> VERIFY(tomato sauce in basket); retry once with a 15 cm retreat, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task49_fail_init1",
@@ -1067,8 +905,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(tomato_sauce)",
-          "confidence": "high",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm) -> REPROMPT 'pick up the tomato sauce and place it in the basket' -> WATCH 3 s that the EE heads for the tomato sauce -> VERIFY(tomato sauce in basket); retry once with a 15 cm retreat, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task53_fail_init0",
@@ -1080,14 +917,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(orange_juice)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the orange juice and put it in the basket')",
-            "WATCH(EE approaches the orange juice, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task53_fail_init1",
@@ -1099,15 +929,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(orange_juice)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.05) then lower and open gripper to set the wrong object back down near its start",
-            "RETREAT(dz=+0.10)",
-            "REPROMPT('pick up the orange juice and put it in the basket')",
-            "WATCH(EE approaches the orange juice, 5 s)",
-            "on no approach: retry once with VERIFY of the target at pre-grasp, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task57_fail_init1",
@@ -1119,14 +941,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(cream_cheese)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT as soon as the EE descends on (or closes on) a non-target object",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
-            "REPROMPT 'pick up the cream cheese and put it in the tray'",
-            "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task58_fail_init0",
@@ -1138,14 +953,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(ketchup)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT as soon as the EE descends on (or closes on) a non-target object",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
-            "REPROMPT 'pick up the ketchup and put it in the tray'",
-            "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task58_fail_init1",
@@ -1157,14 +965,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(ketchup)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT as soon as the EE descends on (or closes on) a non-target object",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
-            "REPROMPT 'pick up the ketchup and put it in the tray'",
-            "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task59_fail_init0",
@@ -1176,14 +977,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(tomato_sauce)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT as soon as the EE descends on (or closes on) a non-target object",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
-            "REPROMPT 'pick up the tomato sauce and put it in the tray'",
-            "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task59_fail_init1",
@@ -1195,14 +989,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(tomato_sauce)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT as soon as the EE descends on (or closes on) a non-target object",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if the wrong object is held, INSERT_SUBTASK to set it back down on the table first",
-            "REPROMPT 'pick up the tomato sauce and put it in the tray'",
-            "WATCH 3 s for the EE heading toward the target object ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task61_fail_init0",
@@ -1214,15 +1001,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(chocolate_pudding)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
-            "REPROMPT 'pick up the chocolate pudding and place it in the tray'",
-            "WATCH 3 s for EE approach toward the target",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task61_fail_init1",
@@ -1234,15 +1013,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(chocolate_pudding)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
-            "REPROMPT 'pick up the chocolate pudding and place it in the tray'",
-            "WATCH 3 s for EE approach toward the target",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task62_fail_init0",
@@ -1254,15 +1025,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(salad_dressing)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
-            "REPROMPT 'pick up the salad dressing and place it in the tray'",
-            "WATCH 3 s for EE approach toward the target",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task62_fail_init1",
@@ -1274,15 +1037,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(salad_dressing)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the empty gripper descends toward a non-target object over 2 frames (VERIFY target grounding)",
-            "RETREAT up 10 cm",
-            "VERIFY gripper empty; if a non-target is held, ESCALATE (no put-back primitive)",
-            "REPROMPT 'pick up the salad dressing and place it in the tray'",
-            "WATCH 3 s for EE approach toward the target",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task69_fail_init0",
@@ -1294,14 +1049,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(chocolate_pudding)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward the white mug (not the target)",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the chocolate pudding and place it to the left of the plate'",
-            "WATCH 3 s for approach to the pudding",
-            "VERIFY pudding grasped; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task69_fail_init1",
@@ -1313,14 +1061,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(chocolate_pudding)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward the white mug",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the chocolate pudding and place it to the left of the plate'",
-            "WATCH 3 s for approach to the pudding",
-            "VERIFY; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task77_fail_init1",
@@ -1332,15 +1073,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm",
-            "if the mug ended up in the back compartment: INSERT_SUBTASK \"pick up the mug and place it on the table\"",
-            "REPROMPT \"pick up the book and place it in the back compartment of the caddy\"",
-            "WATCH 5 s for an approach to the book",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task78_fail_init1",
@@ -1352,14 +1085,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm",
-            "REPROMPT \"pick up the book and place it in the front compartment of the caddy\"",
-            "WATCH 5 s for an approach to the book",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task80_fail_init0",
@@ -1371,14 +1097,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm",
-            "REPROMPT \"pick up the book and place it in the right compartment of the caddy\"",
-            "WATCH 5 s for an approach to the book",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         }
       ],
       "status": "proposed"
@@ -1387,7 +1106,7 @@
       "id": "HL-4",
       "level": "high",
       "name": "referring_expression_instance_error",
-      "summary": "Right kind of object or fixture, wrong instance: the qualifier (left/middle/right, colour, top/bottom drawer) is ignored. pi0 opens the middle drawer for 'top'/'bottom', always grabs the same book, takes the white mug for 'red mug'.",
+      "definition": "Right kind of object or fixture, wrong instance: the qualifier (left/middle/right, colour, top/bottom drawer) is ignored. pi0 opens the middle drawer for 'top'/'bottom', always grabs the same book, takes the white mug for 'red mug'.",
       "applies_when": "target is named with a qualifier and the scene has >1 instance of its category",
       "slots": [
         "target",
@@ -1400,6 +1119,7 @@
         "earliest_fire_s": 2,
         "distinguish_from": "HL-3: different category"
       },
+      "remedy_brief": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE",
       "recovery": [
         {
           "do": "HALT"
@@ -1454,16 +1174,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(bottom_drawer)",
-          "confidence": "low",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10)",
-            "VERIFY(all drawers closed, cabinet ROI zoom)",
-            "REPROMPT('open the bottom drawer of the cabinet')",
-            "WATCH(EE descends to the lowest handle, 3 s)",
-            "VERIFY(bottom drawer front moved out, zoom)",
-            "retry once with RETREAT 15 cm, then ESCALATE"
-          ]
+          "confidence": "low"
         },
         {
           "episode": "libero_90/task6_fail_init1",
@@ -1475,16 +1186,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "open(bottom_drawer)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10)",
-            "INSERT_SUBTASK('close the middle drawer of the cabinet') (optional, restores the scene)",
-            "REPROMPT('open the bottom drawer of the cabinet')",
-            "WATCH(EE descends to the lowest handle, 3 s)",
-            "VERIFY(bottom drawer front out, zoom)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task11_fail_init0",
@@ -1496,8 +1198,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(top_drawer)",
-          "confidence": "medium",
-          "episode_remedy": "HALT -> RETREAT(up 10 cm, 5 cm away from cabinet) -> VERIFY(top drawer closed, which drawer is open) -> REPROMPT 'open the top drawer of the cabinet' -> WATCH 3 s that the gripper approaches the topmost handle -> VERIFY(top drawer open); retry once, then ESCALATE"
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task38_fail_init1",
@@ -1509,15 +1210,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(right_moka_pot)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT up 10 cm",
-            "if the wrong pot is on the stove: INSERT_SUBTASK \"pick up the left moka pot and place it on the table\"",
-            "REPROMPT \"put the right moka pot on the stove\"",
-            "WATCH 5 s for an approach to the image-left (robot's right) pot",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task71_fail_init0",
@@ -1529,14 +1222,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(red_mug)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends on the white mug",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the red mug and place it on the plate'",
-            "WATCH 3 s for approach to the red mug",
-            "VERIFY red mug grasped; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task71_fail_init1",
@@ -1548,14 +1234,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(red_mug)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends on the white mug",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the red mug and place it on the plate'",
-            "WATCH 3 s for approach to the red mug",
-            "VERIFY red mug grasped; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task86_fail_init0",
@@ -1567,14 +1246,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(middle_book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
-            "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
-            "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
-            "VERIFY the referred book is between the fingers after closure",
-            "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task86_fail_init1",
@@ -1586,14 +1258,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(middle_book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
-            "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
-            "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
-            "VERIFY the referred book is between the fingers after closure",
-            "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task87_fail_init0",
@@ -1605,14 +1270,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "pick(left_book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
-            "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
-            "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
-            "VERIFY the referred book is between the fingers after closure",
-            "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task87_fail_init1",
@@ -1624,14 +1282,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(left_book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the gripper descends toward a book that VERIFY (zoomed image) says is not the referred book",
-            "if a wrong book is already in hand: open the gripper in place to set it down, then RETREAT up 10 cm",
-            "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
-            "VERIFY the referred book is between the fingers after closure",
-            "WATCH 5 s for transport toward the cabinet shelf; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         }
       ],
       "status": "proposed"
@@ -1640,7 +1291,7 @@
       "id": "HL-5",
       "level": "high",
       "name": "intermediate_subtask_skipped",
-      "summary": "In 'stack A on B and place them in C', pi0 skips the stack and carries a single bowl straight to C. It never stacked in any surveyed episode.",
+      "definition": "In a multi-step instruction, pi0 skips a middle subtask (e.g. the stack in 'stack A on B and place them in C') and carries a single object straight to the final destination. It never stacked in any surveyed episode.",
       "applies_when": "instruction with an intermediate stack/combine subtask before the final place",
       "slots": [
         "top_obj",
@@ -1652,6 +1303,7 @@
         "visual": "VLM: 'is {top_obj} resting inside {base_obj}?' == no while the EE heads to {container}",
         "earliest_fire_s": 2
       },
+      "remedy_brief": "HALT before the single object reaches the container -> stack in place if base already in container, else POINT_APPROACH(top) + REPROMPT stack sentence -> VERIFY(stacked) -> REPROMPT place sentence for the base",
       "recovery": [
         {
           "do": "HALT"
@@ -1720,15 +1372,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "stack(left_bowl, right_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT once a single bowl is carried toward the tray before the stack VERIFY passes",
-            "if the base (right) bowl already sits in the tray: REPROMPT 'pick up the left bowl and place it on the right bowl'",
-            "otherwise RETREAT up 10 cm and REPROMPT 'pick up the left bowl and place it on the right bowl'",
-            "VERIFY left bowl rests in right bowl",
-            "if the stack is not yet in the tray: REPROMPT 'pick up the right bowl and place it in the tray'",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task63_fail_init1",
@@ -1740,14 +1384,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "stack(left_bowl, right_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the held bowl moves past the base bowl toward the tray (before stack VERIFY)",
-            "REPROMPT 'pick up the left bowl and place it on the right bowl'",
-            "VERIFY left bowl rests in right bowl",
-            "REPROMPT 'pick up the right bowl and place it in the tray'",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task64_fail_init0",
@@ -1759,15 +1396,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "stack(right_bowl, left_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT once a single bowl is carried toward the tray before the stack VERIFY passes",
-            "if the base (left) bowl already sits in the tray: REPROMPT 'pick up the right bowl and place it on the left bowl'",
-            "otherwise RETREAT up 10 cm and REPROMPT 'pick up the right bowl and place it on the left bowl'",
-            "VERIFY right bowl rests in left bowl",
-            "if the stack is not yet in the tray: REPROMPT 'pick up the left bowl and place it in the tray'",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task64_fail_init1",
@@ -1779,15 +1408,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "stack(right_bowl, left_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT once a single bowl is carried toward the tray before the stack VERIFY passes",
-            "if the base (left) bowl already sits in the tray: REPROMPT 'pick up the right bowl and place it on the left bowl'",
-            "otherwise RETREAT up 10 cm and REPROMPT 'pick up the right bowl and place it on the left bowl'",
-            "VERIFY right bowl rests in left bowl",
-            "if the stack is not yet in the tray: REPROMPT 'pick up the left bowl and place it in the tray'",
-            "WATCH 5 s; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         }
       ],
       "status": "proposed"
@@ -1796,7 +1417,7 @@
       "id": "HL-6",
       "level": "high",
       "name": "destination_misgrounding",
-      "summary": "pi0 holds the correct object but carries it to / hovers at / places it in a non-instructed destination or relation, usually the trained task's destination (back compartment for 'front', right of the plate for 'left of', microwave for 'in front of the mug'), or hovers without committing.",
+      "definition": "pi0 holds the correct object but carries it to / hovers at / places it in a non-instructed destination or relation, usually the trained task's destination (back compartment for 'front', right of the plate for 'left of', microwave for 'in front of the mug'), or hovers without committing.",
       "applies_when": "object grasped; subtask place(obj, dest, relation)",
       "slots": [
         "obj",
@@ -1810,6 +1431,7 @@
         "earliest_fire_s": 2,
         "distinguish_from": "LL-7: the object is AT the correct destination but not released"
       },
+      "remedy_brief": "HALT keeping grasp -> RETREAT up 10 cm -> POINT_APPROACH(destination point) -> REPROMPT place sentence or scripted lower-and-release -> VERIFY(on/in); retry -> ESCALATE",
       "recovery": [
         {
           "do": "HALT",
@@ -1855,14 +1477,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(black_bowl, plate, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10) keeping the bowl",
-            "REPROMPT('pick up the black bowl and place it on the plate')",
-            "WATCH(EE heads toward plate, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task9_fail_init1",
@@ -1874,14 +1489,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(black_bowl, plate, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT",
-            "RETREAT(dz=+0.10) keeping the bowl",
-            "REPROMPT('pick up the black bowl and place it on the plate')",
-            "WATCH(EE heads toward plate, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task17_fail_init1",
@@ -1893,8 +1501,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "stack(middle_black_bowl, back_black_bowl)",
-          "confidence": "high",
-          "episode_remedy": "HALT -> VERIFY(bowl still in gripper) -> RETREAT(up 5 cm, 10 cm away from the cabinet toward the table centre) -> REPROMPT 'pick up the middle black bowl and place it on the back black bowl' -> WATCH 3 s that the EE moves toward the back bowl -> VERIFY(bowl on back bowl); retry once, then ESCALATE"
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task25_fail_init0",
@@ -1906,14 +1513,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(black_bowl, cabinet_top, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT once the EE has been near-stationary for 3 frames with the object held",
-            "VERIFY bowl still in gripper",
-            "RETREAT up 10 cm",
-            "REPROMPT 'put the black bowl on top of the cabinet'",
-            "WATCH 3 s for the EE moving over the cabinet top ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task25_fail_init1",
@@ -1925,14 +1525,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(black_bowl, cabinet_top, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT once the EE has been near-stationary for 3 frames with the object held",
-            "VERIFY bowl still in gripper",
-            "RETREAT up 10 cm",
-            "REPROMPT 'put the black bowl on top of the cabinet'",
-            "WATCH 3 s for the EE moving over the cabinet top ROI; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task34_fail_init0",
@@ -1944,13 +1537,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(yellow_white_mug, white_mug, front_of)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the held mug moves toward the microwave instead of the white mug (VERIFY on image ROI)",
-            "RETREAT up 5 cm and 10 cm away from the microwave keeping the grasp",
-            "REPROMPT 'pick up the yellow and white mug and place it in front of the white mug'",
-            "WATCH 5 s for motion toward the white mug; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task34_fail_init1",
@@ -1962,13 +1549,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(yellow_white_mug, white_mug, front_of)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the held mug moves toward the microwave instead of the white mug (VERIFY on image ROI)",
-            "RETREAT up 5 cm and 10 cm away from the microwave keeping the grasp",
-            "REPROMPT 'pick up the yellow and white mug and place it in front of the white mug'",
-            "WATCH 5 s for motion toward the white mug; retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task69_fail_init0",
@@ -1980,14 +1561,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(chocolate_pudding, plate, left_of)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT once the carried object moves toward the wrong side of the reference",
-            "RETREAT up 5 cm keeping the grasp",
-            "REPROMPT 'put the chocolate pudding to the left of the plate'",
-            "WATCH 3 s; VERIFY placement side using image-left = robot-right convention",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task73_fail_init0",
@@ -1999,13 +1573,7 @@
           "step_resolution": 7,
           "primary": true,
           "subtask": "place(book, caddy_front_compartment, in)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the held book descends toward a caddy cell other than the front one (VERIFY on caddy ROI)",
-            "RETREAT up 10 cm keeping the grasp",
-            "REPROMPT 'pick up the book and place it in the front compartment of the caddy'",
-            "WATCH 5 s; if pi0 again heads for the back cell, ESCALATE (trained-task bias likely to repeat)"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task73_fail_init1",
@@ -2017,13 +1585,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(book, caddy_front_compartment, in)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT when the held book descends toward a caddy cell other than the front one (VERIFY on caddy ROI)",
-            "RETREAT up 10 cm keeping the grasp",
-            "REPROMPT 'pick up the book and place it in the front compartment of the caddy'",
-            "WATCH 5 s; if pi0 again heads for the back cell, ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task86_fail_init0",
@@ -2035,13 +1597,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(middle_book, cabinet_shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task86_fail_init1",
@@ -2053,13 +1609,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(middle_book, cabinet_shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the black book and place it on the cabinet shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task87_fail_init0",
@@ -2071,13 +1621,7 @@
           "step_resolution": 7,
           "primary": false,
           "subtask": "place(left_book, shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task87_fail_init1",
@@ -2089,13 +1633,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "place(left_book, shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the book on the left and place it on top of the shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task88_fail_init0",
@@ -2107,13 +1645,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(right_book, cabinet_shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the book on the right and place it on the cabinet shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task88_fail_init1",
@@ -2125,13 +1657,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(right_book, cabinet_shelf, on)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "VERIFY the object is held at the destination (zoom ROI on the shelf)",
-            "HALT as soon as the EE starts moving away from the destination with the object still in hand",
-            "REPROMPT 'pick up the book on the right and place it on the cabinet shelf'",
-            "WATCH 5 s for a release at the destination; if pi0 again withdraws, ESCALATE (candidate for an RL place-on/under-shelf subtask)"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task89_fail_init0",
@@ -2143,13 +1669,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(right_book, cabinet_shelf, under)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT when the EE carrying the object moves away from the instructed destination for 2 frames",
-            "RETREAT up 10 cm keeping the grasp (if already released, VERIFY where the object lies)",
-            "REPROMPT 'pick up the book on the right and place it under the cabinet shelf'",
-            "WATCH 5 s for motion toward the destination; retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         },
         {
           "episode": "libero_90/task89_fail_init1",
@@ -2161,13 +1681,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "place(right_book, cabinet_shelf, under)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "VERIFY the object is held at the destination (zoom ROI on the shelf)",
-            "HALT as soon as the EE starts moving away from the destination with the object still in hand",
-            "REPROMPT 'pick up the book on the right and place it under the cabinet shelf'",
-            "WATCH 5 s for a release at the destination; if pi0 again withdraws, ESCALATE (candidate for an RL place-on/under-shelf subtask)"
-          ]
+          "confidence": "medium"
         }
       ],
       "status": "proposed"
@@ -2176,7 +1690,7 @@
       "id": "HL-7",
       "level": "high",
       "name": "target_never_approached",
-      "summary": "pi0 hovers/wanders among other objects and fixtures for the whole episode and never approaches the instructed target (e.g. a bowl in an unusual raised start pose on top of the microwave).",
+      "definition": "pi0 hovers/wanders among other objects and fixtures for the whole episode and never approaches the instructed target (e.g. a bowl in an unusual raised start pose on top of the microwave).",
       "applies_when": "any subtask; no progress toward target after the first seconds",
       "slots": [
         "target"
@@ -2187,6 +1701,7 @@
         "earliest_fire_s": 3,
         "distinguish_from": "HL-2/HL-3: there pi0 commits to a specific wrong fixture/object"
       },
+      "remedy_brief": "early heading check (2-3 frames) -> HALT -> RETREAT -> POINT_APPROACH(target) -> REPROMPT -> WATCH 3 s -> ESCALATE",
       "recovery": [
         {
           "do": "HALT"
@@ -2231,14 +1746,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "open(microwave)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT after 3 frames with the gripper over a non-target object (plate)",
-            "RETREAT up 10 cm",
-            "REPROMPT 'open the door of the microwave'",
-            "WATCH 3 s for the EE to approach the microwave handle",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task37_fail_init0",
@@ -2250,14 +1758,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(white_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT after 3 frames with no EE progress toward the bowl",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the white bowl on top of the microwave and place it to the right of the plate'",
-            "WATCH 3 s for the EE to approach the bowl",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task37_fail_init1",
@@ -2269,14 +1770,7 @@
           "step_resolution": 20,
           "primary": true,
           "subtask": "pick(white_bowl)",
-          "confidence": "medium",
-          "episode_remedy": [
-            "HALT after 3 frames with no EE progress toward the bowl",
-            "RETREAT up 10 cm",
-            "REPROMPT 'pick up the white bowl on top of the microwave and place it to the right of the plate'",
-            "WATCH 3 s for the EE to approach the bowl",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "medium"
         }
       ],
       "status": "proposed"
@@ -2285,7 +1779,7 @@
       "id": "HL-8",
       "level": "high",
       "name": "grasp_loss_unnoticed",
-      "summary": "After a missed or slipped grasp (LL-4/LL-5), pi0 continues the transport/place motion with an empty gripper instead of re-grasping.",
+      "definition": "After a missed or slipped grasp (LL-4/LL-5), pi0 continues the transport/place motion with an empty gripper instead of re-grasping.",
       "applies_when": "after any pick; object no longer between the fingers",
       "slots": [
         "obj",
@@ -2297,6 +1791,7 @@
         "earliest_fire_s": 1,
         "distinguish_from": "a deliberate release at the destination"
       },
+      "remedy_brief": "post-grasp VERIFY(object between fingers, width > 0) fails -> HALT -> RETREAT 10 cm -> POINT_APPROACH(object) -> INVOKE_RL(rl/pick) or REPROMPT pick sentence -> VERIFY; retry -> ESCALATE",
       "recovery": [
         {
           "do": "HALT"
@@ -2342,15 +1837,7 @@
           "step_resolution": 7,
           "primary": false,
           "subtask": "pick(black_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "VERIFY(gripper empty, bowl on table, zoom)",
-            "RETREAT(dz=+0.10)",
-            "INVOKE_RL(rl/pick_bowl) or REPROMPT('pick up the black bowl and place it on top of the cabinet')",
-            "WATCH(EE descends to bowl, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task10_fail_init1",
@@ -2362,15 +1849,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "pick(black_bowl)",
-          "confidence": "high",
-          "episode_remedy": [
-            "HALT",
-            "VERIFY(gripper empty, bowl on table, zoom)",
-            "RETREAT(dz=+0.10)",
-            "INVOKE_RL(rl/pick_bowl) or REPROMPT('pick up the black bowl and place it on top of the cabinet')",
-            "WATCH(EE descends to bowl, 3 s)",
-            "retry once, then ESCALATE"
-          ]
+          "confidence": "high"
         },
         {
           "episode": "libero_90/task80_fail_init1",
@@ -2382,15 +1861,7 @@
           "step_resolution": 20,
           "primary": false,
           "subtask": "pick(book)",
-          "confidence": "high",
-          "episode_remedy": [
-            "VERIFY gripper is empty and target still on the table (zoom on target ROI)",
-            "HALT",
-            "RETREAT up 10 cm",
-            "REPROMPT \"pick up the book and place it in the right compartment of the caddy\"",
-            "WATCH 5 s for an approach to the book (now lying flat)",
-            "retry once, then INVOKE_RL for the grasp or ESCALATE"
-          ]
+          "confidence": "high"
         }
       ],
       "status": "proposed"
@@ -2399,7 +1870,7 @@
       "id": "LL-1",
       "level": "low",
       "name": "drawer_push_stall",
-      "summary": "While closing a drawer pi0 pushes from above; the drawer travels 1/2-2/3 of the way, then the hand rests on the drawer front.",
+      "definition": "While closing a drawer pi0 pushes from above; the drawer travels 1/2-2/3 of the way, then the hand rests on the drawer front.",
       "applies_when": "subtask close(drawer); drawer not flush; EE at drawer front",
       "slots": [
         "drawer"
@@ -2524,7 +1995,7 @@
       "id": "LL-2",
       "level": "low",
       "name": "hinged_door_pull_stall",
-      "summary": "pi0 hooks a hinged door's handle and swings it partly open, then stops pulling short of the open threshold.",
+      "definition": "pi0 hooks a hinged door's handle and swings it partly open, then stops pulling short of the open threshold.",
       "applies_when": "subtask open(door); door partly open; EE at handle",
       "slots": [
         "door"
@@ -2622,7 +2093,7 @@
       "id": "LL-3",
       "level": "low",
       "name": "knob_approach_contortion",
-      "summary": "Approaching a stove knob the wrist/elbow folds into a twisted configuration, the wrist body touches the knob instead of the fingertips, and the arm swings away (often out of view) without turning it.",
+      "definition": "Approaching a small fixture (a stove knob), the wrist/elbow folds into a twisted configuration, the wrist body touches the knob instead of the fingertips, and the arm swings away (often out of view) without turning it.",
       "applies_when": "subtask turn_on/turn_off(stove); EE near the knob",
       "slots": [
         "knob"
@@ -2739,7 +2210,7 @@
       "id": "LL-4",
       "level": "low",
       "name": "unstable_grasp_slip",
-      "summary": "The grasp closes on a rim, edge or handle; during lift or transport the object tilts, pivots or slips out of the gripper (bowl rims, book top edges, mug rims, pan handles).",
+      "definition": "The grasp closes on a rim, edge or handle; during lift or transport the object tilts, pivots or slips out of the gripper (bowl rims, book top edges, mug rims, pan handles).",
       "applies_when": "after a grasp on obj",
       "slots": [
         "obj"
@@ -3002,7 +2473,7 @@
       "id": "LL-5",
       "level": "low",
       "name": "pregrasp_contact_disturbance",
-      "summary": "A misaligned descent knocks over, pushes or tips the target (or a neighbouring receptacle) before a grasp is formed.",
+      "definition": "A misaligned descent or reach knocks over, pushes or tips the target (or a neighbouring receptacle) before a grasp is formed.",
       "applies_when": "subtask pick(obj); EE descending",
       "slots": [
         "obj"
@@ -3156,7 +2627,7 @@
       "id": "LL-6",
       "level": "low",
       "name": "placement_instability",
-      "summary": "The object is released off-centre, at an edge or tilted, so it falls off the support, tips over or overhangs the region.",
+      "definition": "The object is released off-centre, at an edge or tilted, so it falls off the support, tips over or overhangs the region and the placement predicate fails.",
       "applies_when": "subtask place(obj, dest); right after release",
       "slots": [
         "obj",
@@ -3306,7 +2777,7 @@
       "id": "LL-7",
       "level": "low",
       "name": "place_release_stall",
-      "summary": "The object is brought to (or just beside) the correct destination but pi0 keeps adjusting and never lowers/releases it before timeout.",
+      "definition": "The object is brought to (or just beside) the correct destination but pi0 keeps adjusting and never lowers/releases it before timeout.",
       "applies_when": "subtask place(obj, dest); obj held at dest",
       "slots": [
         "obj",
@@ -3447,7 +2918,7 @@
       "id": "LL-8",
       "level": "low",
       "name": "pregrasp_hesitation",
-      "summary": "The gripper hovers next to the correct target with small adjustments for many seconds before (or instead of) closing, exhausting the step budget.",
+      "definition": "The gripper hovers next to the correct target with small adjustments for many seconds before (or instead of) closing, exhausting the step budget.",
       "applies_when": "subtask pick(obj); EE next to the correct obj, gripper open",
       "slots": [
         "obj"

@@ -1,4 +1,8 @@
-"""Merge the per-episode survey.json files into survey_results.json.
+"""ARCHIVAL: kept to document how the survey was built; not part of the live pipeline.
+skill_library/library.json is now hand-edited, and mode_map.json was merged into it and deleted
+(recover it from git at 79d43fb to re-run). Paths below assume the old flat failure_survey/ layout.
+
+Merge the per-episode survey.json files into survey_results.json.
 
 Surveyors name new modes independently, so mode_map.json maps every surveyor mode_name onto the
 unified taxonomy ID (HL-n / LL-n). Run after all batches are surveyed:

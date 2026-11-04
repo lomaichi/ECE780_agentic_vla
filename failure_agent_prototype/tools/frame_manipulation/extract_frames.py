@@ -16,8 +16,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-ROOT = Path(__file__).resolve().parent
-ROLLOUTS = ROOT.parents[1] / "Documentation" / "pi0_LIBERO_rollouts"
+HERE = Path(__file__).resolve().parent  # failure_agent_prototype/tools/frame_manipulation
+ROLLOUTS = HERE.parents[2] / "Documentation" / "pi0_LIBERO_rollouts"
+SURVEY = HERE.parents[1] / "failure_survey"
+SAMPLING = SURVEY / "documentation" / "sampling"  # sampling_plan.json, libero90_split.json
 SUITES = ["libero_spatial", "libero_10", "libero_90"]
 VIDEO_FPS = 20
 COLS, ROWS = 5, 4  # tiles per contact sheet
@@ -58,7 +60,7 @@ for i, (suite, ep) in enumerate(episodes):
     if steps[-1] != n - 1:
         steps.append(n - 1)  # always include the final frame
 
-    ep_dir = ROOT / "episodes" / suite / ep["folder"]
+    ep_dir = SURVEY / "episodes" / suite / ep["folder"]
     out = ep_dir / "frames"
     out.mkdir(parents=True, exist_ok=True)
     tiles = []
@@ -84,9 +86,10 @@ for i, (suite, ep) in enumerate(episodes):
                  "survey_fps": fps, "video_frames": n, "num_sheets": (len(tiles) - 1) // per + 1,
                  "sampled_steps": steps})
 
+SAMPLING.mkdir(parents=True, exist_ok=True)
 counts = {s: sum(p["suite"] == s for p in plan) for s in SUITES}
 json.dump({"random_seed": seed, "dense_fps": 3, "sparse_fps": 1, "counts": counts,
            "three_fps_episodes": [f'{p["suite"]}/{p["folder"]}' for p in plan if p["survey_fps"] == 3],
-           "episodes": plan}, open(ROOT / "sampling_plan.json", "w"), indent=2)
-json.dump(split, open(ROOT / "libero90_split.json", "w"), indent=2)
+           "episodes": plan}, open(SAMPLING / "sampling_plan.json", "w"), indent=2)
+json.dump(split, open(SAMPLING / "libero90_split.json", "w"), indent=2)
 print(json.dumps({"seed": seed, "counts": counts, "n_3fps": len(dense)}))

@@ -1,4 +1,8 @@
-"""Build skill_library/library.json (v0.2) from the full survey, in the PoC library's schema.
+"""ARCHIVAL: kept to document how the survey was built; not part of the live pipeline.
+skill_library/library.json is now hand-edited, and mode_map.json was merged into it and deleted
+(recover it from git at 79d43fb to re-run). Paths below assume the old flat failure_survey/ layout.
+
+Build skill_library/library.json (v0.2) from the full survey, in the PoC library's schema.
 
 Entry semantics (detect / recovery / prevention / rl_spec) are written here by hand; `instances`
 and RL reset states are filled from survey_results.json so they stay in sync with the survey.
