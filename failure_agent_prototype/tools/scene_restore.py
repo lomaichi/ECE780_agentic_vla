@@ -50,8 +50,9 @@ def episode_info(episode):
     """(suite meta.json settings, this episode's meta entry, trace dir) for "<suite>/<folder>"."""
     suite, folder = episode.split("/")
     meta = json.loads((ROLLOUTS / suite / "meta.json").read_text())
-    entry = next(e for e in meta["episodes"] if e["folder"] == folder)
-    return meta, entry, ROLLOUTS / suite / folder / "trace"
+    # accept the full folder name or the short id ("task0_fail_init0") used in survey/library files
+    entry = next(e for e in meta["episodes"] if folder in (e["folder"], e.get("episode_id")))
+    return meta, entry, ROLLOUTS / suite / entry["folder"] / "trace"
 
 
 def load_trace(trace_dir, fields=("states", "gripper_current_action", "qacc_warmstart", "actions")):
