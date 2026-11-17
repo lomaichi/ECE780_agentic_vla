@@ -318,6 +318,8 @@ def run_job(job):
 
 def prepare_states(a):
     """Resolve each rl/pick reset state: target object, its AABB, the grid and the grid's agentview pixels."""
+    import types
+    sys.modules.setdefault("h5py", types.ModuleType("h5py"))  # camera_utils imports h5py only for its demo replay class
     from robosuite.utils.camera_utils import get_camera_transform_matrix, project_points_from_world_to_camera
 
     words = target_words()
@@ -352,7 +354,8 @@ def prepare_states(a):
         res = meta["camera_resolution"]
         M = get_camera_transform_matrix(env.env.sim, "agentview", res, res)
         pix = project_points_from_world_to_camera(np.array([[x, y, hi[2]] for x, y in cells]), M, res, res)
-        pix = (res - 1) - np.asarray(pix)  # same 180 deg rotation as sr.upright
+        pix = np.asarray(pix)
+        pix[:, 1] = (res - 1) - pix[:, 1]  # robosuite rows are already for the v-flipped image; sr.upright adds the h-flip
         s = {"idx": i, "tag": f"{rs['episode'].replace('/', '_')}@{rs['step']}", "episode": rs["episode"],
              "step": rs["step"], "onset_step": rs["onset_step"], "horizon": rs["horizon_steps"],
              "prompt": str(task.language), "word": word, "object": name, "objects_in_scene": list(env.env.objects_dict),
