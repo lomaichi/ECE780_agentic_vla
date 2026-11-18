@@ -1,6 +1,14 @@
 # Subtask detection: implementation scope
 
-Goal: provide reusable, simulator-evidence pick and on-support place detection for the pixel-Q correction loop. This implements procedures 1-3 only. It does not train a model, run a VLM, detect arbitrary failure categories, or launch simulator evaluation.
+Goal: provide reusable, simulator-evidence pick and on-support place detection for the pixel-Q correction loop. It does not train a model, run a VLM, detect arbitrary failure categories, or launch simulator evaluation.
+
+## Implemented scope
+
+1. **Define the detector interface:** explicit subtask target and destination inputs; `in_progress`, `succeeded`, `failed`, and `unknown` outputs with reasons and evidence.
+2. **Extract and improve pick detection:** require a sustained grasp and lift of the specified target, with configurable thresholds, grasp-loss reporting, and attempt timeout.
+3. **Implement on-support place detection:** require the named support relation, release, absence of a grasp, and sustained stability. Verified support and release predicates must be supplied by the simulator integration; missing evidence produces `unknown`.
+
+Synthetic checks cover selected logic cases. Simulator replay validation, detector-accuracy evaluation, and in-container placement detection are outside this implementation's scope.
 
 Create one detector per attempt. Call update after robot actions, with simulation time in seconds. The detector returns a Result; to_dict() produces JSON-compatible fields. The controller chooses retry/advance/stop; the trainer maps the result to reward. The detector itself never moves the robot.
 
