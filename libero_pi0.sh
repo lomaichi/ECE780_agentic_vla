@@ -7,8 +7,9 @@
 # opens another shell in it instead.
 #
 # Inside the container:
-#   shell 1 (policy server):
-#     cd /opt/openpi && uv run scripts/serve_policy.py --env LIBERO
+#   shell 1 (pi0 policy server):
+#     ./serve_pi0.sh
+#     (do NOT use `serve_policy.py --env LIBERO`: that serves pi0.5, not pi0)
 #   shell 2 (open by running this script again):
 #     cd /opt/openpi && source examples/libero/.venv/bin/activate
 #     python examples/libero/main.py --args.task-suite-name libero_spatial

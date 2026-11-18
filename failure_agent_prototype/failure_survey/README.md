@@ -164,6 +164,7 @@ General FR-agent rules that came out of the survey:
 
 ## Caveats
 
+- **Trained-task list was incomplete.** `pi0_libero` was finetuned on libero_spatial, libero_object, libero_goal and libero_10, but the surveyors were told only libero_spatial and libero_10 (see `SURVEY_PROTOCOL.md`). The "runs a trained task" attributions (headline finding 2, `runs_trained_task` in the episode records) therefore only consider libero_10/libero_spatial tasks. Some HL-2/HL-3/HL-6 cases may come from libero_goal or libero_object priors instead; the HL/LL split itself does not depend on this.
 - The labels are visual judgements from 256 px frames, with no predicate check. The low-confidence calls are listed with `confidence: low` in `documentation/library_building_tools_and_episode_logs/survey_results.json`. Notable ones:
   - task4/1 (L10): the overhang cause is not visible.
   - task21/0: pan swing vs. hesitation.

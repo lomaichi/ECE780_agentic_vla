@@ -12,8 +12,20 @@ random-step screenshots and the per-step exact renders. Layout:
 Episodes already listed in a suite's meta.json are skipped, so the script can
 be rerun after an interruption. Workers share one pi0_libero server.
 
-Run with the LIBERO client venv while the pi0_libero server is up:
+Task selection (default: every task of every suite):
+  --tasks 1 25 27        only these task ids
+  --split held_out       libero_90 only: the 45 tasks in library.json split_guard.held_out_tasks
+  --split survey         libero_90 only: the other 45 (the survey/training split)
+--tasks and --split combine (intersection).
+
+Run with the LIBERO client venv while the pi0_libero server is up (../../serve_pi0.sh):
   MUJOCO_GL=egl /opt/openpi/examples/libero/.venv/bin/python record_suites.py --out-root DIR
+
+Held-out zero-shot baseline (phase 0), 10 init states per task, into a fresh folder:
+  MUJOCO_GL=egl /opt/openpi/examples/libero/.venv/bin/python record_suites.py \\
+      --out-root ../../Documentation/pi0_baseline_heldout --suites libero_90 \\
+      --split held_out --init-states 0 1 2 3 4 5 6 7 8 9
+  then: python baseline_summary.py ../../Documentation/pi0_baseline_heldout
 """
 
 import argparse
@@ -40,6 +52,35 @@ MAX_STEPS = {
     "libero_10": 520,
     "libero_90": 400,
 }
+LIBRARY = pathlib.Path(__file__).resolve().parents[1] / "failure_survey" / "skill_library" / "library.json"
+SPLITS = ("all", "survey", "held_out")
+
+
+def held_out_tasks(library=LIBRARY):
+    """libero_90 task ids reserved for the zero-shot test (library.json split_guard)."""
+    return set(json.loads(pathlib.Path(library).read_text())["split_guard"]["held_out_tasks"])
+
+
+def select_tasks(suite_name, n_tasks, tasks=None, split="all", held_out=None):
+    """Sorted task ids to run for one suite.
+
+    tasks: optional list of ids to restrict to; split: all | survey | held_out (libero_90 only).
+    held_out: set of held-out libero_90 ids (read from library.json when None and needed).
+    """
+    if split not in SPLITS:
+        raise ValueError(f"split must be one of {SPLITS}, got {split!r}")
+    ids = set(range(n_tasks))
+    if tasks is not None:
+        bad = sorted(t for t in tasks if not 0 <= t < n_tasks)
+        if bad:
+            raise ValueError(f"{suite_name} has tasks 0..{n_tasks - 1}; invalid ids: {bad}")
+        ids &= set(tasks)
+    if split != "all":
+        if suite_name != "libero_90":
+            raise ValueError(f"--split {split} only applies to libero_90, not {suite_name}")
+        ho = held_out_tasks() if held_out is None else set(held_out)
+        ids = ids & ho if split == "held_out" else ids - ho
+    return sorted(ids)
 
 
 def make_env(task, seed):
@@ -237,6 +278,8 @@ def suite_meta(suite_name, a, episodes):
                             "To continue from step t, after env.set_init_state(states[t]) also call "
                             "robot.controller.update(force=True) and restore gripper.current_action and "
                             "sim.data.qacc_warmstart from the trace",
+        "last_run_selection": {"tasks": a.get("tasks"), "split": a.get("split", "all"),
+                               "init_states": a.get("init_states")},
         "num_episodes": len(episodes),
         "num_success": sum(e["success"] for e in episodes),
         "episodes": episodes,
@@ -248,6 +291,9 @@ def main():
     p.add_argument("--out-root", required=True)
     p.add_argument("--suites", nargs="+", default=["libero_spatial", "libero_10", "libero_90"])
     p.add_argument("--init-states", type=int, nargs="+", default=[0, 1])
+    p.add_argument("--tasks", type=int, nargs="+", default=None, help="only these task ids (default: all)")
+    p.add_argument("--split", choices=SPLITS, default="all",
+                   help="libero_90 only: held_out or survey half from library.json split_guard")
     p.add_argument("--workers", type=int, default=6)
     p.add_argument("--env-seed", type=int, default=7, help="env.seed(), same default as main.py")
     p.add_argument("--host", default="0.0.0.0")
@@ -260,6 +306,22 @@ def main():
 
     from libero.libero import benchmark
 
+    # Resolve and validate the task selection for every suite before touching the output folder
+    selected = {}
+    for suite_name in args.suites:
+        suite = benchmark.get_benchmark_dict()[suite_name]()
+        try:
+            selected[suite_name] = select_tasks(suite_name, suite.n_tasks, args.tasks, args.split)
+        except ValueError as e:
+            p.error(str(e))
+        for task_id in selected[suite_name]:
+            n_init = len(suite.get_task_init_states(task_id))
+            bad = [k for k in args.init_states if not 0 <= k < n_init]
+            if bad:
+                p.error(f"{suite_name} task {task_id} has init states 0..{n_init - 1}; invalid: {bad}")
+        logging.info(f"{suite_name}: {len(selected[suite_name])} tasks x {len(args.init_states)} init states "
+                     f"(split={args.split}, tasks={selected[suite_name]})")
+
     done_eps = {}
     jobs = []
     for suite_name in args.suites:
@@ -270,7 +332,7 @@ def main():
         eps = [e for e in eps if (suite_dir / e["folder"]).is_dir()]
         done_eps[suite_name] = eps
         have = {(e["task_id"], e["init_state_idx"]) for e in eps}
-        for task_id in range(benchmark.get_benchmark_dict()[suite_name]().n_tasks):
+        for task_id in selected[suite_name]:
             for k in args.init_states:
                 if (task_id, k) not in have:
                     jobs.append({"suite": suite_name, "task_id": task_id, "init_idx": k, "args": a})

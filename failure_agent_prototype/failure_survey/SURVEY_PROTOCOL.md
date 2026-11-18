@@ -3,7 +3,7 @@
 This is the protocol every surveyor follows, one batch of failed pi0 rollouts at a time. It extends the 5-episode proof of concept in `Documentation/failure_survey_test/`. Read that folder's `failure_survey_report.md` and `skill_library/README.md` first; they define the seed taxonomy (HL-1, HL-2, LL-1) and the recovery primitives.
 
 ## Context
-- The policy is pi0 (`pi0_libero`). It was finetuned on libero_spatial and libero_10 but has never seen libero_90. libero_90 shares scenes with libero_10, and pi0 often runs the libero_10 task of the same scene instead of the instruction. The trained libero_10 tasks are:
+- The policy is pi0 (`pi0_libero`). It was finetuned on libero_spatial, libero_object, libero_goal and libero_10 (openpi's `physical-intelligence/libero` dataset) but has never seen libero_90. libero_90 shares scenes with libero_10, and pi0 often runs the libero_10 task of the same scene instead of the instruction. **Correction (phase 0):** earlier versions of this protocol said only libero_spatial and libero_10, so the list below omits the libero_goal and libero_object tasks; the survey run (87 episodes) was done with this incomplete list. The trained libero_10 tasks are:
   - LIVING_ROOM_SCENE2: put both the alphabet soup and the tomato sauce in the basket / put both the cream cheese box and the butter in the basket
   - KITCHEN_SCENE3: turn on the stove and put the moka pot on it
   - KITCHEN_SCENE4: put the black bowl in the bottom drawer of the cabinet and close it

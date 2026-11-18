@@ -48,11 +48,9 @@ ENV CLAUDE_CONFIG_DIR=/root/.claude-config
 #   - LIBERO client: /opt/openpi/examples/libero/.venv (Python 3.8, robosuite 1.4.1)
 #
 # Usage (two shells in the container):
-#   cd /opt/openpi && uv run scripts/serve_policy.py --env LIBERO
-    ## this by default loads pi0.5 instead of pi0. the default checkpoint is : 
-    ## EnvMode.LIBERO: Checkpoint(
-    ## config="pi05_libero",
-    ## dir="gs://openpi-assets/checkpoints/pi05_libero"),
+#   /home/DockerShared/ECE780/serve_pi0.sh      (pi0 server, config pi0_libero)
+#     NOT `uv run scripts/serve_policy.py --env LIBERO`: that shortcut serves
+#     pi0.5 (config pi05_libero, gs://openpi-assets/checkpoints/pi05_libero).
 #   cd /opt/openpi && source examples/libero/.venv/bin/activate && \
 #       python examples/libero/main.py --args.task-suite-name libero_spatial
 # ---------------------------------------------------------------------------

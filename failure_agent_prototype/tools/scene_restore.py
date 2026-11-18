@@ -18,11 +18,17 @@ Check mode: for every reset state, compare the restored render with the video fr
 recorded actions for --replay-steps and compare the reached state with the trace. Run in the LIBERO
 client venv (MUJOCO_GL=egl):
   python scene_restore.py --check [--policy rl/pick] [--replay-steps 20] [--out DIR]
+
+Each reset state gets a verdict: PASS (qpos within --max-qpos-err after the replay), LOOK (state OK
+but the picture differs from the video more than --warn-pix: check the PNG), FAIL (state drifted) or
+ERROR. The exit code is 0 only if every state is PASS. Velocities (qvel) are reported, not judged.
+Also check every PNG by eye: is the restored scene really the moment BEFORE the failing attempt?
 """
 
 import argparse
 import json
 import pathlib
+import sys
 
 import numpy as np
 
@@ -97,44 +103,85 @@ def upright(img):
     return np.ascontiguousarray(img[::-1, ::-1])
 
 
-def check(policy, replay_steps, out):
+def check_one(rs, replay_steps, out, max_qpos_err, warn_pix):
+    """Restore one reset state, replay the recorded actions, compare with the recording. Returns a report row."""
     import imageio.v2 as imageio
 
-    out.mkdir(parents=True, exist_ok=True)
-    report = []
-    for rs in load_reset_states(policy):
-        meta, entry, trace_dir = episode_info(rs["episode"])
-        trace = load_trace(trace_dir)
-        step = rs["step"]
-        end = min(step + replay_steps, len(trace["states"]) - 1)
+    meta, entry, trace_dir = episode_info(rs["episode"])
+    trace = load_trace(trace_dir)
+    n_states = len(trace["states"])
+    step = rs["step"]
+    if not 0 <= step < n_states:
+        raise ValueError(f"reset step {step} outside the trace (0..{n_states - 1})")
+    end = min(step + replay_steps, n_states - 1)
+    onset = min(int(rs.get("onset_step", step)), n_states - 1)
 
-        env, _ = env_for_episode(rs["episode"])
+    env, _ = env_for_episode(rs["episode"])
+    try:
         obs = reset_to(env, trace, step)
         restored = upright(obs["agentview_image"])
         for t in range(step, end):
             obs, *_ = env.step(trace["actions"][t].tolist())
         replayed = upright(obs["agentview_image"])
         reached = env.get_sim_state()
+        nq = int(env.env.sim.model.nq)
+    finally:
         env.close()
 
-        reader = imageio.get_reader(trace_dir.parent / entry["video"])
-        frames = [reader.get_data(s)[..., :3] for s in (step, end)]
-        reader.close()
+    reader = imageio.get_reader(trace_dir.parent / entry["video"])
+    v_step, v_end, v_onset = [reader.get_data(s)[..., :3] for s in (step, end, onset)]
+    reader.close()
 
-        # flattened sim state = [time, qpos, qvel]; skip time
-        state_err = float(np.abs(reached[1:] - trace["states"][end][1:]).max())
-        pix_restore = float(np.abs(frames[0].astype(int) - restored).mean())
-        pix_replay = float(np.abs(frames[1].astype(int) - replayed).mean())
-        name = f"{rs['episode'].replace('/', '_')}_step{step:04d}"
-        imageio.imwrite(out / f"{name}.png", np.concatenate(
-            [np.concatenate([frames[0], restored], 1), np.concatenate([frames[1], replayed], 1)], 0))
-        row = {"policy": rs["policy"], "episode": rs["episode"], "reset_step": step, "onset_step": rs["onset_step"],
-               "replay_to": end, "pix_mae_restore": round(pix_restore, 2), "pix_mae_replay": round(pix_replay, 2),
-               "state_max_abs_err_after_replay": state_err}
+    # flattened sim state = [time, qpos (nq), qvel]; positions decide whether the reset is usable
+    diff = np.abs(reached - trace["states"][end])
+    qpos_err = float(diff[1:1 + nq].max())
+    qvel_err = float(diff[1 + nq:].max()) if diff.size > 1 + nq else 0.0
+    # the video is H.264-compressed, so a perfect restore still differs by a few grey levels
+    pix_restore = float(np.abs(v_step.astype(int) - restored).mean())
+    pix_replay = float(np.abs(v_end.astype(int) - replayed).mean())
+
+    # top row: video @reset | restored @reset | video @onset (what the failure looks like)
+    # bottom row: video @reset+replay | replayed | blank
+    name = f"{rs['policy'].replace('/', '_')}__{rs['episode'].replace('/', '_')}_step{step:04d}"
+    blank = np.zeros_like(v_step)
+    imageio.imwrite(out / f"{name}.png", np.concatenate(
+        [np.concatenate([v_step, restored, v_onset], 1), np.concatenate([v_end, replayed, blank], 1)], 0))
+
+    verdict = "PASS" if qpos_err <= max_qpos_err else "FAIL"
+    if verdict == "PASS" and max(pix_restore, pix_replay) > warn_pix:
+        verdict = "LOOK"  # state matches but the picture differs: check the PNG by eye
+    return {"verdict": verdict, "policy": rs["policy"], "episode": rs["episode"], "reset_step": step,
+            "onset_step": rs.get("onset_step"), "replay_to": end,
+            "qpos_max_abs_err": qpos_err, "qvel_max_abs_err": qvel_err,
+            "pix_mae_restore": round(pix_restore, 2), "pix_mae_replay": round(pix_replay, 2),
+            "image": f"{name}.png"}
+
+
+def check(policy, replay_steps, out, max_qpos_err=1e-3, warn_pix=8.0):
+    """Check every reset state; returns the number of non-PASS rows (FAIL, LOOK or ERROR)."""
+    out.mkdir(parents=True, exist_ok=True)
+    report = []
+    for rs in load_reset_states(policy):
+        try:
+            row = check_one(rs, replay_steps, out, max_qpos_err, warn_pix)
+        except Exception as e:  # keep checking the other states
+            row = {"verdict": "ERROR", "policy": rs["policy"], "episode": rs["episode"],
+                   "reset_step": rs["step"], "error": repr(e)}
         report.append(row)
         print(json.dumps(row))
     (out / "report.json").write_text(json.dumps(report, indent=2))
-    print(f"saved {len(report)} comparisons to {out} (rows: video | restored; top = reset step, bottom = after replay)")
+
+    counts = {v: sum(r["verdict"] == v for r in report) for v in ("PASS", "LOOK", "FAIL", "ERROR")}
+    print(f"\nthresholds: qpos <= {max_qpos_err:g} (m or rad) after {replay_steps} replayed steps; "
+          f"LOOK if the mean pixel difference > {warn_pix:g}")
+    print(f"{counts}  ({len(report)} reset states)")
+    for r in report:
+        if r["verdict"] != "PASS":
+            print(f"  {r['verdict']:5s} {r['policy']:16s} {r['episode']} @ {r['reset_step']}"
+                  + (f"  qpos err {r['qpos_max_abs_err']:.2e}" if "qpos_max_abs_err" in r else f"  {r.get('error')}"))
+    print(f"images and report.json in {out}\n(each PNG, top: video at reset | restored | video at onset; "
+          f"bottom: video after replay | replayed)")
+    return len(report) - counts["PASS"]
 
 
 def main():
@@ -143,9 +190,13 @@ def main():
     p.add_argument("--policy", default=None, help="e.g. rl/pick; default all policies")
     p.add_argument("--replay-steps", type=int, default=20)
     p.add_argument("--out", type=pathlib.Path, default=HERE.parent / "RL" / "restore_check")
+    p.add_argument("--max-qpos-err", type=float, default=1e-3,
+                   help="PASS if every qpos entry is within this after the replay (1e-3 = 1 mm / 1 mrad)")
+    p.add_argument("--warn-pix", type=float, default=8.0,
+                   help="mark LOOK if the mean pixel difference to the video exceeds this (0-255 scale)")
     args = p.parse_args()
     if args.check:
-        check(args.policy, args.replay_steps, args.out)
+        sys.exit(1 if check(args.policy, args.replay_steps, args.out, args.max_qpos_err, args.warn_pix) else 0)
     else:
         for rs in load_reset_states(args.policy):
             print(json.dumps(rs))
