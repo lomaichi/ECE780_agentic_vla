@@ -119,7 +119,7 @@ class EpisodeResult(object):
 
 def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(), task_language=None,
                 num_steps_wait=common.NUM_STEPS_WAIT, replan_steps=common.REPLAN_STEPS, resize=common.RESIZE,
-                stop_on_success=True, record=True, start_step=0, init_state=None, log=None):
+                stop_on_success=True, record=True, start_step=0, init_state=None, log=None, step_hook=None):
     """Run one episode from the env's current state; `obs` is the observation of that state.
 
     max_steps: policy steps after the wait steps (record_suites.py uses MAX_STEPS[suite]).
@@ -127,6 +127,8 @@ def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(),
     start_step: step number of the first state (non-zero when continuing a recorded episode), used
         for step numbers in views, events and check results.
     checks: fa_core.predicates checks, updated after every step (logged; privileged).
+    step_hook: optional callable(step, obs) for logging, called for the first state and after every step
+        (after the checks are updated), so step indexes the state like states[step].
     """
     log = log or logging.getLogger(__name__)
     task_language = prompt if task_language is None else task_language
@@ -159,6 +161,8 @@ def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(),
             check_errors.append({"spec": c.spec, "step": start_step, "error": repr(e)})
             log.warning("check %s disabled at start: %r", c.spec, e)
     update_checks(start_step)
+    if step_hook is not None:
+        step_hook(start_step, obs)
 
     buf = collections.defaultdict(list)
     plan = collections.deque()
@@ -261,6 +265,8 @@ def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(),
         last_action = action
         t += 1
         update_checks(start_step + t)  # states[start_step + t] is the state after this action
+        if step_hook is not None:
+            step_hook(start_step + t, obs)
         if done and stop_on_success:
             break
 

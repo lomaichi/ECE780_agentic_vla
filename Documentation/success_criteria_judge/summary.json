@@ -1,0 +1,172 @@
+{
+ "episodes": [
+  {
+   "task": 2,
+   "init": 0,
+   "language": "put the black bowl in the top drawer of the cabinet",
+   "subtasks": [
+    "pick(black_bowl)",
+    "place(black_bowl, top_drawer, in)"
+   ],
+   "pred_pick": 229,
+   "vlm_pick": 217,
+   "pred_place": 269,
+   "vlm_place": 277,
+   "libero_any": true,
+   "libero_final": true,
+   "stop": "VLM: task complete",
+   "steps": 297,
+   "corrections": [
+    "point_approach@50"
+   ],
+   "calls": 13,
+   "cost": 0.526
+  },
+  {
+   "task": 17,
+   "init": 0,
+   "language": "stack the middle black bowl on the back black bowl",
+   "subtasks": [
+    "pick(black_bowl_middle)",
+    "place(black_bowl_middle, black_bowl_back, on)"
+   ],
+   "pred_pick": null,
+   "vlm_pick": 150,
+   "pred_place": null,
+   "vlm_place": 331,
+   "libero_any": false,
+   "libero_final": false,
+   "stop": "VLM: task complete",
+   "steps": 351,
+   "corrections": [
+    "carry_to@230"
+   ],
+   "calls": 14,
+   "cost": 0.574
+  },
+  {
+   "task": 24,
+   "init": 0,
+   "language": "put the black bowl in the bottom drawer of the cabinet",
+   "subtasks": [
+    "pick(black_bowl)",
+    "place(black_bowl, bottom_drawer, in)"
+   ],
+   "pred_pick": 136,
+   "vlm_pick": 130,
+   "pred_place": 187,
+   "vlm_place": 210,
+   "libero_any": true,
+   "libero_final": true,
+   "stop": "VLM: task complete",
+   "steps": 230,
+   "corrections": [],
+   "calls": 12,
+   "cost": 0.464
+  },
+  {
+   "task": 25,
+   "init": 0,
+   "language": "put the black bowl on top of the cabinet",
+   "subtasks": [
+    "pick(black_bowl)",
+    "place(black_bowl, cabinet_top, on)"
+   ],
+   "pred_pick": 332,
+   "vlm_pick": 334,
+   "pred_place": null,
+   "vlm_place": null,
+   "libero_any": false,
+   "libero_final": false,
+   "stop": null,
+   "steps": 410,
+   "corrections": [
+    "point_approach@190",
+    "carry_to@354"
+   ],
+   "calls": 15,
+   "cost": 0.579
+  },
+  {
+   "task": 30,
+   "init": 0,
+   "language": "put the black bowl on the plate",
+   "subtasks": [
+    "pick(black_bowl)",
+    "place(black_bowl, plate, on)"
+   ],
+   "pred_pick": null,
+   "vlm_pick": null,
+   "pred_place": null,
+   "vlm_place": null,
+   "libero_any": false,
+   "libero_final": false,
+   "stop": null,
+   "steps": 410,
+   "corrections": [
+    "point_approach@110",
+    "point_approach@265"
+   ],
+   "calls": 14,
+   "cost": 0.556
+  },
+  {
+   "task": 36,
+   "init": 0,
+   "language": "put the white bowl on the plate",
+   "subtasks": [
+    "pick(white_bowl)",
+    "place(white_bowl, plate, on)"
+   ],
+   "pred_pick": null,
+   "vlm_pick": null,
+   "pred_place": null,
+   "vlm_place": null,
+   "libero_any": false,
+   "libero_final": false,
+   "stop": null,
+   "steps": 410,
+   "corrections": [
+    "point_approach@50",
+    "reprompt@259",
+    "point_approach@319"
+   ],
+   "calls": 15,
+   "cost": 0.568
+  }
+ ],
+ "per_call_confusion": {
+  "pick/pred_latched": {
+   "tp": 1,
+   "fp": 3,
+   "fn": 0,
+   "tn": 63,
+   "n": 67,
+   "agreement": 0.955
+  },
+  "pick/pred_now": {
+   "tp": 2,
+   "fp": 2,
+   "fn": 0,
+   "tn": 63,
+   "n": 67,
+   "agreement": 0.97
+  },
+  "place/pred_latched": {
+   "tp": 4,
+   "fp": 2,
+   "fn": 1,
+   "tn": 9,
+   "n": 16,
+   "agreement": 0.812
+  },
+  "place/pred_now": {
+   "tp": 4,
+   "fp": 2,
+   "fn": 1,
+   "tn": 9,
+   "n": 16,
+   "agreement": 0.812
+  }
+ }
+}
