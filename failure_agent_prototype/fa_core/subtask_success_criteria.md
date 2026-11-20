@@ -8,7 +8,7 @@ A summary of `fa_core/predicates.py`, the code that decides whether the robot fi
 
 | Spec | Succeeds when | Must hold for |
 |---|---|---|
-| `pick(obj)` | `obj` is grasped **and** lifted ≥ 5 cm above its height at the start of the segment | 10 states in a row |
+| `pick(obj)` | `obj` is grasped **and** lifted ≥ 5 cm above its resting height (the lowest height seen since `start`; objects spawn ~7 cm up and settle during the wait steps) | 10 states in a row |
 | `place(obj, dest, on\|in)` | LIBERO's `On`/`In(obj, dest)` is true **and** `obj` is no longer grasped | 10 states in a row |
 | `open(target)` | LIBERO's `Open` is true | 1 state |
 | `close(target)` | LIBERO's `Close` is true | 1 state |

@@ -2,7 +2,7 @@
 
 Specs are short strings with simulator names (see the scene's objects with tools/probe_libero_api.py):
 
-  pick(akita_black_bowl_1)                        grasped AND lifted >= 5 cm above its start height
+  pick(akita_black_bowl_1)                        grasped AND lifted >= 5 cm above its resting height
   place(akita_black_bowl_1, plate_1, on)          LIBERO On/In(obj, dest) AND obj not grasped
   open(wooden_cabinet_1_top_region)               LIBERO Open
   close(wooden_cabinet_1_top_region)              LIBERO Close
@@ -152,6 +152,14 @@ class Check(object):
 
 
 class PickCheck(Check):
+    """Grasped and lifted >= lift_m above the object's resting height.
+
+    The resting height z0 is the lowest height seen since start(), not the height at start(): LIBERO
+    spawns objects ~7 cm above the table and they only settle during the wait steps, so an episode's
+    first state (where loop.run_episode and validate_predicates start the checks) is not at rest.
+    Measuring from it demanded ~12 cm of real lift, and ordinary picks never counted.
+    """
+
     kind = "pick"
 
     def __init__(self, obj, lift_m=LIFT_M, hold=PICK_HOLD):
@@ -164,10 +172,12 @@ class PickCheck(Check):
 
     def start(self, env):
         super().start(env)
-        self.z0 = obj_pos(env, self.obj)[2]  # height at the start of the evaluated segment
+        self.z0 = obj_pos(env, self.obj)[2]
 
     def holds(self, env):
-        return obj_pos(env, self.obj)[2] - self.z0 >= self.lift_m and grasped(env, self.obj)
+        z = obj_pos(env, self.obj)[2]
+        self.z0 = z if self.z0 is None else min(self.z0, z)  # resting height (idempotent, safe to re-call)
+        return z - self.z0 >= self.lift_m and grasped(env, self.obj)
 
 
 class PlaceCheck(Check):

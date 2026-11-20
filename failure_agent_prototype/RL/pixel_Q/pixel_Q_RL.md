@@ -26,8 +26,8 @@ Model input is language instruction, RGB image (256x256 resolution), and robot p
 
 ## 2. Inference
 
-1. A segmentation mask (80x80) selects the pick object. grey out everything outside this mask
-2. The network outputs Q(u, v, θ) for each 5×5-pixel cell and each of 9 rotation bins, where (u,v) is the pixel coordinate in the image's local frame, and θ is the rotation bin
+1. A segmentation mask (80x80) selects the pick object. Everything outside is not included in the Q-map, though it's still visible to pi0 (otherwise it will be out of distribution)
+2. The network outputs Q(u, v, θ) for each 8×8-pixel window across the mask and each of 9 rotation bins, where (u,v) is the pixel coordinate in the image's local frame, and θ is the rotation bin. The center of each pixel window would be the center of an opened gripper
 3. Take the argmax pixel. Back-project pixel + depth + camera intrinsics to a 3D point, then run a `POINT_APPROACH` to it
 4. Hand control back to pi0. Corrections are issued less often than pi0 replans; pi0 runs 3 chunks after each correction.
 5. After each correction + pi0 3-chunk episode, the coordinator VLM agent will determine whether the current subtask has been succeeded
