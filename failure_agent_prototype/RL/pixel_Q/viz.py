@@ -51,21 +51,40 @@ def save_qmap(obs, q, action, path, scale=4, title=""):
     im.save(path)
 
 
-def save_inspect(info, path, scale=3):
-    """Full upright agentview: object mask tinted, crop box, valid cell centres (white) and their
-    back-projected 3D points projected again (cyan). Cyan should sit on the white dots."""
+def _tint(rgb, mask, scale):
+    from PIL import Image
+
+    rgb = rgb.astype(np.float32)
+    rgb[mask] = 0.5 * rgb[mask] + 0.5 * np.array([255, 0, 255])
+    return Image.fromarray(rgb.astype(np.uint8)).resize((rgb.shape[1] * scale, rgb.shape[0] * scale), Image.NEAREST)
+
+
+def save_inspect(info, path, side=512):
+    """Left: the WRIST view the Q-map sees, object mask tinted magenta (visualisation only), the 80x80 crop
+    box (yellow), valid cell centres (white) and their back-projected 3D points projected again (cyan; should
+    sit on the white dots). Right: agentview, with the same 3D cell points projected into it (cyan where the
+    cell is >= 50 % object, white otherwise): the on-object ones should land on the object."""
     from PIL import Image, ImageDraw
 
-    rgb = info["rgb_full"].astype(np.float32)
-    m = info["mask_full"]
-    rgb[m] = 0.5 * rgb[m] + 0.5 * np.array([255, 0, 255])
-    im = Image.fromarray(rgb.astype(np.uint8)).resize((rgb.shape[1] * scale, rgb.shape[0] * scale), Image.NEAREST)
-    d = ImageDraw.Draw(im)
-    u0, v0 = info["u0"], info["v0"]
-    side = GRID * CELL
-    d.rectangle([u0 * scale, v0 * scale, (u0 + side) * scale, (v0 + side) * scale], outline=(255, 255, 0), width=2)
+    ws = side // info["rgb_full"].shape[0]
+    wrist = _tint(info["rgb_full"], info["mask_full"], ws)
+    d = ImageDraw.Draw(wrist)
+    u0, v0, crop = info["u0"], info["v0"], GRID * CELL
+    d.rectangle([u0 * ws, v0 * ws, (u0 + crop) * ws, (v0 + crop) * ws], outline=(255, 255, 0), width=2)
     for (uc, vc), (up, vp) in zip(info["cell_centres_px"], info["cell_points_px"]):
-        d.ellipse([uc * scale - 3, vc * scale - 3, uc * scale + 3, vc * scale + 3], fill=(255, 255, 255))
-        d.ellipse([up * scale - 2, vp * scale - 2, up * scale + 2, vp * scale + 2], fill=(0, 255, 255))
-    d.text((4, 4), "{}  |  {}".format(info["object"], info["prompt"]), fill=(255, 255, 0))
+        d.ellipse([uc * ws - 3, vc * ws - 3, uc * ws + 3, vc * ws + 3], fill=(255, 255, 255))
+        d.ellipse([up * ws - 2, vp * ws - 2, up * ws + 2, vp * ws + 2], fill=(0, 255, 255))
+    d.text((4, 4), "wrist ({} px)  |  {}".format(info["rgb_full"].shape[0], info["object"]), fill=(255, 255, 0))
+
+    a_s = side // info["agent_rgb"].shape[0]
+    agent = _tint(info["agent_rgb"], info["agent_mask"], a_s)
+    d = ImageDraw.Draw(agent)
+    for (up, vp), f in zip(info["cell_points_agent_px"], info["cell_obj_frac"]):
+        col = (0, 255, 255) if f >= 0.5 else (255, 255, 255)
+        d.ellipse([up * a_s - 2, vp * a_s - 2, up * a_s + 2, vp * a_s + 2], fill=col)
+    d.text((4, 4), "agentview  |  {}".format(info["prompt"]), fill=(255, 255, 0))
+
+    im = Image.new("RGB", (wrist.width + agent.width + 6, max(wrist.height, agent.height)), (20, 20, 20))
+    im.paste(wrist, (0, 0))
+    im.paste(agent, (wrist.width + 6, 0))
     im.save(path)

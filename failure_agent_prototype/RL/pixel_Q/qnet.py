@@ -1,20 +1,20 @@
 """Fully convolutional pixel-wise Q-network for the pixel-Q corrector (pixel_Q_RL.md sec. 1-3).
 
-Input: an 80x80 crop of the upright agentview image centred on the segmented object, as
+Input: an 80x80 crop of the upright WRIST camera image (first person) centred on the segmented object, as
   rgb (3, outside the mask greyed out), relative depth (1), mask (1), proprio tiled over the crop (6)
 Output: Q(s, k, row, col) of shape (9, 10, 10): one map per rotation bin k, one entry per 8x8-pixel
 window (row, col) of the crop. Three stride-2 convolutions take 80 -> 10, so every output cell lines
 up with exactly one 8x8 window and the network is fully convolutional (as in VPG).
 
-An action is the flat index a = k * 100 + row * 10 + col. Only cells on the object are valid
-(obs["valid"], a (10, 10) bool array); the rotation bin is always free.
+An action is the flat index a = k * 100 + row * 10 + col. The valid cells are obs["valid"], a (10, 10)
+bool array (every cell of the crop by default); the rotation bin is always free.
 
 Python 3.8 / torch 1.11 compatible (the LIBERO client venv).
 """
 
 import numpy as np
 
-CROP = 80                      # crop side in pixels (of the 256x256 upright agentview)
+CROP = 80                      # crop side in pixels (of the wrist render, see corrector_env.WRIST_BOX)
 CELL = 8                       # Q-map window side in pixels
 GRID = CROP // CELL            # 10 x 10 cells
 ROT_DEG = tuple(-20.0 + 5.0 * k for k in range(9))   # yaw offsets of the 9 rotation bins (deg)
@@ -118,7 +118,7 @@ def masked_argmax(q, valid):
 
 
 def select_action(net, obs, eps, rng, device="cpu"):
-    """epsilon-greedy inside the mask (pixel_Q_RL.md step 1). Returns (action, qmap, greedy?)."""
+    """epsilon-greedy over the valid cells (pixel_Q_RL.md step 1). Returns (action, qmap, greedy?)."""
     q = q_map(net, obs, device)
     if rng.random() < eps:
         cells = np.argwhere(obs["valid"])

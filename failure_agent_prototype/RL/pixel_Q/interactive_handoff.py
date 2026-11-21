@@ -1,7 +1,7 @@
 """Interactive LIBERO: pi0 drives, you can take over the gripper from the keyboard and hand it back.
 
-The container has no X display, so the "window" is a local web page served by this script
-(open http://localhost:PORT). The main view is the wrist (eye-in-hand) camera; agentview is inset.
+The "window" is a local web page served by this script (open http://localhost:PORT), so it works
+headless and over ssh. The main view is the wrist (eye-in-hand) camera; agentview is inset.
 
 Keys (in the browser tab):
   space              start / stop the interruption. Stopping hands control back to pi0, which replans
@@ -17,7 +17,7 @@ Both views are shown as the camera actually sees them (not mirrored). pi0 still 
 180-degree-rotated images, as in openpi's examples/libero/main.py.
 
 Run in the LIBERO client venv while the pi0_libero server is up:
-  shell 1:  cd /opt/openpi && uv run scripts/serve_policy.py --env LIBERO
+  shell 1:  ./serve_pi0.sh   (repo root; `serve_policy.py --env LIBERO` would serve pi0.5, not pi0)
   shell 2:  MUJOCO_GL=egl /opt/openpi/examples/libero/.venv/bin/python interactive_handoff.py [--init 0]
   then open http://localhost:8765 (from another machine: ssh -L 8765:localhost:8765 <host>)
 """
@@ -36,8 +36,9 @@ import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "tools"))
+sys.path.insert(0, str(HERE.parents[1]))
 import scene_restore as sr  # noqa: E402
-from oracle_handoff_test import pi0_request, REPLAN_STEPS  # noqa: E402
+from fa_core.common import REPLAN_STEPS, pi0_request  # noqa: E402
 
 SUITE, MAX_STEPS, NUM_WAIT, FPS = "libero_90", 400, 10, 20
 DUMMY = [0.0] * 6 + [-1.0]

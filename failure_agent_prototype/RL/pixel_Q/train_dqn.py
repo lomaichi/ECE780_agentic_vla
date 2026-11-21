@@ -2,7 +2,8 @@
 
 Episode = one correction decision, learned online against the simulator (corrector_env.py): from the
 handoff pose (gripper 7 cm above the centre of the object's segmentation box, pointing down) choose
-(cell, rotation bin) on the object's 80x80 crop, move there horizontally and rotate, hand off to pi0;
+(cell, rotation bin) on the object's 80x80 crop of the WRIST camera view (first person; the handoff itself
+uses agentview), move there horizontally and rotate, hand off to pi0;
 success if the pick is judged done within --timeout-s (5 s), otherwise a fail. Every episode ends after
 its one decision, so the DQN target is the episode's reward and Q(s, a) estimates the success probability
 of that handoff.
@@ -12,7 +13,7 @@ object's current state (possibly pushed or knocked over by the failed attempt), 
 --max-chain episodes; on success / irrecoverable state / the cap, the next chain starts from a fresh
 upright start. Disturbed object states therefore come from the rollouts themselves.
 
-Actor processes run chains with the current weights (epsilon-greedy inside the mask); the main process
+Actor processes run chains with the current weights (epsilon-greedy over the valid cells); the main process
 keeps the replay buffer and does the DQN updates (MSE loss on the executed entry only). Training stays on
 the training split; held-out tasks are refused.
 
@@ -20,13 +21,15 @@ Modes
   train     online DQN (default)
   eval      greedy chains of a checkpoint on the eval starts
   baseline  no correction: pi0 from the handoff pose for the same timeout, chained the same way
-  inspect   LIBERO only, no pi0: reset each start, write the mask / crop / cell back-projection PNGs
+  inspect   LIBERO only, no pi0: reset each start, write wrist-view mask / crop / cell back-projection PNGs
+            (with the cells' 3D points projected into agentview as a cross-camera check)
 
 Steps: see qlearning_code_instruction.md (toy check, inspect, smoke test, baseline, training).
 
 Outputs (OUT_DIR): config.json, episodes.jsonl (one line per chain, with its episodes), train.jsonl
 (per round: loss, Q, eps, success rates, buffer, object tilts), eval.jsonl, ckpt_latest.pt /
-ckpt_best.pt, replay.pkl, qmaps/*.png, videos/*.mp4, inspect/*.png.
+ckpt_best.pt, replay.pkl, qmaps/*.png, videos/*.mp4, inspect/*.png. With --wandb-project, the same
+train / eval records (plus eval Q-maps and videos) also go to Weights & Biases (wandb/, wandb_id.txt).
 """
 
 import argparse
@@ -195,8 +198,9 @@ def build_starts(a):
         train += lib
         ev += lib
     if "tasks" in a.sources:
-        train += CE.task_starts(a.tasks, a.train_inits)
-        ev += CE.task_starts(a.tasks, a.eval_inits)
+        free = a.mode != "train"               # eval / baseline / inspect may use any task, held-out included
+        train += CE.task_starts(a.tasks, a.train_inits, allow_held_out=free)
+        ev += CE.task_starts(a.tasks, a.eval_inits, allow_held_out=free)
     if not train:
         raise SystemExit("no start states")
     return train, ev
@@ -205,6 +209,7 @@ def build_starts(a):
 def env_cfg(a):
     return {"env": a.env, "width": a.width, "max_chain": a.max_chain, "timeout_s": a.timeout_s,
             "handoff_dz": a.handoff_dz, "handoff_jitter_cm": a.handoff_jitter_cm, "min_cell_frac": a.min_cell_frac,
+            "wrist_box": a.wrist_box,
             "min_mask_px": a.min_mask_px, "env_seed": a.env_seed, "host": a.host, "port": a.port, "seed": a.seed}
 
 
@@ -244,16 +249,76 @@ def rates(results):
 
 
 def save_media(res, out, prefix):
+    """Write the chain's Q-map PNG / video, if any; returns {"qmap": path, "video": path} of what was written."""
+    paths = {}
     if res.get("qmap") is not None:
         import viz
 
         obs, q, act = res["qmap"]
-        viz.save_qmap(obs, q, act, str(out / "qmaps" / "{}_{}.png".format(prefix, res["tag"])),
-                      title="{} success={}".format(res["tag"], res.get("success")))
+        paths["qmap"] = out / "qmaps" / "{}_{}.png".format(prefix, res["tag"])
+        viz.save_qmap(obs, q, act, str(paths["qmap"]), title="{} success={}".format(res["tag"], res.get("success")))
     if res.get("frames"):
         import imageio
 
-        imageio.mimwrite(str(out / "videos" / "{}_{}.mp4".format(prefix, res["tag"])), res["frames"], fps=FPS)
+        paths["video"] = out / "videos" / "{}_{}.mp4".format(prefix, res["tag"])
+        imageio.mimwrite(str(paths["video"]), res["frames"], fps=FPS)
+    return paths
+
+
+# ------------------------------------------------------------------ wandb --------------------------
+
+_WB = None   # the wandb module while a run is open (main process only); None = W&B logging off
+
+
+def wb_init(a, out):
+    """Open a W&B run when --wandb-project is set. Training runs keep their id in OUT_DIR/wandb_id.txt, so
+    --resume continues the same W&B run; eval / baseline runs are separate runs in the same group."""
+    global _WB
+    if not a.wandb_project:
+        return
+    import wandb
+
+    run_id, id_file = None, out / "wandb_id.txt"
+    if a.mode == "train":
+        run_id = id_file.read_text().strip() if a.resume and id_file.exists() else wandb.util.generate_id()
+        id_file.write_text(run_id)
+    name = a.wandb_name or (out.name if a.mode == "train" else "{}-{}".format(out.name, a.mode))
+    wandb.init(project=a.wandb_project, entity=a.wandb_entity, name=name, group=out.name, job_type=a.mode,
+               tags=a.wandb_tags, config=vars(a), dir=str(out), id=run_id, resume="allow" if run_id else None,
+               mode=a.wandb_mode)
+    wandb.define_metric("episodes")
+    for prefix in ("train/*", "eval/*"):
+        wandb.define_metric(prefix, step_metric="episodes")
+    wandb.define_metric("eval/episode_success", step_metric="episodes", summary="max")
+    _WB = wandb
+
+
+def wb_log(rec, prefix, episodes=None, extra=None):
+    """Log the numeric fields of rec (nested dicts flattened to prefix/key/sub) plus extra, at x = episodes."""
+    if _WB is None:
+        return
+    d = {}
+
+    def flat(p, v):
+        if isinstance(v, dict):
+            for k, x in v.items():
+                flat("{}/{}".format(p, k), x)
+        elif isinstance(v, (int, float, np.integer, np.floating)) and not isinstance(v, bool):
+            d[p] = float(v)
+
+    for k, v in rec.items():
+        flat("{}/{}".format(prefix, k), v)
+    d.update(extra or {})
+    if episodes is not None:
+        d["episodes"] = episodes
+    _WB.log(d)
+
+
+def wb_finish():
+    global _WB
+    if _WB is not None:
+        _WB.finish()
+        _WB = None
 
 
 def save_ckpt(path, net, target, opt, state):
@@ -265,8 +330,9 @@ def save_ckpt(path, net, target, opt, state):
 
 # ------------------------------------------------------------------ modes --------------------------
 
-def evaluate(a, actors, cfg, net, starts, out, label):
-    """Greedy chains (or baseline chains when net is None) from the eval starts."""
+def evaluate(a, actors, cfg, net, starts, out, label, episodes=None):
+    """Greedy chains (or baseline chains when net is None) from the eval starts. episodes = training episodes
+    so far (the W&B x value; None outside training)."""
     weights = Q.state_dict_numpy(net) if net is not None else None
     mode = "baseline" if net is None else "eval"
     jobs = []
@@ -276,9 +342,10 @@ def evaluate(a, actors, cfg, net, starts, out, label):
                          "seed": a.seed + 7919 * (len(jobs) + 1), "record": a.video and rep == 0 and i < a.media_n,
                          "save_qmap": rep == 0 and i < a.media_n})
     results = actors.run(jobs)
+    media = []
     for r in results:
         log_jsonl(out / "episodes.jsonl", chain_record(r, {"label": label}))
-        save_media(r, out, label)
+        media.append((r, save_media(r, out, label)))
     rec = dict(rates(results), label=label, mode=mode,
                skipped=sorted({r["tag"]: r["skipped"] for r in results if r.get("skipped")}.items()),
                reset_failed=sum(bool(r.get("reset_failed")) for r in results))
@@ -288,6 +355,16 @@ def evaluate(a, actors, cfg, net, starts, out, label):
             per.setdefault(r["tag"], []).extend(e["success"] for e in r["episodes"])
     rec["per_start_episode_success"] = {k: float(np.mean(v)) for k, v in per.items()}
     log_jsonl(out / "eval.jsonl", rec)
+    if _WB is not None:
+        # one key per start: wandb 0.13 queries the server for lists of images, even offline
+        extra = {}
+        for r, p in media:
+            cap = "{} success={}".format(r["tag"], r.get("success"))
+            if "qmap" in p:
+                extra["eval/qmap/" + r["tag"]] = _WB.Image(str(p["qmap"]), caption=cap)
+            if "video" in p:
+                extra["eval/video/" + r["tag"]] = _WB.Video(str(p["video"]), caption=cap, fps=FPS, format="mp4")
+        wb_log(rec, "eval", episodes, extra)      # per-start rates land in eval/per_start_episode_success/<tag>
     print("[{}] {}: episode success {:.3f} ({} episodes), first attempt {:.3f}, chain {:.3f} ({} chains)".format(
         label, mode, rec["episode_success"], rec["n_episodes"], rec["first_success"], rec["chain_success"],
         rec["n_chains"]), flush=True)
@@ -313,16 +390,26 @@ def inspect(a, out):
             continue
         info = env.inspect_info()
         err = np.linalg.norm(np.array(info["cell_centres_px"]) - np.array(info["cell_points_px"]), axis=1)
+        # cross-camera check: wrist cells that are >= 50 % object, projected into agentview, should hit the
+        # agentview object mask (2 px tolerance; a few may be hidden from agentview, e.g. inside a mug)
+        am, hits, n_obj = info["agent_mask"], 0, 0
+        for (up, vp), f in zip(info["cell_points_agent_px"], info["cell_obj_frac"]):
+            if f >= 0.5:
+                n_obj += 1
+                ui, vi = int(round(up)), int(round(vp))
+                hits += bool(am[max(0, vi - 2):vi + 3, max(0, ui - 2):ui + 3].any())
+        agent_hit = hits / max(1, n_obj)
         viz.save_inspect(info, str(out / "inspect" / "{}.png".format(s["tag"])))
         rows.append({"tag": s["tag"], "object": info["object"], "mask_px": int(info["mask_full"].sum()),
                      "valid_cells": int(obs["valid"].sum()), "reproj_err_px_max": float(err.max()),
+                     "object_cells": n_obj, "agentview_hit": round(agent_hit, 3),
                      "start_tilt_deg": round(info["start_tilt_deg"], 1), "handoff": info["handoff"],
                      "obj_tilt_deg": round(info["tilt_deg"], 1),
                      "proprio": [round(float(x), 3) for x in obs["proprio"]]})
         h = info["handoff"]
-        print("{:45s} {:24s} mask {:5d} px  valid cells {:3d}  reproj err max {:.2f} px  "
-              "tilt start {:.0f} -> handoff {:.0f} deg  handoff reached {} ({:.1f} cm)".format(
-                  s["tag"], info["object"], rows[-1]["mask_px"], rows[-1]["valid_cells"],
+        print("{:45s} {:24s} wrist mask {:5d} px  valid cells {:3d}  object cells {:2d}  agentview hit {:.2f}  "
+              "reproj err max {:.2f} px  tilt start {:.0f} -> handoff {:.0f} deg  handoff reached {} ({:.1f} cm)".format(
+                  s["tag"], info["object"], rows[-1]["mask_px"], rows[-1]["valid_cells"], n_obj, agent_hit,
                   rows[-1]["reproj_err_px_max"], info["start_tilt_deg"], h["tilt_deg"], h["reached"],
                   100 * (h["pos_err_m"] or 0.0)))
     env.close()
@@ -408,6 +495,10 @@ def train(a, out):
                 L = np.array(losses)
                 rec.update(loss=float(L[:, 0].mean()), q_sa=float(L[:, 1].mean()), target=float(L[:, 2].mean()))
             log_jsonl(out / "train.jsonl", rec)
+            if _WB is not None:
+                tilts = rec["decision_tilt_deg"]
+                wb_log(rec, "train", state["episodes"],
+                       {"train/decision_tilt_hist": _WB.Histogram(tilts)} if tilts else None)
             if state["rounds"] % a.print_every == 0:
                 print("round {round} ep {episodes} chains {chains} grad {grad_steps} eps {eps} loss {l} q {q} "
                       "buf {b} success(episodes in buffer) {s:.3f} {elapsed_min} min".format(
@@ -418,10 +509,11 @@ def train(a, out):
             ep = state["episodes"]
             if a.eval_every and ep // a.eval_every > ep_before // a.eval_every:
                 rate, _ = evaluate(a, actors, cfg, net, [s for s in eval_starts if s["tag"] not in bad], out,
-                                   "eval_ep{}".format(ep))
+                                   "eval_ep{}".format(ep), episodes=ep)
                 if rate > state["best_eval"]:
                     state["best_eval"] = rate
                     save_ckpt(out / "ckpt_best.pt", net, target, opt, state)
+                wb_log({"best_episode_success": state["best_eval"]}, "eval", ep)
             if ep // a.ckpt_every > ep_before // a.ckpt_every or ep >= a.episodes:
                 save_ckpt(out / "ckpt_latest.pt", net, target, opt, state)
                 if a.save_buffer:
@@ -474,8 +566,11 @@ def parse_args(argv=None):
                    help="handoff pose: gripper this far above the object top, pointing down (m)")
     p.add_argument("--handoff-jitter-cm", type=float, default=0.0,
                    help="optional uniform xy jitter of the handoff pose (the VLM agent's placement error)")
-    p.add_argument("--min-cell-frac", type=float, default=0.25, help="object pixels needed for a cell to be valid")
+    p.add_argument("--min-cell-frac", type=float, default=0.0,
+                   help="object-pixel fraction a cell needs to be a valid action (0 = every cell of the 80x80 crop)")
     p.add_argument("--min-mask-px", type=int, default=20)
+    p.add_argument("--wrist-box", type=float, default=150,
+                   help="side (px of the 256 px wrist image) of the object-centred box the 80x80 Q-map crop spans")
     p.add_argument("--env-seed", type=int, default=7)
     # DQN
     p.add_argument("--episodes", type=int, default=3000)
@@ -488,25 +583,32 @@ def parse_args(argv=None):
     p.add_argument("--buffer", type=int, default=20000)
     p.add_argument("--warmup", type=int, default=64, help="transitions before the first update")
     p.add_argument("--utd", type=float, default=1.0,
-                   help="gradient steps per new transition (CPU: ~1 s per step at width 32, batch 32)")
+                   help="gradient steps per new transition (CPU: ~0.04 s per step at width 32, batch 32)")
     p.add_argument("--target-every", type=int, default=200, help="gradient steps between target copies")
     p.add_argument("--double", action="store_true", help="double-DQN target (pixel_Q_RL.md uses the plain max)")
     p.add_argument("--huber", action="store_true", help="Huber instead of squared TD loss")
     p.add_argument("--eps-start", type=float, default=1.0)
     p.add_argument("--eps-end", type=float, default=0.1)
     p.add_argument("--eps-decay-episodes", type=int, default=1000)
-    p.add_argument("--device", default="cpu", help="learner device (the LIBERO venv's torch is CPU-only on sm_120)")
+    p.add_argument("--device", default="cpu", help="learner device (the LIBERO venv's torch 1.11+cu113 has no kernels for the RTX 5090, sm_120)")
     # runtime
     p.add_argument("--workers", type=int, default=None, help="actor processes (default: 0 for toy, 6 for libero)")
     p.add_argument("--eval-every", type=int, default=100, help="training episodes between evals (0 = never)")
     p.add_argument("--eval-repeats", type=int, default=2)
     p.add_argument("--eval-eps", type=float, default=0.0)
     p.add_argument("--media-n", type=int, default=3, help="eval starts that get a Q-map PNG (and a video)")
-    p.add_argument("--video", action="store_true", help="record agentview mp4s of the first eval starts")
+    p.add_argument("--video", action="store_true", help="record wrist | agentview mp4s of the first eval starts")
     p.add_argument("--ckpt-every", type=int, default=50)
     p.add_argument("--save-buffer", action="store_true", default=True)
     p.add_argument("--no-save-buffer", dest="save_buffer", action="store_false")
     p.add_argument("--print-every", type=int, default=1)
+    # Weights & Biases (off unless --wandb-project is given; the JSONL logs are written either way)
+    p.add_argument("--wandb-project", default=None, help="W&B project; enables W&B logging")
+    p.add_argument("--wandb-entity", default=None, help="W&B team / user (default: your default entity)")
+    p.add_argument("--wandb-name", default=None, help="run name (default: OUT_DIR's name, + -eval / -baseline)")
+    p.add_argument("--wandb-tags", nargs="*", default=None)
+    p.add_argument("--wandb-mode", default="online", choices=["online", "offline", "disabled"],
+                   help="offline: write to OUT_DIR/wandb and upload later with `wandb sync`")
     p.add_argument("--host", default="0.0.0.0")
     p.add_argument("--port", type=int, default=8000)
     p.add_argument("--seed", type=int, default=0)
@@ -528,10 +630,15 @@ def main(argv=None):
         if a.env != "libero":
             raise SystemExit("inspect needs --env libero")
         inspect(a, out)
-    elif a.mode == "train":
-        train(a, out)
-    else:
-        eval_mode(a, out, baseline=a.mode == "baseline")
+        return
+    wb_init(a, out)
+    try:
+        if a.mode == "train":
+            train(a, out)
+        else:
+            eval_mode(a, out, baseline=a.mode == "baseline")
+    finally:
+        wb_finish()
 
 
 if __name__ == "__main__":

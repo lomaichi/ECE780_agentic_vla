@@ -90,6 +90,12 @@ RUN uv venv --python 3.8 examples/libero/.venv \
     && VIRTUAL_ENV=examples/libero/.venv uv pip install -e third_party/libero \
     && uv cache clean
 
+# Newer wandb in the LIBERO client venv: the pinned 0.13.1 rejects current
+# (86-char) W&B API keys ("must be 40 characters long"). 0.24.2 is the last
+# release supporting Python 3.8; keeps protobuf 3.20.3, bumps sentry-sdk to 2.x.
+RUN VIRTUAL_ENV=examples/libero/.venv uv pip install "wandb==0.24.2" \
+    && uv cache clean
+
 # LIBERO asks for its paths interactively on first import unless a config exists
 ENV LIBERO_CONFIG_PATH=/opt/libero-config
 RUN mkdir -p "${LIBERO_CONFIG_PATH}" && B=/opt/openpi/third_party/libero/libero/libero && printf '%s\n' \

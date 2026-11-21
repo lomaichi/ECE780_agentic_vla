@@ -9,7 +9,8 @@ Episodes come in CHAINS on one scene:
   reset(start)  restore an upright start (a library rl/pick reset state, or a task's init state after the
                 10 wait steps), HANDOFF move, observe -> obs of the chain's first episode
   step(a)       one episode. a = (rotation bin k, cell row, cell col) as a flat index (qnet.encode_action):
-                  1. back-project the cell to a 3D point on the object (masked depth pixels of the cell)
+                  1. back-project the cell to a 3D point: the mean of its object pixels, or for a cell
+                     with none, the ray through its centre cut at the object's median height
                   2. move horizontally (same height) above that point, rotating the yaw by ROT_DEG[k],
                      gripper open (fa_core.motion.MoveTo)
                   3. pi0 until the subtask succeeds or the judge window ends (timeout_steps control steps
@@ -26,17 +27,25 @@ Judge: the sim pick predicate (grasped and lifted >= 5 cm for 10 steps) stands i
 during training (pixel_Q_RL.md "Reward source"). fa_core.judge_agent.SubtaskJudgeAgent is the VLM judge
 for test time; plugging it in here would cost ~5 VLM calls (1 fps) per episode.
 
+Views: the HANDOFF move (the VLM agent's stand-in) reads the third-person agentview; the Q-map
+observation, its mask and its cells are on the first-person WRIST view taken at the handoff pose
+(camera looking straight down, ~17 cm above the object's top). pi0 still gets both views as always.
+
 HANDOFF move (_handoff): above the centre of the object's segmentation box, handoff_dz above the
 object's top, approach axis straight down, current yaw kept, gripper open (optional xy jitter,
 handoff_jitter_cm, default 0). Only mask + depth + camera geometry are used. Path: rise to the target
 height (if below it), travel, descend.
 
 Observation (dict, compact, what the Q-net and the replay buffer see):
-  rgb      (80, 80, 3) uint8   crop of the upright agentview around the object; outside the mask grey
+  rgb      (80, 80, 3) uint8   crop of the upright WRIST camera image (robot0_eye_in_hand) centred on
+                               the object's box: a wrist_box (150) px box of the 256 px image, rendered
+                               at 137 px so the crop is 80x80 (one cell ~2 cm on the object); outside
+                               the mask grey
   depth    (80, 80) float16    (depth - median object depth) / 0.1 m, clipped to [-1.5, 1.5]
   mask     (80, 80) bool       target object
   proprio  (6,) float32        EE - object centre (dm, world xyz), gripper opening (0..1), EE yaw sin/cos
-  valid    (10, 10) bool       8x8 cells with >= min_cell_frac of their pixels on the object
+  valid    (10, 10) bool       8x8 cells the Q-map may pick: the whole crop by default (min_cell_frac 0);
+                               min_cell_frac > 0 keeps only cells with that fraction of object pixels
 
 PRIVILEGED (training only): the object mask comes from MuJoCo's segmentation render (stand-in for the
 segmentation model of pixel_Q_RL.md sec. 2), and reward / termination read the sim state through
@@ -73,6 +82,9 @@ MJ_OBJ_GEOM = 5                 # mjtObj.mjOBJ_GEOM in MuJoCo's segmentation ren
 DROP_M = 0.15                   # object fell this far below its start height (off the table)
 WORKSPACE_M = 0.30              # object pushed this far (xy) from its start
 DEPTH_SCALE = 0.1               # m per unit of the depth channel
+WRIST_CAMERA = "robot0_eye_in_hand"   # the Q-map's view (first person); the handoff uses agentview
+WRIST_BOX = 150                 # Q-map region: a 150x150 box of the 256 px wrist image (object box ~110x100)
+HORIZON = 100000                # robosuite steps per env.reset(); the chain cap ends chains, not this
 
 
 class IneligibleStart(Exception):
@@ -124,9 +136,11 @@ def library_starts(policy="rl/pick"):
     return starts, skipped
 
 
-def task_starts(task_specs, init_states):
-    """Task init states, e.g. task_specs=["libero_90:9,10", "libero_spatial:0-9"], init_states=[0, 1, 2]."""
-    held_out = common.held_out_tasks()
+def task_starts(task_specs, init_states, allow_held_out=False):
+    """Task init states, e.g. task_specs=["libero_90:9,10", "libero_spatial:0-9"], init_states=[0, 1, 2].
+
+    allow_held_out: accept held-out libero_90 tasks (eval / baseline / inspect only, never training)."""
+    held_out = set() if allow_held_out else common.held_out_tasks()
     starts = []
     for spec in task_specs:
         suite, ids = spec.split(":")
@@ -183,6 +197,19 @@ def pixels_to_world(env, us, vs, depth, size, cam=camera.CAMERA):
     return pos + pc @ mat.T
 
 
+def ray_at_height(env, us, vs, z, size, cam=camera.CAMERA):
+    """World points where the camera rays through upright pixels (u, v) cross the plane world-z = z."""
+    pos = camera._cam(env, cam)[0]
+    ray = pixels_to_world(env, us, vs, np.ones(np.shape(us)), size, cam) - pos     # point at unit depth - camera
+    return pos + ray * ((z - pos[2]) / ray[..., 2])[..., None]
+
+
+def video_frame(obs):
+    """Wrist view (first person, what the Q-map sees) | agentview, both upright as pi0 gets them."""
+    return np.concatenate([common.upright(obs["robot0_eye_in_hand_image"]), common.upright(obs["agentview_image"])],
+                          axis=1)
+
+
 def rotz(deg):
     c, s = np.cos(np.radians(deg)), np.sin(np.radians(deg))
     return np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]])
@@ -217,6 +244,35 @@ def proprio_features(obs, center, T):
 
 # ------------------------------------------------------------------ env ----------------------------
 
+def _patient_client_cls():
+    from openpi_client import msgpack_numpy, websocket_client_policy
+    import websockets.sync.client
+
+    class PatientClient(websocket_client_policy.WebsocketClientPolicy):
+        """WebsocketClientPolicy without the 10 s websocket open timeout. The openpi server runs
+        policy.infer() inside its asyncio loop, so while one worker's request runs (the first one
+        JIT-compiles for a minute or more) no other handshake is answered. The stock client then gives
+        up after 10 s and drops the socket, which the server logs as an "opening handshake failed ...
+        no close frame received or sent" traceback per attempt. Waiting instead is silent."""
+
+        def _wait_for_server(self):
+            import time
+
+            while True:
+                try:
+                    conn = websockets.sync.client.connect(self._uri, compression=None, max_size=None,
+                                                          open_timeout=None)
+                    return conn, msgpack_numpy.unpackb(conn.recv())
+                except ConnectionRefusedError:
+                    time.sleep(5)
+
+    return PatientClient
+
+
+def _PatientClient(host, port):
+    return _patient_client_cls()(host, port)
+
+
 class PickCorrectorEnv(object):
     def __init__(self, cfg, client=None):
         """cfg: timeout_s, handoff_dz, handoff_jitter_cm, min_cell_frac, min_mask_px, env_seed, seed, host, port."""
@@ -232,9 +288,19 @@ class PickCorrectorEnv(object):
     # ---- setup
     def _pi0(self):
         if self.client is None:
+            import urllib.request
+
             from openpi_client import websocket_client_policy
 
-            self.client = websocket_client_policy.WebsocketClientPolicy(self.cfg["host"], self.cfg["port"])
+            # the client below waits forever and silently on a refused connection: say so once.
+            # Probe the server's /healthz over HTTP: a bare TCP connect+close makes the websockets
+            # server log an "opening handshake failed ... did not receive a valid HTTP request" traceback
+            try:
+                urllib.request.urlopen("http://{}:{}/healthz".format(self.cfg["host"], self.cfg["port"]), timeout=2).close()
+            except OSError as e:
+                print("[worker {}] pi0 server not reachable at {}:{} ({}); waiting for it (start ./serve_pi0.sh)".format(
+                    self.cfg.get("worker_id", 0), self.cfg["host"], self.cfg["port"], e), flush=True)
+            self.client = _PatientClient(self.cfg["host"], self.cfg["port"])
         return self.client
 
     def _ensure_env(self, start):
@@ -249,6 +315,9 @@ class PickCorrectorEnv(object):
             if self.env is not None:
                 self.env.close()
             self.env, self.task, _ = common.make_env(key[0], key[1], key[2], key[3])
+            # one env.reset() serves a whole chain (up to max_chain x (re-handoff + 100 steps)), which can pass
+            # robosuite's default horizon of 1000 steps ("executing action in terminated episode")
+            self.env.env.horizon = HORIZON
             self._env_key, self.res = key, key[3]
         if trace_dir is not None and self._trace_key != start["episode"]:
             sr = common.tools_module("scene_restore")
@@ -295,7 +364,7 @@ class PickCorrectorEnv(object):
         self.p0 = P.obj_pos(env, self.obj)           # scene reference: irrecoverable + tilt logging
         self.up0 = self._obj_up()
         self.steps, self.sim_error, self.fail_reason = 0, None, None
-        self.frames = [common.upright(obs["agentview_image"])] if record else None
+        self.frames = [video_frame(obs)] if record else None
         self.start_tilt_deg = approach_tilt_deg(obs["robot0_eef_quat"], self.T)
         if self._render()[2].sum() < self.cfg.get("min_mask_px", 20):
             raise IneligibleStart("{} is not visible in agentview".format(self.obj))
@@ -318,13 +387,26 @@ class PickCorrectorEnv(object):
         return float(np.degrees(np.arccos(np.clip(self._obj_up() @ self.up0, -1, 1))))
 
     # ---- observation
-    def _render(self):
-        """(upright rgb, upright metric depth, upright object mask) of the current state."""
-        env, size = self.env, self.res
-        rgb = common.upright(self.obs["agentview_image"])
-        depth = common.upright(camera.depth_image(env, size))
-        mask_full = np.isin(common.upright(segmentation_geom_ids(env, size)), self.geom_ids)
+    def _render(self, cam=camera.CAMERA, size=None):
+        """(upright rgb, upright metric depth, upright object mask) of the current state seen by `cam` at
+        size x size px (default: agentview at the env resolution)."""
+        env, size = self.env, size or self.res
+        if cam == camera.CAMERA and size == self.res:
+            rgb = common.upright(self.obs["agentview_image"])
+        else:   # sim.render returns the same (raw, upside-down) layout as the obs images
+            rgb = common.upright(np.asarray(env.env.sim.render(width=size, height=size, camera_name=cam)))
+        depth = common.upright(camera.depth_image(env, size, cam))
+        mask_full = np.isin(common.upright(segmentation_geom_ids(env, size, cam)), self.geom_ids)
         return rgb, depth, mask_full
+
+    def _wrist_res(self):
+        """Wrist render size whose 80x80 crop spans a wrist_box x wrist_box box of the full-res wrist image
+        (256 * 80 / 150 -> 137 px). Rendering small keeps the pixel <-> 3D geometry exact (no resampling)."""
+        box = float(self.cfg.get("wrist_box", WRIST_BOX))
+        n = int(round(self.res * CROP / box))
+        if n < CROP:
+            raise ValueError("wrist_box {} is larger than the {} px wrist image".format(box, self.res))
+        return n
 
     def _handoff(self):
         """Gripper open, pointing straight down (current yaw kept), above the centre of the object's
@@ -339,10 +421,7 @@ class PickCorrectorEnv(object):
         vs, us = np.nonzero(mask_full)
         pts = pixels_to_world(self.env, us, vs, depth[vs, us], self.res)
         uc, vc = 0.5 * (us.min() + us.max()), 0.5 * (vs.min() + vs.max())
-        cam_pos = camera._cam(self.env, camera.CAMERA)[0]
-        ray = pixels_to_world(self.env, uc, vc, 1.0, self.res) - cam_pos       # point at unit depth - camera
-        z_mid = float(np.median(pts[:, 2]))
-        centre = cam_pos + ray * (z_mid - cam_pos[2]) / ray[2]
+        centre = ray_at_height(self.env, uc, vc, float(np.median(pts[:, 2])), self.res)
         jit = self.rng.uniform(-1, 1, 2) * self.cfg.get("handoff_jitter_cm", 0.0) / 100.0
         top = float(np.percentile(pts[:, 2], 95))
         target = np.r_[centre[:2] + jit, top + self.cfg.get("handoff_dz", 0.07)]
@@ -365,8 +444,9 @@ class PickCorrectorEnv(object):
         return ("sim_error: " + self.sim_error) if self.sim_error else self.fail_reason
 
     def _observe(self):
-        env, size = self.env, self.res
-        rgb, depth, mask_full = self._render()
+        """Q-map observation from the WRIST camera (first person) at the handoff pose."""
+        env, size, cam = self.env, self._wrist_res(), WRIST_CAMERA
+        rgb, depth, mask_full = self._render(cam, size)
         if mask_full.sum() < self.cfg.get("min_mask_px", 20):
             return None
         vs, us = np.nonzero(mask_full)                     # crop centred on the segmentation box
@@ -375,34 +455,50 @@ class PickCorrectorEnv(object):
         win = (slice(v0, v0 + CROP), slice(u0, u0 + CROP))
         m, d = mask_full[win], depth[win]
         vv, uu = np.mgrid[v0:v0 + CROP, u0:u0 + CROP]
-        world = pixels_to_world(env, uu, vv, d, size)
+        world = pixels_to_world(env, uu, vv, d, size, cam)
         cells_m = m.reshape(GRID, CELL, GRID, CELL)
         frac = cells_m.mean(axis=(1, 3))
-        valid = frac >= self.cfg.get("min_cell_frac", 0.25)
+        valid = frac >= self.cfg.get("min_cell_frac", 0.0)
         if not valid.any():
             return None
         cnt = cells_m.sum(axis=(1, 3))[..., None]
         wsum = (world * m[..., None]).reshape(GRID, CELL, GRID, CELL, 3).sum(axis=(1, 3))
         with np.errstate(invalid="ignore", divide="ignore"):
             cell_points = wsum / cnt                       # mean surface point of the cell's object pixels
+        # cells with no object pixels: the ray through the cell centre cut at the object's median height
+        # (same rule as the handoff's box centre). Their own depth may hit the table, the fingers or a
+        # neighbouring object, none of which says where the gripper should go.
+        empty = cnt[..., 0] == 0
+        if empty.any():
+            rr, cc = np.nonzero(empty)
+            cell_points[rr, cc] = ray_at_height(env, u0 + cc * CELL + CELL / 2 - 0.5, v0 + rr * CELL + CELL / 2 - 0.5,
+                                                float(np.median(world[m][:, 2])), size, cam)
         center = world[m].mean(axis=0)
         crop_rgb = rgb[win].copy()
         crop_rgb[~m] = 128
         dfeat = np.clip((d - np.median(d[m])) / DEPTH_SCALE, -1.5, 1.5)
         self._frame = {"u0": u0, "v0": v0, "cell_points": cell_points, "center": center, "valid": valid,
+                       "cell_frac": frac,
                        "rgb_full": rgb, "mask_full": mask_full, "tilt_deg": self.obj_tilt_deg()}
         return {"rgb": crop_rgb, "depth": dfeat.astype(np.float16), "mask": m.copy(),
                 "proprio": proprio_features(self.obs, center, self.T), "valid": valid}
 
     def inspect_info(self):
-        """Current frame + every valid cell's 3D point projected back to the image (should hit the cell)."""
+        """Current frame + every valid cell's 3D point projected back to the wrist image (should hit the
+        cell) and into agentview (cells on the object should land on the agentview object mask)."""
         fr = dict(self._frame)
         rows, cols = np.nonzero(fr["valid"])
         fr["cells"] = [(int(r), int(c)) for r, c in zip(rows, cols)]
         fr["cell_centres_px"] = [(fr["u0"] + c * CELL + CELL / 2 - 0.5, fr["v0"] + r * CELL + CELL / 2 - 0.5)
                                  for r, c in fr["cells"]]
-        fr["cell_points_px"] = [tuple(float(x) for x in camera.project(self.env, fr["cell_points"][r, c], self.res))
+        fr["cell_points_px"] = [tuple(float(x) for x in camera.project(self.env, fr["cell_points"][r, c],
+                                                                        self._wrist_res(), WRIST_CAMERA))
                                 for r, c in fr["cells"]]
+        fr["agent_rgb"], _, fr["agent_mask"] = self._render()
+        fr["cell_points_agent_px"] = [tuple(float(x) for x in camera.project(self.env, fr["cell_points"][r, c],
+                                                                              self.res))
+                                      for r, c in fr["cells"]]
+        fr["cell_obj_frac"] = [float(fr["cell_frac"][r, c]) for r, c in fr["cells"]]
         fr["object"], fr["prompt"] = self.obj, self.prompt
         fr["handoff"], fr["start_tilt_deg"] = self.handoff_info, self.start_tilt_deg
         return fr
@@ -425,7 +521,7 @@ class PickCorrectorEnv(object):
             return True
         self.steps += 1
         if self.frames is not None:
-            self.frames.append(common.upright(self.obs["agentview_image"]))
+            self.frames.append(video_frame(self.obs))
         if self.check.update(self.env, self.steps):
             return True
         self.fail_reason = self._irrecoverable()
@@ -473,7 +569,7 @@ class PickCorrectorEnv(object):
         k, row, col = decode_action(action)
         fr = self._frame
         if not fr["valid"][row, col]:
-            raise ValueError("action {} is outside the object mask".format(action))
+            raise ValueError("action {} is not a valid cell (min_cell_frac)".format(action))
         T = self.T
         target = fr["cell_points"][row, col]
         q_now = np.array(self.obs["robot0_eef_quat"], copy=True)

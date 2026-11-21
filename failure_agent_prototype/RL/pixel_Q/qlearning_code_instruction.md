@@ -36,7 +36,7 @@ that this handoff succeeds within 5 s**, and the DQN target is the episode's rew
 | `replay.py` | Replay buffer of `(s, a, r, s', done)` with compact observations; save/load |
 | `corrector_env.py` | LIBERO env: start states, handoff pose, segmentation, crop, back-projection, 2D move + yaw, pi0 handoff, timeout judge, chaining |
 | `toy_env.py` | Synthetic env with the same interface. Tests the DQN code without LIBERO or pi0 |
-| `viz.py` | PNGs: Q-map overlays, and inspect views (mask, crop box, cell back-projection) |
+| `viz.py` | PNGs: Q-map overlays, and inspect views (wrist view: mask, crop box, cell back-projection; agentview: cross-camera check) |
 | `train_dqn.py` | Entry point. Modes `train`, `eval`, `baseline`, `inspect`. Actor pool + learner |
 | `interactive_handoff.py` | Standalone tool, not used by training: pi0 drives a LIBERO-90 task, and you can take over the gripper from the keyboard in a browser page (`http://localhost:8765`) and hand it back |
 | `archive/` | The earlier oracle handoff test (`oracle_handoff_test.py`), its outputs and the go/no-go proposal |
@@ -54,18 +54,26 @@ Reused from `fa_core/`:
 
 | Key | Shape / type | Content |
 |---|---|---|
-| `rgb` | 80×80×3 uint8 | Crop of the upright 256×256 agentview, centred on the object's segmentation box. Pixels outside the mask are grey (128) |
+| `rgb` | 80×80×3 uint8 | Crop of the upright **wrist camera** (`robot0_eye_in_hand`, first person), centred on the object's segmentation box in that view. It spans a 150×150 box of the 256 px wrist image (`--wrist-box`): the wrist view is rendered at 137 px and an 80×80 window is cut, so pixel ↔ 3D geometry stays exact. Pixels outside the mask are grey (128) |
 | `depth` | 80×80 float16 | (depth − median object depth) / 0.1 m, clipped to ±1.5 |
 | `mask` | 80×80 bool | Target object |
 | `proprio` | 6 float32 | EE − object centre (world xyz, in dm), gripper opening (finger gap / 8 cm, clipped to 0..1.5), EE yaw sin/cos |
-| `valid` | 10×10 bool | 8×8 cells with ≥ 25 % object pixels (`--min-cell-frac`) |
+| `valid` | 10×10 bool | Cells the Q-map may pick: all 100 cells of the crop by default. `--min-cell-frac f > 0` keeps only cells with ≥ f object pixels |
 
-The 80×80 mask is treated as an **object-centred crop**. Cell indices therefore mean "where on the object".
+**Views.** The Q-map's mask, crop and cells are all on the wrist view, taken at the handoff pose. Only
+the handoff move (the VLM agent's stand-in) and the start's visibility check use the third-person
+agentview, since before the handoff the object need not be in the wrist view. pi0 gets both views as always.
+At the handoff the wrist camera looks straight down from ~17 cm above the object's top (it sits 4.9 cm
+beside and 9.7 cm above the gripper point), so the object appears below the image centre, next to the
+hand. Its box is ~110×100 px of the 256 px image; one 8 px cell of the crop is ~2 cm on the object.
+
+The 80×80 crop is **object-centred**, and Q is learnt over **all of it**, not only the cells on the object.
+Cell indices therefore mean "where relative to the object"; cells off the object are legal actions too.
 
 **Action:** flat index `a = k·100 + row·10 + col`.
 - `k` ∈ 0..8 selects a rotation bin, yaw offset `ROT_DEG = −20, −15, …, +20°`.
 - `(row, col)` selects one of the 10×10 cells, each an 8×8-pixel window of the crop.
-- Valid actions are the valid cells, with every rotation bin allowed (900 actions in total).
+- Every cell is valid by default, with every rotation bin allowed (900 actions in total).
 
 **FCN** (`qnet.build_qnet`, ~0.76 M parameters at `--width 32`):
 - Input: 11 channels (rgb 3 + depth 1 + mask 1 + proprio 6 tiled over the crop).
@@ -95,8 +103,10 @@ The handoff fails if it hits an irrecoverable state or a sim error, or if the pi
 during it. After every successful handoff the pick check is restarted, and the observation is taken.
 
 **One episode** (`PickCorrectorEnv.step`), starting from the handoff pose:
-1. Back-project the chosen cell: the mean 3D surface point of its object pixels. A cell outside the
-   mask raises `ValueError`.
+1. Back-project the chosen cell: the mean 3D surface point of its object pixels; for a cell with no
+   object pixels, the ray through the cell centre cut at the object's median height (the same rule as
+   the handoff's box centre; the cell's own depth may hit the table, the fingers or another object).
+   An invalid cell (only possible with `--min-cell-frac > 0`) raises `ValueError`.
 2. **2D move + yaw:** one `MoveTo` to that point's (x, y) at the **handoff height**, rotating yaw by
    `ROT_DEG[k]` about world z. Gripper open. The move is capped at 60 steps.
 3. **pi0** takes over (5 actions per chunk) until the subtask succeeds or the **judge window** ends. The
@@ -156,7 +166,7 @@ The loop maps to the steps in pixel_Q_RL.md:
 repeat until --episodes (counted in episodes = decisions):
   one round: each actor (spawn pool, --workers) runs one chain with the current weights,   ❶–❸
       from a training start drawn uniformly (ineligible starts excluded)
-      every episode: ε-greedy inside the mask, ε linear 1.0 → 0.1 over --eps-decay-episodes
+      every episode: ε-greedy over all valid cells, ε linear 1.0 → 0.1 over --eps-decay-episodes
   add every episode to the replay buffer as a terminal transition (s, a, r)                ❹
   if |D| ≥ max(--warmup, --batch): do (--utd × new episodes) gradient steps:              ❺–❼
       y = r   (each episode is one decision; the γ / target-network / --double path stays
@@ -196,44 +206,79 @@ Defaults:
 | ckpt-every | 50 episodes |
 | workers | 6 (LIBERO) / 0 (toy, in-process) |
 
-The learner runs on CPU. The LIBERO venv's torch is built for cu113 and cannot use the RTX 5070 (sm_120); the pi0 server holds the GPU anyway.
+The learner runs on CPU. The LIBERO venv's torch (1.11+cu113) has no kernels for the RTX 5090 (sm_120),
+and the pi0 server holds the GPU anyway (~26 GB with 6 clients).
 
-**Learner cost.** One gradient step (width 32, batch 32) took about 1.1 s on this machine's CPU when the
-target network also ran. With terminal-only batches the target pass is skipped, so it's roughly a third
-less. The loop is synchronous (actors wait while the learner updates), so `--utd` above 1 can make the
-learner, not the simulator, the bottleneck. Watch `elapsed_min` in `train.jsonl`. Don't run two torch
-jobs at once without `OMP_NUM_THREADS`: each grabs all cores and both slow to a crawl.
+**Learner cost.** One gradient step (width 32, batch 32, terminal-only batch) takes about 0.04 s on this
+machine's 32-core CPU (torch's default 16 threads). A round of 6 chains adds ~10–15 episodes, so at
+`--utd 1` the learner needs well under a second per round, against ~5–10 s of simulation. The loop is
+synchronous (actors wait while the learner updates), so `--utd` above 1 is affordable here; it was
+lowered to 1 on a slower CPU (~1.1 s per step). Watch `elapsed_min` in `train.jsonl`. Actors use one
+torch thread each; don't run two learners at once without `OMP_NUM_THREADS`.
 
 ## 6. How to run
 
-Use the LIBERO client venv in the container, with `MUJOCO_GL=egl`. Start the pi0 server with `./serve_pi0.sh` for every step except 0 and 1.
+Use the LIBERO client venv in the container (Python 3.8, torch 1.11, robosuite 1.4.1, MuJoCo 3.2.3), with
+`MUJOCO_GL=egl` (`train_dqn.py` sets it by default). Start the pi0_libero server for every step except 0
+and 1, from the repo root with `./serve_pi0.sh`, or without `uv` syncing:
+`cd /opt/openpi && OPENPI_DATA_HOME=/home/DockerShared/.cache/openpi .venv/bin/python scripts/serve_policy.py policy:checkpoint --policy.config=pi0_libero --policy.dir=gs://openpi-assets/checkpoints/pi0_libero`
+(ready in ~1 min; it compiles on the first request, and the actors retry their connection meanwhile).
 
 ```bash
 cd failure_agent_prototype/RL/pixel_Q
 PY=/opt/openpi/examples/libero/.venv/bin/python
 
-# 0. Code check, no simulator (~15 min on CPU). See section 8 for the expected numbers
+# 0. Code check, no simulator (~2 min on CPU). See section 8 for the expected numbers
 $PY train_dqn.py --env toy --out-dir runs/toy --episodes 1500 --width 16 --lr 3e-4 \
     --eval-every 500 --eval-repeats 10 --eps-decay-episodes 750 --print-every 100 --no-save-buffer
 
 # 1. Geometry + handoff check, no pi0. Check in the PNGs and the printed table:
-#    magenta mask on the bowl/mug, cyan dots on the white cell centres (small reproj err),
-#    "tilt ... -> handoff ~0 deg", "handoff reached True", enough valid cells
-$PY train_dqn.py --mode inspect --out-dir runs/inspect
+#    left = wrist view (what the Q-map sees): magenta tint = the object mask (visualisation only),
+#    yellow box = the 80x80 crop, white dots = the 100 cell centres, cyan = their back-projections
+#    (on the white dots off the object; up to ~5 px off on edge cells, where the mean object pixel is
+#    not the cell centre). right = agentview with the same 3D cell points: cyan (>= 50 % object)
+#    should land on the object ("agentview hit" ~1; a few can be hidden from agentview).
+#    Also "tilt ... -> handoff ~0 deg", "handoff reached True", valid cells 100.
+#    The defaults reset all ~1000 task starts (~20 min); one init per task takes ~1.5 min:
+$PY train_dqn.py --mode inspect --out-dir runs/inspect --train-inits 0 --eval-inits 40
 
-# 2. Smoke test (pi0 up)
-$PY train_dqn.py --out-dir runs/smoke --episodes 10 --workers 2 --eval-every 5 --video
+# 2. Smoke test (pi0 up, ~2.5 min: the eval at episode 10 runs ~50 chains)
+$PY train_dqn.py --out-dir runs/smoke --episodes 10 --workers 2 --eval-every 5 --eval-repeats 1 --video
 
-# 3. Baseline to beat: handoff pose + pi0, no correction, same chains, eval starts
+# 3. Baseline to beat: handoff pose + pi0, no correction, same chains, eval starts (~4.5 min)
 $PY train_dqn.py --mode baseline --out-dir runs/baseline
 
 # 4. Train, then evaluate the best checkpoint (the network width is read from the checkpoint;
 #    --ckpt picks another one)
-$PY train_dqn.py --out-dir runs/pick_v0 --workers 6          # add --resume to continue
-$PY train_dqn.py --mode eval --out-dir runs/pick_v0
+$PY train_dqn.py --out-dir runs/pick_v0 --workers 6 --wandb-project online         # add --resume to continue
+$PY train_dqn.py --mode eval --out-dir runs/pick_v0 --video
+
+# 5. Eval on specific task
+
+
+$PY train_dqn.py --mode baseline --out-dir runs/baseline \
+      --sources tasks \
+      --tasks libero_90:10 \
+      --eval-inits 0 1 2 3\
+      --video --media-n 4
 ```
 
-If the LIBERO venv lacks torch, install the CPU build there.
+**Weights & Biases (optional).** Add `--wandb-project <project>` to any train / eval / baseline command
+(optional: `--wandb-entity`, `--wandb-name`, `--wandb-tags`, `--wandb-mode offline`). One-time login in
+the LIBERO venv: `/opt/openpi/examples/libero/.venv/bin/wandb login`, or set `WANDB_API_KEY`. The x-axis is
+`episodes`. Logged keys: `train/*` (everything in a `train.jsonl` line: loss, q_sa, target, eps, success
+rates, `train/buffer/*`, plus a `train/decision_tilt_hist` histogram), `eval/*` (episode / first / chain
+success, `eval/best_episode_success`, `eval/per_start_episode_success/<tag>`, and the Q-map PNGs / videos
+as `eval/qmap/<tag>` / `eval/video/<tag>`). `--resume` continues the same W&B run (its id is in
+`OUT_DIR/wandb_id.txt`); eval / baseline runs are separate runs grouped under OUT_DIR's name. The venv has
+wandb 0.13.1 (LIBERO's pin; its missing deps were added, nothing upgraded). That version asks the server
+about lists of images even in offline mode, so log images one key at a time.
+
+```bash
+$PY train_dqn.py --out-dir runs/pick_v1 --workers 6 --wandb-project pixel-q-pick
+$PY train_dqn.py --out-dir runs/pick_v1 --workers 6 --wandb-project pixel-q-pick --wandb-mode offline
+$PY -m wandb sync runs/pick_v1/wandb/offline-run-*      # upload an offline run later
+```
 
 **Outputs** (`OUT_DIR`):
 
@@ -245,7 +290,7 @@ If the LIBERO venv lacks torch, install the CPU build there.
 | `eval.jsonl` | Episode / first-attempt / chain success, per-start episode success, failed resets |
 | `ckpt_latest.pt`, `ckpt_best.pt`, `replay.pkl` | Checkpoints (with the network width and the ineligible starts) and replay buffer (skipped with `--no-save-buffer`) |
 | `qmaps/<label>_<start>.png` | First decision of the first eval chain of the first `--media-n` (3) eval starts: crop with max-over-rotation Q, chosen cell boxed, plus the 9 rotation maps. Label is `eval_ep<N>` during training, `eval` / `baseline` in those modes |
-| `videos/<label>_<start>.mp4` | Agentview recordings of the same eval chains (with `--video`) |
+| `videos/<label>_<start>.mp4` | Wrist \| agentview recordings of the same eval chains (with `--video`) |
 | `inspect/*.png`, `inspect/starts.json` | Inspect-mode output |
 
 ## 7. Deviations from pixel_Q_RL.md and assumptions
@@ -270,7 +315,8 @@ If the LIBERO venv lacks torch, install the CPU build there.
 
 ## 8. What has been tested, and what has not
 
-The container was not running, so nothing involving LIBERO or pi0 has run yet.
+Steps 0–3 of section 6, eval mode and `--resume` all ran in the container on 2026-11-20 (RTX 5090 for
+the pi0 server, learner on CPU). No full training run yet.
 
 **Tested on CPU without the simulator:**
 - Q-net shapes, action encoding and decoding, masked argmax, replay buffer, DQN update (terminal and
@@ -281,7 +327,8 @@ The container was not running, so nothing involving LIBERO or pi0 has run yet.
   stand-in for robosuite's quaternion functions (x, y, z, w order).
 - pyflakes is clean, and all files parse as Python 3.8.
 
-**Toy results** (chained episodes, 1500 episodes ≈ 450 chains, width 16, ~7 min on CPU). Random valid
+**Toy results** (chained episodes, 1500 episodes ≈ 450 chains, width 16, ~7 min on the first CPU, ~2 min
+in the container; a rerun here gave episode / first / chain success 0.22 / 0.29 / 0.63 at 1500). Random valid
 actions succeed ~8 % per episode, and ~34 % per chain of up to 5 episodes.
 
 | Eval after | Episode success | First attempt | Chain success | Rim cell | Facing side | Right rotation bin |
@@ -316,25 +363,42 @@ What this means for LIBERO:
   - a higher-resolution yaw encoding, e.g. radial-basis (RBF) features over the yaw angle; or
   - VPG-style rotation of the input crop, so the yaw shows up in the image rather than only in proprio.
 
-**Not verified (run inspect mode and the smoke test first):**
-- **Segmentation render.** `MjSim.render(..., segmentation=True)` is expected to return (objtype, objid)
-  per pixel in robosuite 1.4. Inspect mode fails with a clear error if it does not.
-- **Image orientation.** The segmentation and depth renders should share the orientation that
-  `fa_core.camera` assumes. Check the reprojection error printed by inspect mode.
-- **EE axis convention.** The handoff assumes the Panda EE z axis is the approach axis. Inspect prints
-  the approach tilt at the start state (should be small for pi0 states) and at the handoff (should be
-  ~0°). If the start tilts come out near 90°, the convention is wrong.
-- **Is 5 s enough?** In the oracle handoff test, successful handoffs took ~70–100 pi0 steps (3.5–5 s)
-  after a scripted approach. Here the 100-step window also includes the 2D move (up to 60 steps), so
-  it may be tight. Check `timeout`, `move_steps` and `pi0_steps` in `episodes.jsonl`.
-- **How often do disturbed states occur?** Watch `decision_tilt_deg` in `train.jsonl` and the
-  `obj_tilt_deg` values of episodes after the first in each chain.
-- **Occlusion at the handoff pose.** With the gripper 7 cm above the object, it may hide part of the
-  object from agentview, so those cells drop out of the mask. Check the valid-cell counts and the PNGs.
-- **OSC conventions.** `fa_core.motion.MoveTo` assumes world-frame position and rotation deltas
-  (see `tools/check_loop.py motion`).
-- **Simulation time.** An episode is at most 5 s of sim (100 steps) plus a handoff move. Measure
-  `wall_s` per chain in `episodes.jsonl` during the smoke test.
+**Verified in LIBERO** (inspect on the library starts plus init 0 and 40 of every default task, 59 starts;
+smoke test; baseline):
+- **Segmentation render.** robosuite 1.4.1 returns (objtype, objid) per pixel; the masks sit on the
+  bowl/mug in every inspect PNG.
+- **Image orientation.** Cell back-projections land within 1.9–3.0 px of the cell centres (the gap is
+  the cell's mean object pixel versus its geometric centre). (Agentview crop; superseded below.)
+- **Wrist-view Q-map** (2026-11-20, inspect → `runs/inspect_wrist`, 53 usable starts): every start
+  reaches a handoff with 100 valid cells, 13–41 of them ≥ 50 % object (mugs 13–30, bowls 19–41). The
+  wrist cells' 3D points land on the object in agentview (agentview hit 1.00 on 47 starts, 0.86–0.97 on
+  the rest, where the gripper hides part of the object from agentview). The bottom 1–2 cell rows of
+  the crop are the gripper body in the wrist view; they back-project under it at object height.
+  The baseline and timing numbers below were measured before the switch; pi0 itself is unchanged.
+- **EE axis convention.** Approach tilt is ~3° at the task starts and 5–32° at the library states,
+  0–3° at the handoff.
+- **Starts.** 6 library starts are skipped as not round-rim (moka pot, book, pudding), and the 3 task-21
+  library starts as outside the training split. Every task start reaches a handoff. 11–31 cells with ≥ 25 % object pixels (all 100 are actions now).
+- **Baseline to beat** (eval starts, 2 repeats, 104 chains): episode success **0.36**, first attempt
+  **0.44**, chain **0.86**.
+- **Is 5 s enough?** Mostly. Successful episodes needed 38–90 pi0 steps (median ~55–59, 90th percentile
+  ~75–82), and the 2D move takes a median of 16 steps (60 at most). A few successes may still be cut
+  off at the window's end.
+- **Disturbed states occur.** In episodes after a chain's first, 14–15 % have the object tilted > 30°
+  (many ~86°, i.e. on its side).
+- **Occlusion.** At the handoff pose the fingers cut a thin unmasked seam through the object (visible
+  in the inspect PNGs). This only shifts where on-object cells back-project; every cell stays an action.
+- **Simulation time.** ~5.5 s per chain with 2 workers (smoke) and ~15 s with 6 workers (baseline;
+  they share one pi0 server). 6 spawn workers ran without the EGL hang seen in `validate_predicates`.
+
+**Open issues:**
+- **libero_90 task 31 (bowl onto the cabinet).** From the task init states the handoff's descent leg
+  stalls 4.5–7 cm above its target (60 steps, `reached False`), and re-handoffs take ~50–220 steps. The
+  reset is not rejected, so the Q-map decides from ~12–14 cm above the bowl instead of 7 cm. No first
+  episode there succeeded in the baseline; later episodes in the chain sometimes did. The library start
+  of the same task reaches its handoff.
+- The handoff counts as done even when `reached` is False; only a failure or a fired pick predicate
+  raises `ResetFailed`.
 
 ## 9. Changes since the first version
 
@@ -352,3 +416,6 @@ What this means for LIBERO:
 | Target-network forward skipped when a batch is all terminal; eval reads the width from the checkpoint | Speed; usability |
 | Default `--utd` 4 → 1 | ~1.1 s per CPU gradient step; utd 4 made the learner the bottleneck |
 | Tried and removed: late fusion, FiLM, a scaled toy yaw feature (rotation learning), a random pi0 prefix and a state archive (state diversity) | No measurable gain / superseded by chaining from the bowl's current state |
+| robosuite horizon raised to 100 000 steps per `env.reset()` (`corrector_env.HORIZON`) | Long chains passed the default 1000 and ended with "executing action in terminated episode" (2 of 104 baseline chains) |
+| Actors retry the pi0 connection on a handshake timeout | A cold server compiles on its first request and blocks the other actors' handshakes |
+| `interactive_handoff.py` imports `pi0_request` / `REPLAN_STEPS` from `fa_core.common` | `oracle_handoff_test.py` moved to `archive/` |
