@@ -83,6 +83,7 @@ podman run -it \
 	--env=NVIDIA_DRIVER_CAPABILITIES=all \
 	--env=__GLX_VENDOR_LIBRARY_NAME=nvidia \
 	--env=__NV_PRIME_RENDER_OFFLOAD=1 \
+	--env=WANDB_API_KEY=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\
 	-v /tmp/.X11-unix:/tmp/.X11-unix \
 	-v terminator-config:/etc/xdg/terminator \
 	-v claude-config:/root/.claude-config \

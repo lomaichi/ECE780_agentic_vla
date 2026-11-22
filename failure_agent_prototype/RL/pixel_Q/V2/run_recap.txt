@@ -1,0 +1,395 @@
+Pixel-Q V2 — running recap of the discussion (started 2026-11-22)
+=================================================================
+
+[1] Question: was phase 1 useless because no ticks were sampled for intervention
+    (few gated ticks per 3 s window x p_branch = 0.1)?
+
+Answer: no. Interventions were sampled. The result is still useless, but for a different reason.
+
+  Sampling (runs/pick_v2, phase 1):
+    - 3096 rollouts, 3050 branch points; every branch point runs both a no-op branch and an
+      intervention branch, and both samples go to replay (810 random eps + 2240 greedy corrections).
+    - The rate estimate was right: ~10 gated ticks/rollout x 0.1 = ~1 branch/rollout. The code makes up
+      for the low rate by running >3000 rollouts.
+    - Misleading log fields:
+        * rollout.interventions = 0 counts trigger firings on the main rollout; the trigger is off
+          in phase 1 by design.
+        * gated_ticks ~= 1.0/rollout in phase 1 is a counting artifact (rollout.py ~l.233: a tick
+          counts as gated only when observe() runs, i.e. only on branch ticks). The true figure,
+          9.7/rollout, shows in phase 2.
+    - Phase 2 also finished: 1000 branch points, 3 trigger firings.
+
+  Real problem: corrections almost always fail.
+    - Pick success within 3 s: no-op 1122/3050 (37%) vs intervention 87/3050 (2.9%).
+    - Of the 1122 states where pi0 alone succeeds, the correction ruins 1042; it rescues only 7 states
+      where pi0 fails.
+    - So the Q-map learned "never correct" (Q(a) ~0.02 vs Q0 ~0.23); A(s) is useless as a trigger.
+
+  Cause: how execute_primitive (libero_env.py:236) spends its 30-step budget (prim_cap = 1.5 s):
+    - The "rise" leg (clearance) fires in 78% of corrections, since the gripper is near the target and
+      below h_clear + 2 cm. It uses ~22 of the 30 steps.
+    - So the move leg is skipped in 53% of corrections and reaches its goal only 19% of the time.
+    - 83% of corrections use the full 30 steps. The 3 s label clock (H_max) starts before the
+      correction, so pi0 has only ~1.5 s left to pick, against 3 s in the no-op branch.
+    - In practice the correction mostly lifts the gripper away from the object just before pi0 would
+      grasp it. The chosen cell/yaw barely affects the outcome, so there is nothing spatial to learn.
+
+  Possible fixes (none applied yet):
+    1. Rise: skip or limit it for small sideways moves, or rise only as far as the move needs.
+    2. Label timing: start the H_max window after the correction ends, or give the intervention branch
+       extra time equal to the correction's duration.
+    3. Budget: raise --prim-cap, or split it per leg so the move leg can't be starved.
+    4. Logging: count gated ticks from gate_open in phase 1.
+    -> Phase 1 needs rerunning after 1-3; the current checkpoint is just "never correct".
+
+[2] User asked to keep this running recap file updated as the discussion continues.
+
+[3] Question: Q0 is trained only on no-op labels. Does Q0 then automatically mean "let pi0 continue",
+    even though the action A0 nominally means "level first"?
+
+Answer: yes, by construction. The A0 entry of the Q-map is only a slot for the no-op value.
+    - Phase 0: only (obs, A0, y_noop) is pushed; the level-only probe results are measured but not
+      pushed (replay_phase0 noop_frac = 1.0).
+    - Phase 1/2: each branch point pushes (obs, A0, y_noop) plus (obs, a, y_a) for a correction a.
+    - correction_actions() (qnet.py:66) removes A0, so neither the eps-greedy branches nor the trigger
+      ever execute "level only". Q0 is never trained on a levelling outcome.
+    - So A(s) = max_corr - Q0 compares each correction with "pi0 continues", which is the right
+      comparison for the trigger.
+
+  Consequence 1: the "no-op ~= level only" assumption is false, so A0 breaks the continuity of the map.
+    - phase0_report.json: levelling alone lowers the label in every tilt bin
+      (0-10: -0.06 [z -2.1], 10-20: -0.14 [z -5.3], 20-30: -0.10 [z -3.8], 30+: -0.26 [z -7.1]).
+      The report recommended training Q0 only below some tilt, or a separate V network (sec. 15).
+      Phase 1 went ahead anyway (no tilt restriction).
+    - Phase 1 confirms it: same cell, yaw only (level + rotate in place, cheb 0, yaw != 0):
+      y_a 0.047 vs y_noop 0.428.
+    - So the map must put ~0.2-0.4 at one entry (k=4, cell 5,5) and ~0 at its neighbours, including the
+      same cell at +-5 deg yaw.
+
+  Consequence 2: the architecture gives the network no clear signal that the centre cell is special.
+    - Shared FCN trunk + 1x1 heads + global-mean context (shared/fcn.py); no coordinate channels.
+      Q0 shares the k=4 output channel with every yaw-0 cell, and its spatial position with the 8 other
+      yaw bins.
+    - The map is gripper-centred, but robot pixels are masked out of the heightmap, so "this is the
+      centre" can only come from zero-padding edge effects / receptive-field position.
+    - On average it fits (train log: Q0 pred/label 0.23/0.23, Qa 0.02/0.02), but the gap between Q0 and
+      the neighbouring entries is learned weakly, and corrections nearly always fail, which hides how
+      weakly.
+
+  Suggested direction (not applied): a separate V/Q0 head (e.g. an MLP on pooled trunk features +
+    proprio) for the no-op value, with the Q-map covering corrections only. Alternatively, add a
+    coordinate / centre-indicator input channel. Either way, keep the rule that Q0 is trained only on
+    y_noop.
+
+[4] User proposal: use a separate value function V(s) for the no-op value within the time window.
+
+Agreed. pixel_Q_RL_V2.md sec. 15 already describes it, and its first switch criterion is met: phase 0
+shows levelling changes the outcome at every tilt. Discussion points:
+
+  Design (sec. 15 + suggestions):
+    - V(s): small CNN on the same heightmap + proprio -> scalar; an ensemble (K heads) so it has
+      sigma_V too. Trained on y_noop only. Trigger: A(s) = max_a [mu_a - kappa*sigma_a] - V(s).
+    - Train V first, then freeze it while the Q-map trains (sec. 15), or train both with separate
+      optimizers and batches.
+    - The centre cell at 0 deg becomes an ordinary, executable correction ("level only"); remove the
+      A0 exclusion. Phase 0 is then no longer a precondition.
+
+  Data for V (main win):
+    - The main rollout in phases 0/1 is itself a no-op trajectory (pi0 + HL, no trigger), so every gated
+      tick gets a free y_noop label from the main rollout's own future: gamma^(dt/20) if pick happens
+      within H_max, else 0. That is ~10 labels/rollout instead of ~1, with no extra simulation (labels
+      within a rollout are correlated).
+    - Exclude ticks whose label window contains an HL correction or trigger intervention (no longer
+      pi0 alone).
+    - Needs a code change: store obs at every gated tick (currently observe() runs only on branch
+      ticks), then label it when the rollout ends.
+    - Existing data: ~4400 branch no-op labels in replay.pkl (phase 0 + 1 + 2) can be used to
+      pretrain/validate V right away, with no new simulation.
+
+  Must fix together with V: V and Q must predict the same quantity.
+    - Both labels should be measured from the branch tick with the same gamma^(t/20) and the same window.
+    - Do not restart the clock after the correction for Q only; that gives corrections free time and
+      biases A upward. The discount already charges the correction for its duration (fair).
+    - Instead make the window long enough for correction + pi0, e.g. H_max >= 3 s + prim_cap (1.5 s);
+      phase 0 found no-op success p90 = 5.8 s, so 5-6 s is reasonable for both.
+
+  Risk (sec. 15 "Cost"): errors no longer cancel. With a shared Q0, a misjudged scene shifts Q0 and Q(a)
+    together; with separate networks it does not. Check at branch points (paired labels from the same
+    state) whether the V-vs-Q error offset is constant (absorbed by tau) or varies by state. Fallback:
+    a dueling architecture, Q = V + Adv(a).
+
+[5] User: start a new folder ../V3 for the V + Q-map version; add the V training code first; copy the training
+    logs and no-op labels to ../V3/runs/V2_noop_data.
+
+Done (V3/README.md has the details):
+    - runs/V2_noop_data/: copied train/branches/eval/rollouts/probe_log jsonl, phase0_report/state, configs
+      (no replay/ckpt/videos/wandb). No-op labels are extracted into noop_dataset.npz (55.7 MB), not copied as
+      the full 229 MB replay.pkl.
+    - extract_noop.py: joins all 4380 no-op replay samples with their branches.jsonl records and keeps the raw
+      outcome (t_success, cap_steps, end), so labels can be recomputed for any H / gamma. Check: relabelling
+      with V2's window reproduces V2's labels exactly.
+      Note: phase 1/2 branches stop at 3 s -> H > 3 s needs new data (or phase 0's 373 10 s branches).
+    - vnet.py: V = shared FCN encoder -> mean+max pool + proprio -> 5 MLP heads -> sigmoid; plus a proprio-only
+      baseline.
+    - train_v.py: group split (tag or task) into train/val/test, bootstrap ensemble, best-val epoch, metrics
+      (MSE, R2, AUC of success, Spearman, calibration, per-phase / per-tilt), plots.
+
+  First offline results (H = 3 s, gamma 0.85, GPU, ~30 s per run):
+    - Split by tag (new inits of known tasks): cnn R2 0.57, AUC 0.93, well calibrated;
+      proprio-only R2 0.15, AUC 0.72; constant R2 0.
+    - Split by task (4 unseen tasks): cnn R2 0.04, AUC 0.76 -> weak transfer to new tasks (16 training tasks).
+    - Overfits after ~15 epochs; ensemble sd tiny (~0.01) although it correlates with |error| (0.59).
+  => V(s) is learnable from the heightmap for the planned use (new inits, known tasks). A separate V is viable.
+
+  Open items for V: more ensemble diversity (independent trunks or a bigger bootstrap gap), regularisation /
+    augmentation, gated-tick labels from the main rollout (needs obs stored at every gated tick), a longer
+    window (needs longer branches).
+
+[6] Question: which tasks are we training on?
+    24 tasks (V2 default --tasks; only bowl / mug / cup pick targets), train inits 0-39, eval inits 40-41.
+    No-op samples per task in noop_dataset.npz in brackets.
+    libero_90  9 [176] put the black bowl on the plate
+    libero_90 10 [182] put the black bowl on top of the cabinet
+    libero_90 14 [202] put the middle black bowl on the plate
+    libero_90 17 [127] stack the middle black bowl on the back black bowl
+    libero_90 25 [346] put the black bowl on top of the cabinet
+    libero_90 31 [744] put the black bowl on top of the cabinet
+    libero_90 34 [489] put the yellow and white mug to the front of the white mug
+    libero_90 37 [150] put the white bowl to the right of the plate
+    libero_90 63  [81] stack the left bowl on the right bowl and place them in the tray
+    libero_90 64 [126] stack the right bowl on the left bowl and place them in the tray
+    libero_90 67 [136] put the white mug on the left plate
+    libero_90 71  [52] put the red mug on the plate
+    libero_90 72 [168] put the white mug on the plate
+    libero_90 85 [472] pick up the white mug and place it to the right of the caddy
+    libero_spatial 0-9 [47,127,98,128,148,45,100,62,93,81]: pick up the black bowl <location> and place it on
+      the plate (0 between plate and ramekin, 1 next to ramekin, 2 table center, 3 on cookie box,
+      4 in top drawer of wooden cabinet, 5 on ramekin, 6 next to cookie box, 7 on stove, 8 next to plate,
+      9 on wooden cabinet)
+    Imbalanced: libero_90 31 + 85 + 34 = 39% of samples; mostly black-bowl picks (17 of 24 tasks).
+
+[7] User: remove the LIBERO-Spatial samples and retrain V (pi0_libero is fine-tuned on libero_spatial, so
+    almost all its samples succeed and bias V upward; pi0 is tested on unseen tasks).
+
+  Confirmed in the data: no-op success libero_spatial 0.88 (mean label 0.64) vs libero_90 0.25 (0.16).
+    Per libero_90 task: 0.00 (task 37) ... 0.02 (31) ... 0.71 (9), 1.00 (63).
+  Added train_v.py --suites (e.g. --suites libero_90). Retrained on libero_90 only: 3451 samples, 14 tasks.
+    - Split by tag (new inits of known tasks): cnn R2 0.40, AUC 0.88 (proprio 0.14 / 0.72). Still works.
+    - Split by task (unseen tasks), 7 seeds x 2 held-out tasks: cnn R2 mean -0.01 (-0.33..0.43),
+      AUC mean 0.64 (0.48..0.73); proprio R2 -0.03, AUC 0.54.
+  Reading: on unseen tasks V ranks states a bit better than chance but gets the level wrong. The per-task
+    base rate (how good pi0 is at that task) dominates the labels and can't be inferred from 10 training
+    tasks.
+  Implication for the trigger: this is the sec. 15 risk. With a shared Q0, a per-task level error would shift
+    Q0 and Q(a) together and cancel in A; with a separate V it doesn't. Options: train on many more LIBERO-90
+    tasks (more task diversity is the main lever), check the V-vs-Q offset per task, or fall back to a
+    dueling Q = V + Adv(a), where the trigger reads Adv and the level cancels.
+  Runs: V3/runs/v_offline_l90_tag, v_offline_l90_task (seed 0), v_offline_l90_task_s1..s6.
+
+[8] Q: what are the "proprio only" rows, R2 and AUC?
+    - proprio only: baseline V that sees only the 4 proprio numbers (finger gap, sin/cos tilt, height above
+      target top), no heightmap. The gap to the CNN = what the heightmap adds.
+    - R2 = 1 - MSE(V) / MSE(constant train mean): 1 = perfect, 0 = no better than always predicting the
+      average, < 0 = worse. Measures whether the predicted value level is right.
+    - AUC: chance that a random success state gets a higher V than a random failure state. 0.5 = random,
+      1 = perfect ranking. Ignores level/calibration; measures ranking only.
+
+[9] User proposal: pi0 rollouts from different inits of a few tasks give too little state diversity (pi0
+    keeps going to the same position/pose). At each natural branch point, also sample a group of gripper
+    poses around the natural pose, and evaluate pi0 from each one in turn within the window (more V labels).
+
+  Discussion / proposed design (not implemented yet; V3 has no rollout code yet):
+    - Per branch point: snapshot -> natural no-op branch (as now) -> for n = 1..N: restore, drive the gripper
+      to perturbed pose p_n with the OSC MoveTo (as the correction primitive does; no IK teleport exists),
+      observe() there, run pi0 for H -> sample (obs at p_n, y). Clock starts on arrival at p_n, so the motion
+      time doesn't bias the label.
+    - Perturbations: xy +-3 cm, z within [clearance, +3 cm] (heightmap clearance, never into the object), yaw
+      +-30 deg, tilt +-15 deg; uniform. Discard if the gripper didn't arrive, touched/moved an object
+      (contact or object displacement check), or left the gate. Gripper stays open.
+    - Cost: ~1 s move + up to 3 s pi0 per sample (sim time) -> N = 8 gives ~30-40 s wall per branch point per
+      worker; ~3000 extra samples ~ 40 min with 6 workers.
+    - Bonus: if the perturbations are drawn from the Q-map's action set (cell + yaw), each one is also a
+      correction branch: label from the branch tick -> Q(s, a); label from arrival -> V(s'). One rollout
+      trains both, and Q(s,a) ~ gamma^(t_move) * V(s'_a) gives a consistency check.
+    - Caveats: perturbed states are off pi0's natural distribution; V is used on natural states, so keep
+      natural samples, report metrics on natural states separately, maybe weight them. Labels within a branch
+      point are correlated (group split by tag handles it). More state diversity per task does NOT fix the
+      per-task base-rate problem from [7]; more LIBERO-90 tasks is still needed for that.
+
+[10] User decisions on [9] (no runs until the user says ready; agree on the plan first):
+    - NO shared rollout for V and Q: the Q-map's actions are levelled (gripper facing -z, then cell + yaw),
+      while pi0's natural poses are tilted. Q-map samples never cover non-top-down poses, so they can't
+      expand V's natural distribution.
+    - Keep perturbations SMALL and around pi0's own pose (orientation included, not levelled): pi0 then
+      approaches the bowl in nearly the same way, so the states stay close to pi0's natural distribution
+      (avoids the off-distribution problem). Goal: widen the near-bowl view distribution of the training data
+      enough to cover the eval cases' views.
+
+  Revised V-data plan (proposal, still to agree):
+    - At each natural branch point (gated tick): snapshot -> natural no-op branch -> N perturbed branches, one
+      by one: restore, small OSC move to p_n = natural pose + (dx, dy, dz, small rotation about the current
+      orientation), observe() at arrival, pi0 alone for H from arrival -> (obs, y).
+    - Ranges to agree: position offsets (~1-2 cm?), rotation offsets about the gripper's own axes
+      (~5-10 deg?), N per branch point, keep z above clearance.
+    - Pilot check before a big run: label spread within a group. If every perturbed label equals the natural
+      label, the ranges are too small (no new information); if most fail while the natural one succeeds,
+      too large (off-distribution).
+    - Discard rules: didn't arrive, touched/moved an object, left the gate, gripper not open/empty.
+    - Bookkeeping per sample: branch-point id, offset (dx, dy, dz, drot), natural vs perturbed flag, so V can
+      be evaluated on natural states only and samples weighted.
+
+[11] User: pilot check on libero_90 task 10, inits 40-43, 5 perturbations per init, videos with V_est / true V /
+     timer on screen, one video per tick (all episodes, state reset in between), save to ../V3/runs/V_pilot.
+
+  Done: V3/pilot_perturb.py (LIBERO venv; imports V2's libero_env; V = runs/v_offline_l90_tag/v_cnn.pt).
+    - Main rollout pi0 + privileged HL -> branch at the 3rd gated tick -> snapshot -> episode 0 natural +
+      5 perturbed (OSC move to pose + offset: xy +-1.5 cm, z -0.5..+1.5 cm, rotation +-8 deg about each gripper
+      axis; pi0 queue cleared) -> observe + V_est at the takeover pose -> pi0 until pick or 3 s.
+    - Outputs: <tag>_tick<step>.mp4 (4 videos, wrist | agentview 2x, banner), episodes.jsonl, obs_<tag>.npz
+      (obs + labels), summary.json, config_pilot.json. ~1 s wall per episode.
+  Results (24 episodes):
+    - All perturbation moves arrived (8-17 steps), no bumped objects, all stayed in the gate.
+    - Label spread within groups: init40 0.33 (4/5 perturbed differ from natural), init41 0.25 (1/5),
+      init42 0.32 (2/5), init43 0.02 (0/5, all succeed). The ranges produce varied outcomes, not trivial
+      copies, except where pi0 is very reliable (init43).
+    - V_est vs true V: AUC 0.82, MSE 0.099 vs 0.123 constant (small sample).
+  Caveats found:
+    - All successes land at 1.85-2.65 s after takeover, close to the 3 s window, so many "timeouts" may be
+      slow picks, not failures. Suggest running each episode longer (e.g. 10 s cap, like phase 0) and storing
+      t_success, so the label can be recomputed for any H later.
+    - pi0 is stochastic: a perturbed outcome that differs from the natural one may be pi0 noise. Suggest a
+      control: repeat the natural episode several times per tick (noise floor), and/or repeat each perturbed
+      pose 2x.
+    - Branch ticks are early (step 24-32 = 1.2-1.6 s into the episode; gate opens at ~3-4 cm). --gated-tick
+      sets which gated tick.
+  pi0 server left running (log: V3/runs/V_pilot/pi0_server.log).
+
+[12] User: change the window to 4.5 s, output the videos again, label old/new videos by time limit.
+  pilot_perturb.py now labels every output with the time limit (_H3s / _H4.5s: videos, episodes, obs, summary,
+    config); old 3 s outputs renamed to _H3s. H is also shown in the video banner. Same seed -> same
+    perturbation offsets per init as the 3 s run.
+  4.5 s results (24 episodes): 9 successes (3 s run: 11).
+    - init40 nat 0 | 1/5 perturbed succeed; init41 nat 0 | 5/5 succeed; init42 nat 0 | 0/5; init43 nat 0 | 2/5.
+    - Not directly comparable with the 3 s run: pi0 is stochastic, so the main rollouts differ (branch ticks
+      at steps 36/28/28/32 vs 32/24/32/32, target 1.5-4.7 cm away). E.g. init43 succeeded 6/6 at 3 s but its
+      natural episode fails now.
+    - Successes still come at 2.3-3.0 s after takeover (46-60 steps), with one at 4.25 s (85 steps). Extra time
+      rarely turns a timeout into a success -> the timeouts are mostly real misses, not slow picks. Frame check
+      (init42 ep0): gripper hovers over the bowl, then closes its fingers above it and misses.
+    - V_est is trained on 3 s labels, so V_est vs true V at 4.5 s is not like-for-like.
+  => The run-to-run variance of pi0 at the same init is large; the noise-floor control (repeat the natural
+     episode at the same tick) matters more than the window length.
+
+[13] User: stick with the 3 s timeout. Deployment evaluates V - Qmax at 5 fps on gated ticks; pilot the same on
+     task 10 init 1: natural main rollout, every gated tick selected with P = 0.2; at a selected tick run the
+     perturbation episodes, then continue the natural rollout from the original state; until the natural pick
+     succeeds or 3 s after gating; pause briefly at each tick and label selected / not.
+
+  Done: V3/pilot_ticks.py (reuses pilot_perturb.py's episode + render functions). Every tick after the first
+    gated tick pauses (12 frames) with: TICK #k SELECTED / not selected / not gated (+ reason), V_est at every
+    gated tick. Selected tick: ep 0 natural branch + 5 perturbed, then "back to the natural rollout". Outputs
+    <tag>_ticks_p0.2_seed<s>_H3s.{mp4,json(l)}: per-tick log (incl. the main rollout's own label main_y where
+    known), episodes, summary, config.
+  Runs (task 10 init 1):
+    - seed 0: 5 gated ticks (t 0-0.8 s), none selected (P(none) = 0.8^5 = 0.33); then the gripper closes
+      (pi0's grasp attempt) and the gate stays shut; window over, no natural pick within 3 s. Video 15 s.
+    - seed 1: 9 gated ticks (t 0-1.6 s), tick #8 selected (step 52): natural branch 0.00; perturbed
+      0, 0, 0.73, 0.62, 0 (2 of the 5 moves didn't fully reach the pose in 30 steps; one bumped the bowl).
+      Then 6 un-gated ticks (gripper closed); window over, no natural pick. Video 48 s.
+  Observations:
+    - The gate is only open for ~5-9 ticks per rollout (until pi0 closes the gripper), so P = 0.2 gives
+      ~1-2 selected ticks per rollout -> the data rate is set by gated ticks, not by the 5 fps.
+    - In both runs the natural rollout was still mid-grasp when the 3 s window ended; ending at "window over"
+      may cut picks that come just after.
+
+[14] User: redo the tick pilot with P(select) = 0.5; what is the gate condition?
+  Run (task 10 init 1, seed 0, P 0.5): 7 gated ticks (t 0-1.2 s), ticks #2, #3, #5 selected; then the gripper
+    closes (gate shut) and the natural rollout picks at 2.85 s after the first gated tick. Video
+    libero_90_task10_init1_ticks_p0.5_seed0_H3s.mp4 (108 s).
+    - tick #2: natural 0.67 | perturbed all 0 (5/5 fail)
+    - tick #3: natural 0.67 | perturbed 0, 0.67, 0, 0.62, 0.66
+    - tick #5: natural 0.74 | perturbed 0.70, 0.71, 0, 0, 0.73
+    - 18 episodes (9 successes): V_est vs true V AUC 0.95, MSE 0.066 vs 0.119 constant.
+  Gate (V2 libero_env.gate(), all must hold; training uses privileged sim quantities, --hl moondream uses the
+    agent's own judgements):
+    1. pick subtask: the pick of the target isn't done yet (PickCheck not latched)
+    2. gripper open: last commanded gripper action is open AND finger gap >= 0.05 m (full open = 0.08 m)
+    3. target within reach: xy distance grasp point -> target <= reach 3 cells x 2 cm + 4 cm margin = 10 cm
+    4. gripper empty: no movable object grasped
+    Plus, for the tick to count: not within 3 s after an HL correction (cooldown), and the target grounded
+    (agentview sees >= 20 target-mask pixels, needed for the heightmap). No height or tilt condition.
+    "gate closed (open)" in the videos = condition 2 failed: pi0 started closing the gripper.
+
+[15] Q: is the current V proprio-only or with the observation?
+  With the observation: the pilots use runs/v_offline_l90_tag/v_cnn.pt = the CNN V (88x88 gripper-centred
+  heightmap: rgb, height, target mask, observed + the 4 proprio numbers), trained on libero_90 only, split by
+  tag. The proprio-only model (v_proprio.pt) is just the baseline in train_v.py and isn't used in the pilots.
+
+[16] User doubt: once V is trained, why a Q-map? V alone could guide the gripper. (1) The Q-map gives the best
+     cell from the current observation only (efficient). (2) "If V < threshold, sample N poses, argmax V(pose)"
+     needs the observation at each pose: either physically move there (slow, sequential) or a model that maps
+     pose -> expected observation.
+
+  Discussion:
+    - Agreed on (1): Q(s, a) is an amortised "value after moving by a", predicted without the post-move
+      observation. But it needs a label per (state, action) out of 441 actions (sparse; part of why V2 phase 1
+      learned little), while V gets a dense label for every state it visits (natural or perturbed).
+    - On (2), the pose -> observation model already exists, almost for free: V2's heightmap is built from a world
+      point cloud (agentview + wrist depth, robot points removed), rasterised around the grasp point p with yaw
+      psi; the height channel is relative to p_z; proprio = finger gap, tilt, p_z - target top. For a candidate
+      pose (p', psi', tilt'), re-rasterise the SAME cloud around p' with psi' and recompute proprio -> a synthetic
+      observation. No sim, no robot motion; N candidates = N rasterisations + one batched V forward (ms-scale on
+      GPU, ~0.1-0.3 s for ~64 candidates in numpy, and only needed when V < threshold).
+    - Differences from the real arrival observation: the wrist camera would see from a new viewpoint (different
+      occlusions / holes, filled from agentview or left unobserved); otherwise geometry is the same.
+    - V(s') then plays Q's role if V is trained on "move a little, then pi0" data (the perturbation episodes)
+      with the clock starting at arrival; the move cost can be added as gamma^(t_move). Trigger becomes
+      max_c V(s'_c) - V(s) > tau.
+    - The Q-map becomes optional: a later distillation of the argmax-V search into one forward pass if speed
+      ever matters.
+  Proposed check (on pilot data, no new design needed): at each selected tick, also save the point cloud; for
+    each perturbed episode, compare V(synthetic obs from the tick's cloud at the arrival pose) with V(real
+    arrival obs) and with the true label. If they agree, V + synthetic search can replace the Q-map.
+
+[17] User decision: go with option 2 (V + synthetic-observation search, no Q-map). Asked for the training code
+     using the pilot method (no training run, no toy run), and to confirm first: (1) parameters and defaults,
+     (2) outputs (avoid unneeded log files), (3) what goes to wandb, (4) which videos / images to save.
+  Proposed (awaiting confirmation; no code written yet):
+    - Two stages: collect.py (actors: pilot_ticks-style main rollouts, selected ticks -> natural + perturbed
+      episodes -> sample shards) + train_v.py (offline, existing, extended). V doesn't steer data collection
+      (pi0 + random perturbations), so no online learner loop is needed.
+    - "Training Q" read as training V (the value at the pose where pi0 takes over); to confirm.
+    - Parameter, output, wandb and video proposals: see the chat message of [17].
+
+[18] Plan agreed in V3/plan_the_algo.txt (sections 6-7). Key decisions: train V (no Q-map); actor/learner loop
+     (so videos show the current V); main rollout ends on pick success, 20 s budget or irrecoverable failure;
+     natural branch episode kept at selected ticks; no main-rollout labels; no point clouds; no V2 data;
+     train on the 14 training-split tasks, test on 6 held-out bowl/mug tasks (13, 15, 24, 36, 65, 76; ~7:3);
+     val = 15% of training (task, init) tags; bumped / unarrived episodes not saved; --rot-deg 10;
+     --target-samples 10000 + 4300 eval; --video-every 50; minimal outputs.
+  Code written (not run, no toy run): V3/episodes.py (actor rollout + video), V3/train.py (actors + online
+    learner, eval, wandb, outputs), V3/data_io.py (shards), train_v.py extended (reads shard folders, uses the
+    stored split, --natural-weight; no train_log.jsonl / preds_test.npz any more).
+  Static checks only: imports in the LIBERO venv, shard write/read round trip, learner forward pass and test
+    metrics on fake samples, held-out guard (training tasks refuse held-out ids), val split = 87 of 560 tags (15.5%).
+
+[19] Cleanup + docs (user request).
+  Deleted from V3: pilot_perturb.py, pilot_ticks.py, extract_noop.py (no V2 data reused; pilots done).
+    train_v.py now reads only V3 shard folders (V2 .npz path, --phases, --suites, --split-by, --val-frac,
+    --test-frac, --seed removed). runs/ had already been cleared by the user except runs/V_pilot videos.
+  README.md rewritten as a short overview; new V3/Vlearning_code_instruction.md: what it does (branches, gate,
+    splits), files, setup (LIBERO venv + pi0 server; train_v on the simplevla venv / GPU), how to run (smoke test,
+    full run, --resume, offline refit), flags, outputs, shard fields, how to read printout / metrics / videos.
+
+[20] User: run the training on two randomly selected tasks to see how it performs.
+  Random pick: training tasks libero_90 9 (black bowl on the plate) + 25 (black bowl on top of the cabinet).
+  Smoke test (runs/v3_smoke: targets 60 / 30, 2 workers, eval task 76 picked at random): the loop runs end to end,
+    all outputs written. Found:
+    - bug: within a round all jobs became eval (queued jobs not counted) -> fixed (expected samples of queued jobs).
+    - eval task 76 alone is degenerate: pi0 never picked the mug (0/274), AUC undefined -> full run uses the 6
+      default held-out eval tasks (same cost: eval stays ~3/7 of samples).
+    - gating lasts far longer than in the task 10 pilot: 28-44 gated ticks per rollout (pi0 hovers in the gate
+      without grasping until the 20 s budget) -> up to ~140 correlated samples from one rollout. Design unchanged
+      for now; to report.
+  Full run launched: runs/v3_t9_25 (--tasks libero_90:9,25, defaults otherwise, wandb offline; console log in the
+    session scratchpad).

@@ -12,9 +12,16 @@ bool array (every cell of the crop by default); the rotation bin is always free.
 Python 3.8 / torch 1.11 compatible (the LIBERO client venv).
 """
 
+import pathlib
+import sys
+
 import numpy as np
 
-CROP = 80                      # crop side in pixels (of the wrist render, see corrector_env.WRIST_BOX)
+_PIXQ = str(pathlib.Path(__file__).resolve().parents[1])   # pixel_Q/: the shared package
+if _PIXQ not in sys.path:
+    sys.path.insert(0, _PIXQ)
+
+CROP = 80                     # crop side in pixels (of the wrist render, see corrector_env.WRIST_BOX)
 CELL = 8                       # Q-map window side in pixels
 GRID = CROP // CELL            # 10 x 10 cells
 ROT_DEG = tuple(-20.0 + 5.0 * k for k in range(9))   # yaw offsets of the 9 rotation bins (deg)
@@ -47,39 +54,19 @@ def _torch():
 
 
 def build_qnet(width=32):
+    """The trunk and head are ../shared/fcn.py (shared with V2); same layers and parameter names as before."""
     torch = _torch()
     nn = torch.nn
-
-    def block(cin, cout, stride=1, dilation=1):
-        return nn.Sequential(
-            nn.Conv2d(cin, cout, 3, stride=stride, padding=dilation, dilation=dilation, bias=False),
-            nn.GroupNorm(8, cout),
-            nn.ReLU(inplace=True),
-        )
+    from shared import fcn
 
     class PixelQNet(nn.Module):
         def __init__(self, w):
             super(PixelQNet, self).__init__()
-            self.encoder = nn.Sequential(
-                block(IN_CH, w),                    # 80
-                block(w, 2 * w, stride=2),          # 40
-                block(2 * w, 2 * w),
-                block(2 * w, 4 * w, stride=2),      # 20
-                block(4 * w, 4 * w),
-                block(4 * w, 4 * w, stride=2),      # 10: one cell per 8x8 window
-                block(4 * w, 4 * w, dilation=2),    # receptive field grows to cover the whole crop
-                block(4 * w, 4 * w, dilation=4),
-            )
-            self.head = nn.Sequential(              # per-cell features + global (pooled) context
-                nn.Conv2d(8 * w, 4 * w, 1),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(4 * w, N_ROT, 1),
-            )
+            self.encoder = fcn.encoder(IN_CH, w)    # 80 -> 10: one cell per 8x8 window
+            self.head = fcn.head(w, N_ROT)          # per-cell features + global (pooled) context
 
         def forward(self, x):
-            f = self.encoder(x)
-            g = f.mean(dim=(2, 3), keepdim=True).expand_as(f)
-            return self.head(torch.cat([f, g], dim=1))   # (B, 9, 10, 10)
+            return self.head(fcn.with_context(self.encoder(x)))   # (B, 9, 10, 10)
 
     return PixelQNet(width)
 

@@ -1,0 +1,181 @@
+V3 plan: V data collection + V training (option 2: V + synthetic-observation search, no Q-map)
+==============================================================================================
+Temporary file for feedback. Edit anything in place; write comments after "FEEDBACK:" lines.
+Status: proposal only. No code written, nothing run.
+
+
+0. CLARIFICATIONS
+-----------------
+0a. Train V: the value of letting pi0 continue from the pose where it takes over
+    (natural pose, or the pose after a small perturbation move), discounted pick success within H.
+    FEEDBACK:changed the wording a bit
+
+0b. No online actor/learner loop. V never steers data collection (pi0 + random perturbations), so the code
+    is split in two:
+      collect.py   workers run pilot_ticks-style rollouts and write sample shards
+      train_v.py   the existing offline trainer, extended to read the shards
+    V can then be retrained with other settings (H <= 3 s, gamma, filters, weights) without new simulation.
+    FEEDBACK: correct
+
+    Per rollout (collect.py):
+      pi0 (+ privileged HL) main rollout from a task init state
+      tick every 4 control steps (5 fps); at a gated tick:
+        - observe (heightmap) -> main-rollout sample (label filled in from the rollout's own future)
+        - with probability p_select: snapshot -> N perturbed episodes (small OSC move, pi0 queue cleared,
+          observe at arrival, pi0 alone until pick or H) -> restore -> natural rollout continues
+      rollout ends: pick success, failure, budget, or no gated tick for 1 s after the last one
+    FEEDBACK: what is budget, does it mean natural timeout? dont need "no gated tick for 1 s after the last one" conditon
+              for the bowl pickup subtask, i think it's ok to only consider pick success or timeout
+
+0c. Gate condition: #TODO: describe gate condition
+
+1. PARAMETERS
+-------------
+Data collection (collect.py)
+
+  parameter              keep?             default                     note
+  ---------------------  ----------------  --------------------------  -------------------------------------------
+  tick rate              yes           5 fps (every 4 steps)       matches deployment
+  --p-select             yes               0.5                         ~5-9 gated ticks/rollout -> ~3-4 selected
+  --n-perturb            yes               5
+  natural branch episode dont understand  drop                        duplicates the main-rollout labels (if on)
+  main-rollout labels    dont understand  on                          free natural label per gated tick; skipped
+                                                                       if an HL correction falls in the window;
+                                                                       ~2x the natural samples at no extra cost
+  --pos-cm               yes               1.5                         xy offset +- (cm)
+  --dz-cm                yes               -0.5 1.5                    z offset range (cm)
+  --rot-deg              yes               10                          +- about each gripper axis (deg)
+  --move-cap             yes               30                          max control steps of the perturbation move
+  --h-max-s              yes               3.0                         episode cap; raw t_success stored, so the
+                                                                       label can be recomputed for any H <= 3 s
+  gamma                  TODO:don't understand, is this time discount factor?    applied in train_v.py (0.85)
+  main rollout end       -                 pick / failure / budget /   replaces the 3 s cutoff, which cut off
+                                           no gated tick for 1 s       natural picks
+  --tasks                yes TODO:both train/eval?or how are they splitted? libero_90:9,10,14,17,25,31,34,37,63,64,67,71,72,85   (no libero_spatial)
+                                  note that held-out tasks are strictly not used for training
+  --train-inits          yes               0-39
+  --target-samples       yes               10000                       TODO:re-estimate: ~2-3 h on 6 workers (pilot timing)
+  --workers              yes               6
+  --hl                   yes               privileged                  as in V2
+  --seed                 no                0
+  --save-cloud           yes but TODO: explain more   on, selected ticks only,    ~0.1-0.2 MB per tick; needed for the
+                                           cropped 20 cm, float16      synthetic-observation check and the search
+  bump threshold         no flag           5 mm                        bumped samples kept with a flag, filtered
+                                                                       in training
+FEEDBACK: see in line
+
+Training (train_v.py additions; existing flags unchanged: heads 5, epochs 60, best val epoch, split by tag)
+
+  parameter                        default
+  -------------------------------  ---------------------------
+  --data (folder of shards)        runs/<collect run>/data
+  --drop-bumped, --drop-unarrived  on TODO: simply drop this flag, always drop bumped and unarraived
+  --natural-weight                 1.0   (weight of natural vs perturbed samples)
+  gamma / H                        0.85 / 3.0
+FEEDBACK: see in line
+
+
+2. OUTPUTS (minimal)
+--------------------
+Collection:
+  data/shard_*.npz    obs (rgb, height, mask, observed, proprio) + raw outcome (t_success, cap, end) + meta
+                      (start tag, rollout id, tick step, type main/perturbed, offset, arrived, bumped)
+  clouds/             only if --save-cloud TODO: explain why we need this
+  config.json
+  nothing else; progress printed to stdout; resume = count existing shards
+
+Training:
+  v_cnn.pt, metrics.json, config.json
+TODO: what is metrics.json?
+
+Dropped compared to V2: branches/rollouts/train/eval/probe jsonl, per-tick / per-episode jsonl, replay.pkl,
+ckpt_latest + ckpt_best pairs.
+FEEDBACK (anything else to keep / drop?):
+
+
+3. WANDB
+--------
+Collection (every ~50 rollouts):
+  samples collected, natural vs perturbed success rate, gated + selected ticks per rollout,
+  arrival rate, bump rate, rollouts per hour
+Training:
+  per epoch: train / val MSE
+  end: test R2 and AUC (all samples, natural samples only), reliability plot image
+FEEDBACK:
+
+
+4. VIDEOS / IMAGES
+------------------
+Collection:  --video-every 100 -> pilot_ticks-style video (tick pauses + labels, episodes inline) of every
+             100th rollout, ~20 videos in total
+Training:    reliability.png, curves.png; no videos
+Not now:     Q-map / heightmap images (later, with the synthetic-search code)
+FEEDBACK:--video-every 50 instead
+
+
+5. OPEN CHOICES
+---------------
+1. Drop the natural branch episode at selected ticks (main-rollout labels cover natural states)?
+   ANSWER: NO. btw: do not reuse any data from V2
+2. Main-rollout labels on?
+   ANSWER: what does this mean
+3. --save-cloud on?
+   ANSWER: what is save cloud
+4. New main-rollout end condition (no gated tick for 1 s) instead of the 3 s cutoff?
+   ANSWER: note that the rollout end condition is restricted to pick success or timout, as commented above. so this is not needed
+5. Synthetic-observation check script (V on synthetic vs real arrival observations) in this code drop, or
+   later?
+   ANSWER: do not merge this with the main training code or collection code. i will approach this with a small stand-alone test on just one task
+   
+
+
+6. DECISIONS SO FAR (2026-11-22, from the comments above and chat)
+-------------------------------------------------------------------
+- Train V (0a). REVISED: actor/learner loop (user, after the video question): actors run the rollouts, the
+  learner trains V online and sends its weights back, so videos show the current V's V_est. train_v.py stays
+  for offline refits from the saved shards.
+- Main rollout ends on pick success, timeout, or irrecoverable failure (bowl off the table / pushed > 30 cm /
+  sim error; counted as "not picked"). No "no gated tick for 1 s" condition. Timeout: the 20 s LIBERO-90 budget
+  (400 control steps).
+- Gate (0c): pick not done; gripper open (last command open, finger gap >= 5 cm); target within 10 cm (xy) of
+  the grasp point (3 cells x 2 cm + 4 cm); gripper empty. A gated tick also needs: no HL correction in the last
+  3 s, agentview sees >= 20 target pixels. No height / tilt condition.
+- Flags: --tick-steps 4 (5 fps), --p-select 0.5, --n-perturb 5, --pos-cm 1.5, --dz-cm -0.5 1.5, --rot-deg 10,
+  --move-cap 30, --h-max-s 3.0, --target-samples 10000 (branch episodes kept; est. 45-75 min on 6 workers),
+  --workers 6, --hl privileged, --video-every 50. Seed fixed at 0 (no flag). Bump threshold 5 mm (no flag).
+- Natural branch episode at selected ticks: KEPT (ep 0 = pi0 alone from the unperturbed snapshot).
+- Main-rollout labels: SKIPPED (only branch episodes, natural + perturbed, are V samples).
+- Bumped / unarrived perturbed episodes: not saved (only counted for wandb rates).
+- No --save-cloud; synthetic-observation check is a separate stand-alone test (not in this code).
+- No V2 data reused.
+- Task split 7:3: train on all 14 training-split bowl/mug tasks; collect eval data on 6 held-out bowl/mug
+  tasks (13, 15, 24, 36, 65, 76; flag --eval-tasks). Held-out data only reports test metrics: never trains V,
+  never picks the best epoch (val = tag split within the 14 training tasks). Eval target 4300 samples
+  (3/7 of 10000; flag --eval-target-samples).
+- Outputs: data/shard_*.npz, config.json (collection); v_cnn.pt, metrics.json (trimmed: MSE, R2, AUC, bias on
+  all / natural / perturbed + calibration bins), config.json (training).
+- wandb as in section 3.
+- Videos: every 50th training rollout, rendered by the actor with the learner's current weights (V_est at every
+  gated tick and at each episode's takeover pose).
+
+
+7. FINAL DESIGN (code: V3/episodes.py, V3/train.py; train_v.py reads the shards)
+---------------------------------------------------------------------------------
+Rounds (as V2): each round runs --workers rollouts in parallel, then the learner updates.
+  - job type: eval rollout (held-out task) while eval samples < 3/7 of all and < --eval-target-samples,
+    else training rollout. Starts drawn from shuffled cycles over (task, init).
+  - training starts: tag-hash split, 15% of (task, init) tags = val (never trained on; picks the best V).
+  - every --video-every training rollouts: that job records a video and gets the current V weights.
+Actor rollout: pi0 + privileged HL from the init state; tick every 4 steps; at a gate-open tick: observe
+  (grounded check); selected with p 0.5 -> snapshot -> ep 0 natural + 5 perturbed (move, observe at arrival,
+  pi0 until pick or 3 s) -> restore. Ends: pick success, 20 s budget, irrecoverable failure.
+  Kept samples: natural episodes + perturbed episodes that arrived and didn't bump (grounded at takeover).
+Learner: V ensemble (vnet.py cnn, 5 heads, bootstrap 0.8), masked MSE on gamma^t labels (gamma 0.85, H 3 s),
+  --natural-weight; after each round utd 0.5 x new training samples gradient steps (batch 64) once >= 300
+  samples. Every --eval-every 50 rollouts: val MSE (saves v.pt when it improves) + test metrics on the eval
+  tasks (all / natural / perturbed: MSE, R2, AUC, bias) -> wandb + stdout.
+Outputs (--out-dir): data/shard_*.npz, config.json, v.pt (best val), metrics.json (final, best v.pt: test
+  metrics + calibration bins), reliability.png, curves.png, videos/*.mp4, wandb/ (only with --wandb-project).
+Learner flags (train_v.py defaults, not discussed): --width 32 --heads 5 --bootstrap-p 0.8 --lr 3e-4
+  --weight-decay 1e-4 --batch 64 --utd 0.5 --warmup 300 --val-frac 0.15 --eval-every 50 --device cpu
+  (LIBERO venv torch can't use the RTX 5090).

@@ -23,6 +23,10 @@ Each reset state gets a verdict: PASS (qpos within --max-qpos-err after the repl
 but the picture differs from the video more than --warn-pix: check the PNG), FAIL (state drifted) or
 ERROR. The exit code is 0 only if every state is PASS. Velocities (qvel) are reported, not judged.
 Also check every PNG by eye: is the restored scene really the moment BEFORE the failing attempt?
+
+In-memory snapshots of a RUNNING rollout (capture_snapshot / restore_snapshot; pixel-Q V2 branch points) also
+keep the controller's state and robosuite's step counter. Check them (no recordings or pi0 needed):
+  python scene_restore.py --snapshot-check [--suite libero_90 --task 10 --init 0]
 """
 
 import argparse
@@ -101,6 +105,111 @@ def reset_to(env, trace, step):
 def upright(img):
     """LIBERO renders upside down; rotate 180 deg (what pi0 and the videos see)."""
     return np.ascontiguousarray(img[::-1, ::-1])
+
+
+# ------------------------------------------------------------------ in-memory snapshots ------------
+# For pixel-Q V2 branch points (RL/pixel_Q/V2): rewind a RUNNING rollout in memory, without env.reset() (which
+# rebuilds the scene). Unlike reset_to() (restoring a recorded trace step), this also keeps the controller's
+# internal state and robosuite's step counter. Callers keep their own bookkeeping (pi0's queued actions,
+# subtask checks, step count of their rollout) next to it.
+
+def _plain_attrs(obj):
+    """Copies of an object's numpy / scalar attributes (an OSC controller's goals, cached state and flags)."""
+    out = {}
+    for k, v in vars(obj).items():
+        if isinstance(v, np.ndarray):
+            out[k] = v.copy()
+        elif v is None or isinstance(v, (np.generic, bool, int, float)):
+            out[k] = v
+    return out
+
+
+def capture_snapshot(env):
+    """Everything stepping on from the current state depends on: flattened sim state (time, qpos, qvel),
+    MuJoCo's warm start, actuator controls (and activations), the gripper's last action, the controller's
+    numpy / scalar attributes and robosuite's timestep / cur_time / done."""
+    inner = env.env
+    sim, robot = inner.sim, inner.robots[0]
+    d = sim.data
+    snap = {"sim_state": np.array(env.get_sim_state(), copy=True),
+            "qacc_warmstart": np.array(d.qacc_warmstart, copy=True),
+            "ctrl": np.array(d.ctrl, copy=True),
+            "gripper_current_action": np.array(robot.gripper.current_action, copy=True),
+            "controller": _plain_attrs(robot.controller),
+            "env": {k: getattr(inner, k) for k in ("timestep", "cur_time", "done") if hasattr(inner, k)}}
+    act = getattr(d, "act", None)
+    if act is not None and np.size(act):
+        snap["act"] = np.array(act, copy=True)
+    return snap
+
+
+def restore_snapshot(env, snap):
+    """Put a running env back into a capture_snapshot() state (the snapshot itself is not modified)."""
+    inner = env.env
+    sim, robot = inner.sim, inner.robots[0]
+    sim.set_state_from_flattened(np.asarray(snap["sim_state"]))
+    sim.data.qacc_warmstart[:] = snap["qacc_warmstart"]
+    sim.data.ctrl[:] = snap["ctrl"]
+    if "act" in snap:
+        sim.data.act[:] = snap["act"]
+    sim.forward()
+    robot.gripper.current_action = np.array(snap["gripper_current_action"], copy=True)
+    robot.controller.update(force=True)
+    for k, v in snap["controller"].items():          # after update(): flags such as new_update as they were
+        setattr(robot.controller, k, v.copy() if isinstance(v, np.ndarray) else v)
+    for k, v in snap["env"].items():
+        setattr(inner, k, v)
+
+
+def snapshot_check(suite="libero_90", task_id=10, init_idx=0, before=30, after=40, seed=0, env_seed=7):
+    """Run `before` random actions, snapshot, run `after` more (run A), restore, run the same `after` (run B).
+    Deterministic MuJoCo + a complete snapshot -> A and B identical (qpos, qvel, images, controller goal,
+    timestep). Restore twice to show the snapshot is not consumed. Returns a report dict with a verdict."""
+    from libero.libero import benchmark
+
+    env, _ = make_env(suite, task_id, env_seed)
+    rng = np.random.default_rng(seed)
+    try:
+        env.reset()
+        env.set_init_state(benchmark.get_benchmark_dict()[suite]().get_task_init_states(task_id)[init_idx])
+        for _ in range(10):
+            env.step([0.0] * 6 + [-1.0])
+        acts = np.c_[rng.uniform(-0.4, 0.4, (before + after, 3)), rng.uniform(-0.15, 0.15, (before + after, 3)),
+                     np.where(rng.random(before + after) < 0.8, -1.0, 1.0)]
+        for a in acts[:before]:
+            env.step(a.tolist())
+        snap = capture_snapshot(env)
+        nq = int(env.env.sim.model.nq)
+
+        def run():
+            rec = {"state": [], "img": [], "goal": [], "timestep": []}
+            for a in acts[before:]:
+                obs, *_ = env.step(a.tolist())
+                rec["state"].append(np.array(env.get_sim_state(), copy=True))
+                rec["img"].append(obs["agentview_image"].astype(np.int16))
+                rec["goal"].append(np.array(getattr(env.env.robots[0].controller, "goal_pos", np.zeros(3)), copy=True))
+                rec["timestep"].append(int(getattr(env.env, "timestep", -1)))
+            return rec
+
+        A = run()
+        restore_snapshot(env, snap)
+        B = run()
+        restore_snapshot(env, snap)
+        C = run()
+    finally:
+        env.close()
+    rows = {}
+    for name, X in (("restore_1", B), ("restore_2", C)):
+        sA, sX = np.array(A["state"]), np.array(X["state"])
+        rows[name] = {"qpos_max_abs_err": float(np.abs(sA[:, 1:1 + nq] - sX[:, 1:1 + nq]).max()),
+                      "qvel_max_abs_err": float(np.abs(sA[:, 1 + nq:] - sX[:, 1 + nq:]).max()),
+                      "pix_max_abs_err": int(max(np.abs(a - b).max() for a, b in zip(A["img"], X["img"]))),
+                      "goal_max_abs_err": float(np.abs(np.array(A["goal"]) - np.array(X["goal"])).max()),
+                      "timestep_equal": A["timestep"] == X["timestep"]}
+    ok = all(r["qpos_max_abs_err"] <= 1e-9 and r["qvel_max_abs_err"] <= 1e-6 and r["pix_max_abs_err"] == 0
+             and r["timestep_equal"] for r in rows.values())
+    return {"verdict": "PASS" if ok else "FAIL", "suite": suite, "task_id": task_id, "init": init_idx,
+            "before": before, "after": after, **rows}
 
 
 def check_one(rs, replay_steps, out, max_qpos_err, warn_pix):
@@ -194,7 +303,17 @@ def main():
                    help="PASS if every qpos entry is within this after the replay (1e-3 = 1 mm / 1 mrad)")
     p.add_argument("--warn-pix", type=float, default=8.0,
                    help="mark LOOK if the mean pixel difference to the video exceeds this (0-255 scale)")
+    p.add_argument("--snapshot-check", action="store_true",
+                   help="in-memory snapshot / restore of a running rollout (pixel-Q V2 branch points): run random "
+                        "actions, snapshot, continue, restore, repeat; the two continuations must be identical")
+    p.add_argument("--suite", default="libero_90")
+    p.add_argument("--task", type=int, default=10)
+    p.add_argument("--init", type=int, default=0)
     args = p.parse_args()
+    if args.snapshot_check:
+        rep = snapshot_check(args.suite, args.task, args.init)
+        print(json.dumps(rep, indent=2))
+        sys.exit(0 if rep["verdict"] == "PASS" else 1)
     if args.check:
         sys.exit(1 if check(args.policy, args.replay_steps, args.out, args.max_qpos_err, args.warn_pix) else 0)
     else:

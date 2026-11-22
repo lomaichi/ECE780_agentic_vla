@@ -51,185 +51,33 @@ PRIVILEGED (training only): the object mask comes from MuJoCo's segmentation ren
 segmentation model of pixel_Q_RL.md sec. 2), and reward / termination read the sim state through
 fa_core.predicates (as pixel_Q_RL.md "Reward source" allows). Depth and camera geometry are what a
 test-time agent has (fa_core.camera). The Q-net input itself is RGB-D + mask + proprio only.
+
+Start states, geometry, the pi0 client and the env base class (LiberoScene) live in ../shared/scene.py
+(shared with V2) and are re-exported here under their V1 names.
 """
 
-import json
 import pathlib
-import re
 import sys
 from collections import deque
 
 import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
-FAP = HERE.parents[1]                      # failure_agent_prototype/
-if str(FAP) not in sys.path:
-    sys.path.insert(0, str(FAP))
+for _p in (HERE.parent, HERE.parents[2]):  # pixel_Q/ (the shared package), failure_agent_prototype/ (fa_core)
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 from fa_core import camera, common, motion, predicates as P  # noqa: E402
+from shared.scene import (  # noqa: E402
+    DEFAULT_TASKS, DROP_M, WORKSPACE_M, WRIST_CAMERA, IneligibleStart, LiberoScene, ResetFailed, approach_tilt_deg,
+    is_round_rim, library_starts, mask_box_centre_top, object_geom_ids, pixels_to_world, ray_at_height, rotz,
+    segmentation_geom_ids, task_starts, top_down_quat, video_frame)
 
 from qnet import CELL, CROP, GRID, PROPRIO_DIM, ROT_DEG, decode_action  # noqa: E402
 
-ROUND_RIM = ("bowl", "mug", "cup")
-# pixel_Q_RL.md appendix: LIBERO-90 training ("survey") split. The held-out split is never loaded.
-TRAIN_TASKS_90 = (9, 10, 14, 17, 19, 25, 31, 34, 37, 38, 41, 42, 49, 53, 57, 58, 59, 61, 62, 63, 64, 67, 69, 71,
-                  72, 73, 77, 78, 80, 85, 86, 87, 88, 89)
-# the bowl / mug pick-and-place tasks among them (from the recorded task language)
-DEFAULT_TASKS = ("libero_90:9,10,14,17,25,31,34,37,63,64,67,71,72,85", "libero_spatial:0-9")
+_REEXPORTED = (DEFAULT_TASKS, library_starts, task_starts)   # train_dqn.py imports these from here
 
-MJ_OBJ_GEOM = 5                 # mjtObj.mjOBJ_GEOM in MuJoCo's segmentation render
-# Irrecoverable = the object left the table or the robot's reach. A tilted or knocked-over object is NOT
-# terminal: it is one of the states the Q-map must handle.
-DROP_M = 0.15                   # object fell this far below its start height (off the table)
-WORKSPACE_M = 0.30              # object pushed this far (xy) from its start
 DEPTH_SCALE = 0.1               # m per unit of the depth channel
-WRIST_CAMERA = "robot0_eye_in_hand"   # the Q-map's view (first person); the handoff uses agentview
 WRIST_BOX = 150                 # Q-map region: a 150x150 box of the 256 px wrist image (object box ~110x100)
-HORIZON = 100000                # robosuite steps per env.reset(); the chain cap ends chains, not this
-
-
-class IneligibleStart(Exception):
-    """The start state cannot be used (not a round-rim target, held already, object not visible)."""
-
-
-class ResetFailed(Exception):
-    """This reset did not reach a usable handoff state (e.g. the handoff move knocked the object over).
-    Stochastic: skip the episode, but keep the start state."""
-
-
-# ------------------------------------------------------------------ start states -------------------
-
-def _parse_ids(text):
-    out = []
-    for part in str(text).split(","):
-        part = part.strip()
-        if "-" in part:
-            lo, hi = part.split("-")
-            out.extend(range(int(lo), int(hi) + 1))
-        elif part:
-            out.append(int(part))
-    return out
-
-
-def library_starts(policy="rl/pick"):
-    """rl/pick reset states from library.json (pre-failure states pi0 actually reached)."""
-    sr = common.tools_module("scene_restore")
-    held_out = common.held_out_tasks()
-    lib = json.loads(common.LIBRARY.read_text())
-    words = {}
-    for e in lib["entries"]:
-        for inst in e.get("instances", []):
-            m = re.match(r"pick\((\w+)\)", inst.get("subtask", ""))
-            if m and "rl_reset_step" in inst:
-                words[(inst["episode"], inst["rl_reset_step"])] = m.group(1)
-    starts, skipped = [], []
-    for rs in sr.load_reset_states(policy):
-        suite, folder = rs["episode"].split("/")
-        tid = int(re.match(r"task(\d+)", folder).group(1))
-        tag = "{}@{}".format(rs["episode"].replace("/", "_"), rs["step"])
-        if suite == "libero_90" and tid in held_out:
-            raise SystemExit("{}: libero_90 task {} is in the held-out split".format(tag, tid))
-        if suite == "libero_90" and tid not in TRAIN_TASKS_90:
-            skipped.append((tag, "libero_90 task {} is not in the pixel-Q training split".format(tid)))
-            continue
-        starts.append({"kind": "reset_state", "tag": tag, "episode": rs["episode"], "step": rs["step"],
-                       "word": words.get((rs["episode"], rs["step"]))})
-    return starts, skipped
-
-
-def task_starts(task_specs, init_states, allow_held_out=False):
-    """Task init states, e.g. task_specs=["libero_90:9,10", "libero_spatial:0-9"], init_states=[0, 1, 2].
-
-    allow_held_out: accept held-out libero_90 tasks (eval / baseline / inspect only, never training)."""
-    held_out = set() if allow_held_out else common.held_out_tasks()
-    starts = []
-    for spec in task_specs:
-        suite, ids = spec.split(":")
-        for tid in _parse_ids(ids):
-            if suite == "libero_90" and tid in held_out:
-                raise SystemExit("libero_90 task {} is in the held-out split".format(tid))
-            for k in init_states:
-                starts.append({"kind": "task_init", "tag": "{}_task{}_init{}".format(suite, tid, k), "suite": suite,
-                               "task_id": tid, "init_idx": int(k)})
-    return starts
-
-
-def is_round_rim(name):
-    return any(w in name.lower() for w in ROUND_RIM)
-
-
-# ------------------------------------------------------------------ geometry -----------------------
-
-def segmentation_geom_ids(env, size, cam=camera.CAMERA):
-    """Per-pixel MuJoCo geom id (-1 = not a geom) of the raw (not upright) render, like depth_image."""
-    sim = env.env.sim
-    try:
-        seg = sim.render(width=size, height=size, camera_name=cam, segmentation=True)
-    except TypeError as e:
-        raise RuntimeError("MjSim.render has no segmentation option in this robosuite ({}); the corrector needs "
-                           "a mask source".format(e))
-    seg = np.asarray(seg)
-    if seg.ndim == 3 and seg.shape[-1] == 2:      # robosuite: (objtype, objid) per pixel
-        return np.where(seg[..., 0] == MJ_OBJ_GEOM, seg[..., 1], -1)
-    raise RuntimeError("unexpected segmentation render shape {}".format(seg.shape))
-
-
-def object_geom_ids(env, name):
-    m = env.env.sim.model
-    obj = env.env.objects_dict[name]
-    ids = set()
-    for g in list(obj.contact_geoms) + list(obj.visual_geoms):
-        try:
-            ids.add(m.geom_name2id(g))
-        except Exception:
-            pass
-    if not ids:
-        raise IneligibleStart("no geoms found for {}".format(name))
-    return np.array(sorted(ids))
-
-
-def pixels_to_world(env, us, vs, depth, size, cam=camera.CAMERA):
-    """Vectorised fa_core.camera.unproject: upright pixels (u, v) with metric depth -> world points (..., 3)."""
-    pos, mat, fovy = camera._cam(env, cam)
-    f = 0.5 * size / np.tan(np.deg2rad(fovy) / 2)
-    c, r = size - 1 - np.asarray(us, float), size - 1 - np.asarray(vs, float)
-    d = np.asarray(depth, float)
-    pc = np.stack([(c + 0.5 - size / 2) / f * d, (r + 0.5 - size / 2) / f * d, -d], axis=-1)
-    return pos + pc @ mat.T
-
-
-def ray_at_height(env, us, vs, z, size, cam=camera.CAMERA):
-    """World points where the camera rays through upright pixels (u, v) cross the plane world-z = z."""
-    pos = camera._cam(env, cam)[0]
-    ray = pixels_to_world(env, us, vs, np.ones(np.shape(us)), size, cam) - pos     # point at unit depth - camera
-    return pos + ray * ((z - pos[2]) / ray[..., 2])[..., None]
-
-
-def video_frame(obs):
-    """Wrist view (first person, what the Q-map sees) | agentview, both upright as pi0 gets them."""
-    return np.concatenate([common.upright(obs["robot0_eye_in_hand_image"]), common.upright(obs["agentview_image"])],
-                          axis=1)
-
-
-def rotz(deg):
-    c, s = np.cos(np.radians(deg)), np.sin(np.radians(deg))
-    return np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]])
-
-
-def top_down_quat(quat, T):
-    """Same yaw as `quat`, approach axis straight down: EE z axis = world -z (robosuite Panda: the EE z
-    axis points out between the fingers; check with --mode inspect, approach_tilt_deg)."""
-    R = T.quat2mat(quat)
-    x = np.array([R[0, 0], R[1, 0], 0.0])
-    if np.linalg.norm(x) < 1e-6:                   # x axis vertical: fall back to the y axis for the yaw
-        x = np.cross(np.array([R[0, 1], R[1, 1], 0.0]), [0.0, 0.0, -1.0])
-    x /= np.linalg.norm(x)
-    z = np.array([0.0, 0.0, -1.0])
-    return T.mat2quat(np.stack([x, np.cross(z, x), z], axis=1))
-
-
-def approach_tilt_deg(quat, T):
-    """Angle between the EE approach axis (z) and straight down."""
-    return float(np.degrees(np.arccos(np.clip(-T.quat2mat(quat)[2, 2], -1, 1))))
 
 
 def proprio_features(obs, center, T):
@@ -244,102 +92,13 @@ def proprio_features(obs, center, T):
 
 # ------------------------------------------------------------------ env ----------------------------
 
-def _patient_client_cls():
-    from openpi_client import msgpack_numpy, websocket_client_policy
-    import websockets.sync.client
+class PickCorrectorEnv(LiberoScene):
+    """LiberoScene (shared/scene.py) gives _pi0, _ensure_env, _resolve_target, _obj_up, obj_tilt_deg, close."""
 
-    class PatientClient(websocket_client_policy.WebsocketClientPolicy):
-        """WebsocketClientPolicy without the 10 s websocket open timeout. The openpi server runs
-        policy.infer() inside its asyncio loop, so while one worker's request runs (the first one
-        JIT-compiles for a minute or more) no other handshake is answered. The stock client then gives
-        up after 10 s and drops the socket, which the server logs as an "opening handshake failed ...
-        no close frame received or sent" traceback per attempt. Waiting instead is silent."""
-
-        def _wait_for_server(self):
-            import time
-
-            while True:
-                try:
-                    conn = websockets.sync.client.connect(self._uri, compression=None, max_size=None,
-                                                          open_timeout=None)
-                    return conn, msgpack_numpy.unpackb(conn.recv())
-                except ConnectionRefusedError:
-                    time.sleep(5)
-
-    return PatientClient
-
-
-def _PatientClient(host, port):
-    return _patient_client_cls()(host, port)
-
-
-class PickCorrectorEnv(object):
     def __init__(self, cfg, client=None):
         """cfg: timeout_s, handoff_dz, handoff_jitter_cm, min_cell_frac, min_mask_px, env_seed, seed, host, port."""
-        self.cfg = cfg
-        self.client = client
-        self.env, self._env_key, self._trace_key, self._trace = None, None, None, None
+        super(PickCorrectorEnv, self).__init__(cfg, client)
         self.frames = None
-        self.rng = np.random.default_rng(cfg.get("seed", 0) + cfg.get("worker_id", 0))
-        from robosuite.utils import transform_utils as T
-
-        self.T = T
-
-    # ---- setup
-    def _pi0(self):
-        if self.client is None:
-            import urllib.request
-
-            from openpi_client import websocket_client_policy
-
-            # the client below waits forever and silently on a refused connection: say so once.
-            # Probe the server's /healthz over HTTP: a bare TCP connect+close makes the websockets
-            # server log an "opening handshake failed ... did not receive a valid HTTP request" traceback
-            try:
-                urllib.request.urlopen("http://{}:{}/healthz".format(self.cfg["host"], self.cfg["port"]), timeout=2).close()
-            except OSError as e:
-                print("[worker {}] pi0 server not reachable at {}:{} ({}); waiting for it (start ./serve_pi0.sh)".format(
-                    self.cfg.get("worker_id", 0), self.cfg["host"], self.cfg["port"], e), flush=True)
-            self.client = _PatientClient(self.cfg["host"], self.cfg["port"])
-        return self.client
-
-    def _ensure_env(self, start):
-        trace_dir = None
-        if start["kind"] == "reset_state":
-            sr = common.tools_module("scene_restore")
-            meta, entry, trace_dir = sr.episode_info(start["episode"])
-            key = (meta["task_suite"], entry["task_id"], meta["env_seed"], meta["camera_resolution"])
-        else:
-            key = (start["suite"], start["task_id"], self.cfg.get("env_seed", 7), common.ENV_RESOLUTION)
-        if key != self._env_key:
-            if self.env is not None:
-                self.env.close()
-            self.env, self.task, _ = common.make_env(key[0], key[1], key[2], key[3])
-            # one env.reset() serves a whole chain (up to max_chain x (re-handoff + 100 steps)), which can pass
-            # robosuite's default horizon of 1000 steps ("executing action in terminated episode")
-            self.env.env.horizon = HORIZON
-            self._env_key, self.res = key, key[3]
-        if trace_dir is not None and self._trace_key != start["episode"]:
-            sr = common.tools_module("scene_restore")
-            self._trace, self._trace_key = sr.load_trace(trace_dir), start["episode"]
-
-    def _resolve_target(self, start, ee):
-        if start["kind"] == "task_init":
-            picks = [c for c in P.goal_checks(self.env) if c.kind == "pick"]
-            if not picks:
-                raise IneligibleStart("task goal has no pick-and-place of a movable object")
-            return picks[0].obj
-        word = start.get("word")
-        if not word:
-            raise IneligibleStart("no pick(...) label in library.json for this reset state")
-        names = P.object_names(self.env)
-        toks = P._tokens(word)
-        score = {n: len(toks & P._tokens(n)) for n in names}
-        best = max(score.values()) if score else 0
-        if best == 0:
-            raise IneligibleStart("no sim object matches {!r}".format(word))
-        cands = [n for n in names if score[n] == best]
-        return min(cands, key=lambda n: np.linalg.norm(P.obj_pos(self.env, n) - ee))   # tie: the one pi0 went for
 
     def reset(self, start, record=False):
         """Restore an (upright) start, HANDOFF move, observe. Returns the first episode's observation."""
@@ -378,14 +137,6 @@ class PickCorrectorEnv(object):
             raise ResetFailed("{} not visible at the handoff pose".format(self.obj))
         return o
 
-    def _obj_up(self):
-        bid = P.body_id(self.env, self.obj)
-        return np.array(self.env.env.sim.data.body_xmat[bid]).reshape(3, 3)[:, 2].copy()
-
-    def obj_tilt_deg(self):
-        """Object tilt from its pose at the start (upright): 0 standing, ~90 on its side."""
-        return float(np.degrees(np.arccos(np.clip(self._obj_up() @ self.up0, -1, 1))))
-
     # ---- observation
     def _render(self, cam=camera.CAMERA, size=None):
         """(upright rgb, upright metric depth, upright object mask) of the current state seen by `cam` at
@@ -418,12 +169,8 @@ class PickCorrectorEnv(object):
         _, depth, mask_full = self._render()
         if mask_full.sum() < self.cfg.get("min_mask_px", 20):
             return True, {"error": "object not visible"}
-        vs, us = np.nonzero(mask_full)
-        pts = pixels_to_world(self.env, us, vs, depth[vs, us], self.res)
-        uc, vc = 0.5 * (us.min() + us.max()), 0.5 * (vs.min() + vs.max())
-        centre = ray_at_height(self.env, uc, vc, float(np.median(pts[:, 2])), self.res)
+        centre, top = mask_box_centre_top(self.env, depth, mask_full, self.res)
         jit = self.rng.uniform(-1, 1, 2) * self.cfg.get("handoff_jitter_cm", 0.0) / 100.0
-        top = float(np.percentile(pts[:, 2], 95))
         target = np.r_[centre[:2] + jit, top + self.cfg.get("handoff_dz", 0.07)]
         q_now = np.array(self.obs["robot0_eef_quat"], copy=True)
         quat = top_down_quat(q_now, self.T)
@@ -604,8 +351,3 @@ class PickCorrectorEnv(object):
         nxt, end = (None, "success") if success else self._next_episode()
         return nxt, float(success), {"pi0_steps": n_pi0, "success": success, "chain_end": end,
                                      "obj_tilt_deg": self._frame["tilt_deg"], "total_steps": self.steps}
-
-    def close(self):
-        if self.env is not None:
-            self.env.close()
-            self.env = None

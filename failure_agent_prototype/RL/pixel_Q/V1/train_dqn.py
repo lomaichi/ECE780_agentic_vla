@@ -34,7 +34,6 @@ train / eval records (plus eval Q-maps and videos) also go to Weights & Biases (
 
 import argparse
 import json
-import multiprocessing as mp
 import os
 import pathlib
 import sys
@@ -43,11 +42,14 @@ import time
 import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
-if str(HERE) not in sys.path:
-    sys.path.insert(0, str(HERE))
+for _p in (HERE.parent, HERE):             # pixel_Q/ (the shared package), then this folder (V1/) first
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 import qnet as Q  # noqa: E402
 from corrector_env import DEFAULT_TASKS, IneligibleStart, ResetFailed  # noqa: E402  (imports LIBERO lazily)
 from replay import ReplayBuffer  # noqa: E402
+from shared import runlog  # noqa: E402
+from shared.runlog import log_jsonl, wb_finish, wb_log  # noqa: E402
 
 FPS = 20
 
@@ -121,23 +123,9 @@ def run_chain(job):
     return out
 
 
-class Actors(object):
-    """workers=0 runs episodes in this process (toy env, debugging); otherwise a spawn pool."""
-
-    def __init__(self, cfg, workers):
-        self.pool = None
-        if workers > 0:
-            self.pool = mp.get_context("spawn").Pool(workers, initializer=_init_worker, initargs=(cfg,))
-
-    def run(self, jobs):
-        if self.pool is None:
-            return [run_chain(j) for j in jobs]
-        return list(self.pool.imap_unordered(run_chain, jobs, chunksize=1))
-
-    def close(self):
-        if self.pool is not None:
-            self.pool.close()
-            self.pool.join()
+def Actors(cfg, workers):
+    """workers=0 runs episodes in this process (toy env, debugging); otherwise a spawn pool (shared/runlog.py)."""
+    return runlog.ActorPool(run_chain, workers, _init_worker, (cfg,))
 
 
 def _init_worker(cfg):
@@ -218,11 +206,6 @@ def epsilon(a, episodes):
     return a.eps_start + f * (a.eps_end - a.eps_start)
 
 
-def log_jsonl(path, rec):
-    with open(path, "a") as f:
-        f.write(json.dumps(rec) + "\n")
-
-
 EPISODE_KEYS = ("k", "row", "col", "yaw_deg", "obj_tilt_deg", "success", "timeout", "chain_end", "move_steps",
                 "move_reached", "move_err_m", "pi0_steps", "episode_steps", "handoff", "total_steps", "greedy",
                 "q_sa", "q_max", "on_rim", "facing", "rot_ok")
@@ -266,59 +249,12 @@ def save_media(res, out, prefix):
 
 
 # ------------------------------------------------------------------ wandb --------------------------
-
-_WB = None   # the wandb module while a run is open (main process only); None = W&B logging off
-
+# wb_log / wb_finish / runlog.wb() come from shared/runlog.py; x-axis = training episodes.
 
 def wb_init(a, out):
     """Open a W&B run when --wandb-project is set. Training runs keep their id in OUT_DIR/wandb_id.txt, so
     --resume continues the same W&B run; eval / baseline runs are separate runs in the same group."""
-    global _WB
-    if not a.wandb_project:
-        return
-    import wandb
-
-    run_id, id_file = None, out / "wandb_id.txt"
-    if a.mode == "train":
-        run_id = id_file.read_text().strip() if a.resume and id_file.exists() else wandb.util.generate_id()
-        id_file.write_text(run_id)
-    name = a.wandb_name or (out.name if a.mode == "train" else "{}-{}".format(out.name, a.mode))
-    wandb.init(project=a.wandb_project, entity=a.wandb_entity, name=name, group=out.name, job_type=a.mode,
-               tags=a.wandb_tags, config=vars(a), dir=str(out), id=run_id, resume="allow" if run_id else None,
-               mode=a.wandb_mode)
-    wandb.define_metric("episodes")
-    for prefix in ("train/*", "eval/*"):
-        wandb.define_metric(prefix, step_metric="episodes")
-    wandb.define_metric("eval/episode_success", step_metric="episodes", summary="max")
-    _WB = wandb
-
-
-def wb_log(rec, prefix, episodes=None, extra=None):
-    """Log the numeric fields of rec (nested dicts flattened to prefix/key/sub) plus extra, at x = episodes."""
-    if _WB is None:
-        return
-    d = {}
-
-    def flat(p, v):
-        if isinstance(v, dict):
-            for k, x in v.items():
-                flat("{}/{}".format(p, k), x)
-        elif isinstance(v, (int, float, np.integer, np.floating)) and not isinstance(v, bool):
-            d[p] = float(v)
-
-    for k, v in rec.items():
-        flat("{}/{}".format(prefix, k), v)
-    d.update(extra or {})
-    if episodes is not None:
-        d["episodes"] = episodes
-    _WB.log(d)
-
-
-def wb_finish():
-    global _WB
-    if _WB is not None:
-        _WB.finish()
-        _WB = None
+    runlog.wb_init(a, out, step_metric="episodes", summary_max=("eval/episode_success",))
 
 
 def save_ckpt(path, net, target, opt, state):
@@ -355,15 +291,16 @@ def evaluate(a, actors, cfg, net, starts, out, label, episodes=None):
             per.setdefault(r["tag"], []).extend(e["success"] for e in r["episodes"])
     rec["per_start_episode_success"] = {k: float(np.mean(v)) for k, v in per.items()}
     log_jsonl(out / "eval.jsonl", rec)
-    if _WB is not None:
+    WB = runlog.wb()
+    if WB is not None:
         # one key per start: wandb 0.13 queries the server for lists of images, even offline
         extra = {}
         for r, p in media:
             cap = "{} success={}".format(r["tag"], r.get("success"))
             if "qmap" in p:
-                extra["eval/qmap/" + r["tag"]] = _WB.Image(str(p["qmap"]), caption=cap)
+                extra["eval/qmap/" + r["tag"]] = WB.Image(str(p["qmap"]), caption=cap)
             if "video" in p:
-                extra["eval/video/" + r["tag"]] = _WB.Video(str(p["video"]), caption=cap, fps=FPS, format="mp4")
+                extra["eval/video/" + r["tag"]] = WB.Video(str(p["video"]), caption=cap, fps=FPS, format="mp4")
         wb_log(rec, "eval", episodes, extra)      # per-start rates land in eval/per_start_episode_success/<tag>
     print("[{}] {}: episode success {:.3f} ({} episodes), first attempt {:.3f}, chain {:.3f} ({} chains)".format(
         label, mode, rec["episode_success"], rec["n_episodes"], rec["first_success"], rec["chain_success"],
@@ -495,10 +432,11 @@ def train(a, out):
                 L = np.array(losses)
                 rec.update(loss=float(L[:, 0].mean()), q_sa=float(L[:, 1].mean()), target=float(L[:, 2].mean()))
             log_jsonl(out / "train.jsonl", rec)
-            if _WB is not None:
+            WB = runlog.wb()
+            if WB is not None:
                 tilts = rec["decision_tilt_deg"]
                 wb_log(rec, "train", state["episodes"],
-                       {"train/decision_tilt_hist": _WB.Histogram(tilts)} if tilts else None)
+                       {"train/decision_tilt_hist": WB.Histogram(tilts)} if tilts else None)
             if state["rounds"] % a.print_every == 0:
                 print("round {round} ep {episodes} chains {chains} grad {grad_steps} eps {eps} loss {l} q {q} "
                       "buf {b} success(episodes in buffer) {s:.3f} {elapsed_min} min".format(

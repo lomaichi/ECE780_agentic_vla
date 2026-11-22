@@ -1,0 +1,196 @@
+   Building openpi-client @ file:///opt/openpi/packages/openpi-client
+      Built openpi-client @ file:///opt/openpi/packages/openpi-client
+Uninstalled 1 package in 0.22ms
+Installed 1 package in 0.34ms
+INFO:root:Loading model...
+INFO:2026-11-21 20:59:18,145:jax._src.xla_bridge:925: Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:jax._src.xla_bridge:Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:2026-11-21 20:59:18,146:jax._src.xla_bridge:925: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+INFO:jax._src.xla_bridge:Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+INFO:absl:orbax-checkpoint version: 0.11.13
+INFO:absl:Created BasePyTreeCheckpointHandler: use_ocdbt=True, use_zarr3=False, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x77855c25d610>
+INFO:absl:Restoring checkpoint from /home/DockerShared/.cache/openpi/openpi-assets/checkpoints/pi0_libero/params.
+INFO:absl:[thread=MainThread] Failed to get flag value for EXPERIMENTAL_ORBAX_USE_DISTRIBUTED_PROCESS_ID.
+INFO:absl:[process=0][thread=MainThread] No metadata found for any process_index, checkpoint_dir=/home/DockerShared/.cache/openpi/openpi-assets/checkpoints/pi0_libero/params. time elapsed=0.00020384788513183594 seconds. If the checkpoint does not contain jax.Array then it is expected. If checkpoint contains jax.Array then it should lead to an error eventually; if no error is raised then it is a bug.
+INFO:absl:[process=0] /jax/checkpoint/read/bytes_per_sec: 1.9 GiB/s (total bytes: 6.0 GiB) (time elapsed: 3 seconds) (per-host)
+INFO:absl:Finished restoring checkpoint in 3.18 seconds from /home/DockerShared/.cache/openpi/openpi-assets/checkpoints/pi0_libero/params.
+INFO:root:Norm stats not found in /opt/openpi/assets/pi0_libero/physical-intelligence/libero, skipping.
+INFO:root:Loaded norm stats from /home/DockerShared/.cache/openpi/openpi-assets/checkpoints/pi0_libero/assets/physical-intelligence/libero
+INFO:root:Creating server (host: spinda, ip: 127.0.1.1)
+INFO:websockets.server:server listening on 0.0.0.0:8000
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 34626) opened
+2026-11-21 21:00:02.300907: E external/xla/xla/service/slow_operation_alarm.cc:73] Trying algorithm eng11{k2=4,k3=0} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+2026-11-21 21:00:04.266491: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2.965674987s
+Trying algorithm eng11{k2=4,k3=0} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+2026-11-21 21:00:05.266623: E external/xla/xla/service/slow_operation_alarm.cc:73] Trying algorithm eng35{k2=4,k3=0} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+2026-11-21 21:00:12.173398: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 7.906833226s
+Trying algorithm eng35{k2=4,k3=0} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+2026-11-21 21:00:13.176338: E external/xla/xla/service/slow_operation_alarm.cc:73] Trying algorithm eng0{} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+2026-11-21 21:00:15.669373: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 3.493099391s
+Trying algorithm eng0{} for conv %cudnn-conv-bias-activation.9 = (f32[1,16,16,1152]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.9805, %bitcast.10042, %bitcast.10044), window={size=14x14 stride=14x14}, dim_labels=b01f_o01i->b01f, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(fun)/jit(main)/_Module/embedding/conv_general_dilated" source_file="/opt/openpi/.venv/lib/python3.11/site-packages/flax/linen/linear.py" source_line=658}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false} is taking a while...
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 34642) opened
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/opt/openpi/.venv/lib/python3.11/site-packages/websockets/asyncio/server.py", line 356, in conn_handler
+    await connection.handshake(
+  File "/opt/openpi/.venv/lib/python3.11/site-packages/websockets/asyncio/server.py", line 142, in handshake
+    async with self.send_context(expected_state=CONNECTING):
+  File "/opt/uv-python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/openpi/.venv/lib/python3.11/site-packages/websockets/asyncio/connection.py", line 957, in send_context
+    raise self.protocol.close_exc from original_exc
+websockets.exceptions.ConnectionClosedError: no close frame received or sent
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 34642) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 34626) closed
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40388) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40398) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40414) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40422) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40458) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40462) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45512) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45520) opened
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40388) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40458) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45512) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40414) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40398) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40462) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40422) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45520) closed
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60446) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60466) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60482) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60522) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60538) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60580) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60582) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60592) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60606) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32976) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32986) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32998) opened
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60446) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32986) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60466) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60606) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60582) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60580) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60482) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60522) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60538) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32976) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 60592) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 32998) closed
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59436) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59448) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59478) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59482) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59486) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59584) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59582) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59612) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59614) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59628) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59630) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59632) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45352) opened
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40178) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40186) opened
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40192) opened
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40186) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40178) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 40192) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 45352) closed
+INFO:websockets.server:connection rejected (200 OK)
+INFO:websockets.server:connection open
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 47036) opened
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 47036) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59448) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59612) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59628) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59632) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59614) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59482) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59584) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59486) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59582) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59630) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59478) closed
+INFO:openpi.serving.websocket_policy_server:Connection from ('127.0.0.1', 59436) closed

@@ -105,7 +105,7 @@ def run_job(job):
         seq = list(states) + [final]
         for k, s in enumerate(seq):
             if k:
-                P.set_state(env, s)
+                P.set_state(env, s)1-3 fps
             for c in checks:
                 c.update(env, k)
         rows = []
