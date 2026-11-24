@@ -1,0 +1,51 @@
+multiprocessing.pool.RemoteTraceback:
+"""
+Traceback (most recent call last):
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 84, in run_job
+    res = E.collect_rollout(_W["env"], job["start"], job["rc"], rng, net=net, video_path=job.get("video"))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/episodes.py", line 273, in collect_rollout
+    last_v = vpred(obs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/episodes.py", line 188, in vpred
+    return vnet.predict(net, obs) if (net is not None and obs is not None) else None
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 134, in predict
+    v = net(*obs_to_tensor([obs], device))[0].cpu().numpy()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 125, in obs_to_tensor
+    return batch_to_tensor(*(st(k) for k in OBS_FIELDS))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 114, in batch_to_tensor
+    rgb = rgb.float().permute(0, 3, 1, 2) / 255.0 - 0.5
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "train.py", line 420, in main
+    results = pool.run(jobs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 868, in next
+    raise value
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 514, in <module>
+    main()
+  File "train.py", line 487, in main
+    pool.close()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 105, in close
+    self.pool.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 662, in join
+    self._worker_handler.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1011, in join
+    self._wait_for_tstate_lock()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1027, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt

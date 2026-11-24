@@ -13,10 +13,11 @@ plan_the_algo.txt sec. 6-7. Rounds, as in V2:
 Stops when both sample targets are reached. Then metrics.json / reliability.png / curves.png from the best v.pt.
 
 Outputs (--out-dir): data/shard_*.npz, config.json, v.pt, metrics.json, reliability.png, curves.png,
-videos/*.mp4, wandb/ (with --wandb-project). --resume reloads the shards and v.pt.
+attention.png (--arch attn), videos/*.mp4, wandb/ (with --wandb-project). --resume reloads the shards and v.pt.
 
-Runs in the LIBERO venv; needs the pi0 server (../V2/qlearning_code_instruction_V2.md sec. 3):
-  PY=/opt/openpi/examples/libero/.venv/bin/python
+Runs in the V3 venv (V3/.venv: py3.10, torch 2.7 cu128, so the learner and the video V_est run on the RTX 5090);
+needs the pi0 server (Vlearning_code_instruction.md sec. 3):
+  PY=.venv/bin/python
   $PY train.py --out-dir runs/v3 --wandb-project pixelQ_V3
 """
 
@@ -28,6 +29,10 @@ import sys
 import time
 
 import numpy as np
+
+# LIBERO's get_task_init_states torch.load()s its own numpy init-state files; torch >= 2.6 defaults to
+# weights_only=True and refuses them. Set before torch is imported; the spawned actors inherit it.
+os.environ.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")
 
 HERE = pathlib.Path(__file__).resolve().parent
 for _p in (str(HERE), str(HERE.parent)):
@@ -71,9 +76,9 @@ def run_job(job):
     if job.get("video") and job.get("weights") is not None:
         import torch
 
-        net = vnet.build_vnet("cnn", job["width"], job["heads"])
+        net = vnet.build_vnet(job["arch"], job["width"], job["heads"])
         net.load_state_dict({k: torch.from_numpy(v) for k, v in job["weights"].items()})
-        net.eval()
+        net.to(job["device"]).eval()
     rng = np.random.default_rng(job["seed"])
     try:
         res = E.collect_rollout(_W["env"], job["start"], job["rc"], rng, net=net, video_path=job.get("video"))
@@ -120,7 +125,7 @@ class Learner(object):
         self.torch, self.a = torch, a
         torch.manual_seed(0)
         self.dev = torch.device(a.device)
-        self.net = vnet.build_vnet("cnn", a.width, a.heads).to(self.dev)
+        self.net = vnet.build_vnet(a.arch, a.width, a.heads).to(self.dev)
         self.opt = torch.optim.AdamW(self.net.parameters(), lr=a.lr, weight_decay=a.weight_decay)
         self.rng = np.random.default_rng(0)
         self.steps, self.loss_ema = 0, None
@@ -156,11 +161,16 @@ class Learner(object):
                 out.append(self.net(x, p).cpu().numpy())
         return np.concatenate(out) if out else np.zeros((0, self.a.heads))
 
+    def predict_batch(self, b):
+        self.net.eval()
+        with self.torch.no_grad():
+            return self.net(*self._tensors(b)).cpu().numpy()
+
     def weights(self):
         return {k: v.detach().cpu().numpy() for k, v in self.net.state_dict().items()}
 
     def save(self, path, meta):
-        vnet.save_ckpt(path, self.net, dict(meta, arch="cnn", width=self.a.width, heads=self.a.heads))
+        vnet.save_ckpt(path, self.net, dict(meta, arch=self.a.arch, width=self.a.width, heads=self.a.heads))
 
     def load(self, path):
         net, _ = vnet.load_ckpt(path, self.a.device)
@@ -222,6 +232,49 @@ def save_plots(out, mu, y, hist):
     return fig
 
 
+def save_attention(out, learner, ev, n=4):
+    """attention.png: rgb + height of n eval samples with the highest and n with the lowest label, each with the
+    attention maps (mean over the maps, and the sharpest one) upsampled onto the 88x88 map."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    T = learner.torch
+    y, _ = ev.arrays()
+    order = np.argsort(y)
+    idx = list(order[::-1][:n]) + list(order[:n])
+    b = ev.batch(idx)
+    x, _ = learner._tensors(b)
+    learner.net.eval()
+    with T.no_grad():
+        att = learner.net.attention(x)                                          # (B, m, g, g)
+        att = T.nn.functional.interpolate(att, size=b["height"].shape[1:], mode="nearest").cpu().numpy()
+        v = learner.predict_batch(b)
+    fig, axes = plt.subplots(len(idx), 4, figsize=(10, 2.5 * len(idx)))
+    for r, i in enumerate(idx):
+        a = att[r]
+        sharp = a[int(np.argmax(a.reshape(a.shape[0], -1).max(1)))]
+        hgt = b["height"][r].astype(np.float32)
+        axes[r, 0].imshow(b["rgb"][r])
+        axes[r, 0].set_ylabel("y {:.2f}  V {:.2f}".format(y[i], v[r].mean()), fontsize=8)
+        axes[r, 1].imshow(hgt, cmap="viridis")
+        for c, (m, t) in enumerate(((a.mean(0), "mean attention"), (sharp, "sharpest map"))):
+            axes[r, 2 + c].imshow(hgt, cmap="gray")
+            axes[r, 2 + c].imshow(m, cmap="magma", alpha=0.6)
+            if r == 0:
+                axes[r, 2 + c].set_title(t, fontsize=8)
+        if r == 0:
+            axes[r, 0].set_title("rgb (top {} / bottom {} labels)".format(n, n), fontsize=8)
+            axes[r, 1].set_title("height", fontsize=8)
+        for ax in axes[r]:
+            ax.set_xticks([])
+            ax.set_yticks([])
+    fig.tight_layout()
+    fig.savefig(out / "attention.png", dpi=100)
+    plt.close(fig)
+
+
 # ------------------------------------------------------------------ main ---------------------------
 
 def parse():
@@ -234,21 +287,24 @@ def parse():
     p.add_argument("--train-inits", default="0-39")
     p.add_argument("--eval-inits", default="0-39")
     p.add_argument("--tick-steps", type=int, default=4, help="control steps per tick (4 = 5 fps)")
+    p.add_argument("--gate-max-above-cm", type=float, default=10.0,
+                   help="gate closed while the grasp point is more than this far above the target's top (<0 = off)")
     p.add_argument("--p-select", type=float, default=0.5, help="chance a gated tick is selected for branching")
-    p.add_argument("--n-perturb", type=int, default=5)
-    p.add_argument("--pos-cm", type=float, default=1.5, help="xy offset +- (cm)")
-    p.add_argument("--dz-cm", type=float, nargs=2, default=[-0.5, 1.5], help="z offset range (cm)")
+    p.add_argument("--n-perturb", type=int, default=8)
+    p.add_argument("--pos-cm", type=float, default=3., help="xy offset +- (cm)")
+    p.add_argument("--dz-cm", type=float, nargs=2, default=[-1., 2.], help="z offset range (cm)")
     p.add_argument("--rot-deg", type=float, default=10.0, help="+- about each gripper axis (deg)")
-    p.add_argument("--move-cap", type=int, default=30, help="max control steps of the perturbation move")
-    p.add_argument("--h-max-s", type=float, default=3.0, help="episode cap / label window H (s)")
-    p.add_argument("--target-samples", type=int, default=10000, help="kept training-task samples (train + val)")
-    p.add_argument("--eval-target-samples", type=int, default=4300, help="kept eval-task samples")
+    p.add_argument("--move-cap", type=int, default=40, help="max control steps of the perturbation move")
+    p.add_argument("--h-max-s", type=float, default=5.0, help="episode cap / label window H (s)")
+    p.add_argument("--target-samples", type=int, default=15000, help="kept training-task samples (train + val)")
+    p.add_argument("--eval-target-samples", type=int, default=6000, help="kept eval-task samples")
     p.add_argument("--workers", type=int, default=6)
     p.add_argument("--hl", default="privileged", choices=["privileged", "none"])
-    p.add_argument("--video-every", type=int, default=50, help="record every n-th training rollout (0 = never)")
+    p.add_argument("--video-every", type=int, default=10, help="record every n-th training rollout (0 = never)")
     # learner
     p.add_argument("--gamma", type=float, default=0.85, help="time discount per second of the label")
     p.add_argument("--natural-weight", type=float, default=1.0, help="loss weight of natural vs perturbed samples")
+    p.add_argument("--arch", default="attn", choices=["attn", "cnn"], help="V network (vnet.py)")
     p.add_argument("--width", type=int, default=32)
     p.add_argument("--heads", type=int, default=5)
     p.add_argument("--bootstrap-p", type=float, default=0.8)
@@ -258,12 +314,12 @@ def parse():
     p.add_argument("--utd", type=float, default=0.5, help="gradient steps per new training sample")
     p.add_argument("--warmup", type=int, default=300, help="training samples before the first update")
     p.add_argument("--val-frac", type=float, default=0.15, help="share of training (task, init) tags kept for val")
-    p.add_argument("--eval-every", type=int, default=50, help="rollouts between val / test evaluations")
-    p.add_argument("--device", default="cpu")
+    p.add_argument("--eval-every", type=int, default=20, help="rollouts between val / test evaluations")
+    p.add_argument("--device", default="cuda")
     # infra
     p.add_argument("--host", default="0.0.0.0")
     p.add_argument("--port", type=int, default=8000)
-    p.add_argument("--wandb-project", default=None)
+    p.add_argument("--wandb-project", default="pixelQ_V3_new")
     p.add_argument("--wandb-entity", default=None)
     p.add_argument("--wandb-name", default=None)
     p.add_argument("--wandb-mode", default="online")
@@ -285,7 +341,8 @@ def main():
     h_steps = int(round(a.h_max_s * CTRL_HZ))
     rc = {"tick_steps": a.tick_steps, "p_select": a.p_select, "n_perturb": a.n_perturb, "pos_cm": a.pos_cm,
           "dz_cm": a.dz_cm, "rot_deg": a.rot_deg, "move_cap": a.move_cap, "h_steps": h_steps, "gamma": a.gamma}
-    cfg = E.env_cfg(a.hl, a.host, a.port)
+    cfg = E.env_cfg(a.hl, a.host, a.port,
+                    gate_max_above_m=a.gate_max_above_cm / 100.0 if a.gate_max_above_cm >= 0 else None)
 
     train_starts = SC.task_starts(a.tasks, SC.parse_ids(a.train_inits))                       # refuses held-out
     eval_starts = SC.task_starts(a.eval_tasks, SC.parse_ids(a.eval_inits), allow_held_out=True)
@@ -318,7 +375,7 @@ def main():
             learner.load(out / "v.pt")
         print("resumed: {} samples from {} shards, {} rollouts".format(len(rows), n_shards, n_rollouts), flush=True)
 
-    runlog.wb_init(a, out, step_metric="rollouts")
+    runlog.wb_init(a, out, step_metric="rollouts", prefixes=("collect/*", "train/*", "test/*", "final/*"))
     pool = runlog.ActorPool(run_job, a.workers, _init_worker, (cfg,))
     cycles = {"train": [], "eval": []}
 
@@ -358,7 +415,8 @@ def main():
                         video = str(out / "videos" / "rollout{:05d}_{}.mp4".format(n_rollouts + len(jobs), s["tag"]))
                 jobs.append({"id": n_rollouts + len(jobs), "start": s, "kind": kind, "rc": rc, "cfg": cfg,
                              "seed": 7919 * (n_rollouts + len(jobs) + 1), "video": video,
-                             "weights": learner.weights() if video else None, "width": a.width, "heads": a.heads})
+                             "weights": learner.weights() if video else None, "arch": a.arch, "width": a.width,
+                             "heads": a.heads, "device": a.device})
             results = pool.run(jobs)
             n_new_train = 0
             for res in sorted(results, key=lambda r: r["job"]):
@@ -440,9 +498,13 @@ def main():
             {"best_val_mse": best_val, "rollouts": n_rollouts, "samples": {k: len(v) for k, v in sets.items()},
              "test": res, "test_calibration": calibration(mu, y, y > 0)}, indent=2))
         save_plots(out, mu, y, hist)
+        if a.arch == "attn":
+            save_attention(out, learner, sets["eval"])
         WB = runlog.wb()
         if WB is not None:
             WB.log({"rollouts": n_rollouts, "final/reliability": WB.Image(str(out / "reliability.png"))})
+            if a.arch == "attn":
+                WB.log({"rollouts": n_rollouts, "final/attention": WB.Image(str(out / "attention.png"))})
             runlog.wb_log(res, "final", step=n_rollouts)
         print("final (best v.pt) on eval tasks: {}".format(res), flush=True)
     runlog.wb_finish()

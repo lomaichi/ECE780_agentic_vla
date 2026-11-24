@@ -1,5 +1,9 @@
 # Pixel-Q V3: V-learning code instructions
 
+> For new runs use **[../V4](../V4/Vlearning_code_instruction.md)**. It collects without the online learner
+> (`collect.py`) and trains V offline on the GPU (`train_v.py`). V3 shards were labelled with the old pad-only
+> grasp check.
+
 How to run the V3 value-learning code and how to read what it produces. Design decisions are in
 [plan_the_algo.txt](plan_the_algo.txt) (sections 6-7); the discussion behind them is in `../V2/run_recap.txt`.
 
@@ -53,21 +57,22 @@ samples stay at about 3/7 of all samples (7:3 train : eval tasks) until `--eval-
 | `train.py` | **Entry point**: actors + online learner, evaluation, wandb, outputs |
 | `episodes.py` | One actor rollout: ticks, gate, selection, natural + perturbed episodes, video rendering |
 | `data_io.py` | Sample shards (`data/shard_*.npz`), labels, train/val split |
-| `vnet.py` | V network (`cnn`; `proprio` baseline), checkpoint save / load |
+| `vnet.py` | V network (`attn` attention pooling, default; `cnn` mean + max pooling; `proprio` baseline), checkpoint save / load |
 | `train_v.py` | Offline refit of V from a run's shards (other H ≤ 3 s, gamma, weights, epochs) |
 
 V3 uses V2's LIBERO backend unchanged (`../V2/libero_env.py`, `heightmap.py`, `hl.py`, `qnet.py` constants).
 
 ## 3. Setup
 
-- **Python**:
-  - `train.py`: the LIBERO venv `/opt/openpi/examples/libero/.venv/bin/python`. Its torch can't use the RTX 5090,
-    so the learner runs on CPU (`--device cpu`, default).
-  - `train_v.py`: `/opt/simplevla/.venv/bin/python` with `--device cuda` (torch 2.7, GPU).
-- **pi0 server** (needed by `train.py`; one server serves all actors; ready in ~1 min):
+- **Python**: the V3 venv `V3/.venv` for both `train.py` and `train_v.py` (py3.10, torch 2.7.1 cu128, robosuite
+  1.4.1, mujoco 3.2.3, LIBERO + openpi-client editable from /opt/openpi). Everything torch runs on the RTX 5090
+  (`--device cuda`, default): the learner, the offline refit, and the V_est in video rollouts. MuJoCo physics is
+  CPU-only; rendering is EGL (GPU). Run with `MUJOCO_GL=egl`.
+- **pi0 server** (needed by `train.py`; one server serves all actors; ready in ~1 min). Cap JAX at 60% of the GPU
+  (default preallocation is 75%) so the learner and the actors' CUDA contexts fit next to it:
 
 ```bash
-cd /opt/openpi && OPENPI_DATA_HOME=/home/DockerShared/.cache/openpi .venv/bin/python scripts/serve_policy.py \
+cd /opt/openpi && XLA_PYTHON_CLIENT_MEM_FRACTION=0.6 OPENPI_DATA_HOME=/home/DockerShared/.cache/openpi .venv/bin/python scripts/serve_policy.py \
     policy:checkpoint --policy.config=pi0_libero --policy.dir=gs://openpi-assets/checkpoints/pi0_libero
 ```
 
@@ -77,20 +82,21 @@ cd /opt/openpi && OPENPI_DATA_HOME=/home/DockerShared/.cache/openpi .venv/bin/py
 
 ```bash
 cd /home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3
-PY=/opt/openpi/examples/libero/.venv/bin/python
+PY=.venv/bin/python
+export MUJOCO_GL=egl
 
 # smoke test first: a few rollouts, every second training rollout recorded
 $PY train.py --out-dir runs/v3_smoke --target-samples 60 --eval-target-samples 30 --workers 2 --video-every 2 \
     --eval-every 2
 
 # full run (10000 training-task samples + 4300 eval-task samples)
-$PY train.py --out-dir runs/v3 --wandb-project pixelQ_V3
+$PY train.py --out-dir runs/v3_atten2 --wandb-project pixelQ_V3_atten2
 
 # continue after a crash / Ctrl-C (reloads the shards and v.pt)
 $PY train.py --out-dir runs/v3 --wandb-project pixelQ_V3 --resume
 
 # optional: offline refit from the collected shards (GPU)
-/opt/simplevla/.venv/bin/python train_v.py --data runs/v3/data --out-dir runs/v3_offline --device cuda
+$PY train_v.py --data runs/v3/data --out-dir runs/v3_offline --arch attn
 ```
 
 **Time estimate** (from the pilots: ~1.2 s per episode, ~20 kept samples per rollout): ~700 rollouts for both

@@ -1,0 +1,55 @@
+rollouts 42 | samples train 764 val 141 eval 729 | grad 50 loss 0.0742 | 0.09 h
+  [eval] val MSE 0.1587 (best 0.1587) | test {'all': 'MSE 0.139 R2 -0.99 AUC 0.27', 'natural': 'MSE 0.154 R2 -1.33 AUC 0.17', 'perturbed': 'MSE 0.136 R2 -0.92 AUC 0.28'} | natural success 0.33 perturbed 0.51 | gated 10.7 selected 6.0 per rollout | arrival 0.90 bump 0.37
+rollouts 48 | samples train 832 val 141 eval 756 | grad 84 loss 0.0633 | 0.12 h
+rollouts 54 | samples train 955 val 141 eval 805 | grad 146 loss 0.0607 | 0.19 h
+rollouts 60 | samples train 969 val 258 eval 917 | grad 153 loss 0.0607 | 0.29 h
+  [eval] val MSE 0.1499 (best 0.1499) | test {'all': 'MSE 0.161 R2 -0.84 AUC 0.36', 'natural': 'MSE 0.177 R2 -1.11 AUC 0.30', 'perturbed': 'MSE 0.157 R2 -0.79 AUC 0.37'} | natural success 0.43 perturbed 0.52 | gated 8.2 selected 4.5 per rollout | arrival 0.88 bump 0.23
+rollouts 66 | samples train 1067 val 273 eval 997 | grad 202 loss 0.0558 | 0.39 h
+rollouts 72 | samples train 1255 val 273 eval 1145 | grad 296 loss 0.0407 | 0.54 h
+rollouts 78 | samples train 1310 val 273 eval 1173 | grad 324 loss 0.0381 | 0.60 h
+rollouts 84 | samples train 1380 val 273 eval 1373 | grad 359 loss 0.0362 | 0.72 h
+  [eval] val MSE 0.1167 (best 0.1167) | test {'all': 'MSE 0.067 R2 0.09 AUC 0.76', 'natural': 'MSE 0.062 R2 0.10 AUC 0.76', 'perturbed': 'MSE 0.068 R2 0.09 AUC 0.76'} | natural success 0.26 perturbed 0.32 | gated 10.7 selected 5.2 per rollout | arrival 0.87 bump 0.26
+rollouts 90 | samples train 1445 val 273 eval 1381 | grad 392 loss 0.0349 | 0.76 h
+rollouts 96 | samples train 1797 val 273 eval 1381 | grad 568 loss 0.0357 | 0.92 h
+rollouts 102 | samples train 1797 val 273 eval 1631 | grad 568 loss 0.0357 | 1.05 h
+  [eval] val MSE 0.0991 (best 0.0991) | test {'all': 'MSE 0.074 R2 -0.00 AUC 0.78', 'natural': 'MSE 0.052 R2 0.25 AUC 0.86', 'perturbed': 'MSE 0.078 R2 -0.05 AUC 0.77'} | natural success 0.24 perturbed 0.31 | gated 11.5 selected 5.6 per rollout | arrival 0.84 bump 0.26
+rollouts 108 | samples train 1813 val 327 eval 1638 | grad 576 loss 0.0357 | 1.07 h
+rollouts 114 | samples train 1822 val 337 eval 1665 | grad 581 loss 0.0358 | 1.11 h
+rollouts 120 | samples train 2077 val 337 eval 1683 | grad 709 loss 0.0341 | 1.21 h
+  [eval] val MSE 0.1242 (best 0.0991) | test {'all': 'MSE 0.065 R2 0.15 AUC 0.77', 'natural': 'MSE 0.059 R2 0.18 AUC 0.81', 'perturbed': 'MSE 0.066 R2 0.14 AUC 0.76'} | natural success 0.27 perturbed 0.34 | gated 10.5 selected 5.0 per rollout | arrival 0.86 bump 0.25
+rollouts 126 | samples train 2077 val 337 eval 1926 | grad 709 loss 0.0341 | 1.30 h
+rollouts 132 | samples train 2289 val 337 eval 2007 | grad 815 loss 0.0356 | 1.40 h
+Traceback (most recent call last):
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 851, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 420, in main
+    results = pool.run(jobs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 856, in next
+    self._cond.wait(timeout)
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 302, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 514, in <module>
+    main()
+  File "train.py", line 487, in main
+    pool.close()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 105, in close
+    self.pool.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 662, in join
+    self._worker_handler.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1011, in join
+    self._wait_for_tstate_lock()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1027, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt

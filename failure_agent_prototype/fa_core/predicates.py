@@ -2,7 +2,8 @@
 
 Specs are short strings with simulator names (see the scene's objects with tools/probe_libero_api.py):
 
-  pick(akita_black_bowl_1)                        grasped AND lifted >= 5 cm above its resting height
+  pick(akita_black_bowl_1)                        grasped (both fingers touch it, pad or finger body)
+                                                  AND lifted >= 5 cm above its resting height
   place(akita_black_bowl_1, plate_1, on)          LIBERO On/In(obj, dest) AND obj not grasped
   open(wooden_cabinet_1_top_region)               LIBERO Open
   close(wooden_cabinet_1_top_region)              LIBERO Close
@@ -70,12 +71,20 @@ def obj_pos(env, name):
 
 
 def grasped(env, name):
+    """Both fingers touch the object, anywhere on the finger: robosuite's left_finger / right_finger groups
+    (finger*_collision mesh + finger*_pad_collision box), not just the fingertip pads that its default
+    _check_grasp uses. The pads only cover ~33-49 mm along the finger, so a deep grip (rim above the pads)
+    held the object in the air while the pad-only check said not grasped."""
     e = _inner(env)
     objects = _require(e, "objects_dict", "movable objects")
     if name not in objects:
         raise KeyError(f"{name!r} is not a movable object; objects: {sorted(objects)}")
     check = _require(e, "_check_grasp", "robosuite grasp check")
-    return bool(check(gripper=e.robots[0].gripper, object_geoms=objects[name]))
+    gripper = e.robots[0].gripper
+    geoms = getattr(gripper, "important_geoms", {})
+    if "left_finger" in geoms and "right_finger" in geoms:
+        gripper = [geoms["left_finger"], geoms["right_finger"]]
+    return bool(check(gripper=gripper, object_geoms=objects[name]))
 
 
 def libero_predicate(env, predicate, *names):

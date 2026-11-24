@@ -3,3 +3,63 @@ rollouts 12 | samples train 270 val 0 eval 66 | grad 0 loss nan | 0.09 h
 rollouts 18 | samples train 270 val 0 eval 338 | grad 0 loss nan | 0.15 h
 rollouts 24 | samples train 611 val 13 eval 338 | grad 171 loss 0.0248 | 0.24 h
 rollouts 30 | samples train 653 val 13 eval 394 | grad 192 loss 0.0206 | 0.26 h
+rollouts 36 | samples train 768 val 13 eval 414 | grad 250 loss 0.0186 | 0.31 h
+rollouts 42 | samples train 768 val 13 eval 601 | grad 250 loss 0.0186 | 0.35 h
+rollouts 48 | samples train 852 val 25 eval 601 | grad 292 loss 0.0182 | 0.38 h
+rollouts 54 | samples train 858 val 25 eval 694 | grad 295 loss 0.0188 | 0.41 h
+  [eval] val MSE 0.1454 (best 0.1454) | test {'all': 'MSE 0.059 R2 -0.66 AUC 0.23', 'natural': 'MSE 0.060 R2 -0.50 AUC 0.22', 'perturbed': 'MSE 0.059 R2 -0.70 AUC 0.23'} | natural success 0.12 perturbed 0.09 | gated 10.6 selected 5.4 per rollout | arrival 0.94 bump 0.06
+rollouts 60 | samples train 895 val 61 eval 712 | grad 314 loss 0.0178 | 0.43 h
+rollouts 66 | samples train 1031 val 61 eval 766 | grad 382 loss 0.0179 | 0.48 h
+rollouts 72 | samples train 1031 val 73 eval 794 | grad 382 loss 0.0179 | 0.49 h
+rollouts 78 | samples train 1084 val 73 eval 812 | grad 409 loss 0.0175 | 0.52 h
+rollouts 84 | samples train 1084 val 73 eval 902 | grad 409 loss 0.0175 | 0.54 h
+rollouts 90 | samples train 1125 val 73 eval 962 | grad 430 loss 0.0190 | 0.57 h
+rollouts 96 | samples train 1388 val 85 eval 1024 | grad 562 loss 0.0160 | 0.67 h
+rollouts 102 | samples train 1400 val 85 eval 1108 | grad 568 loss 0.0159 | 0.69 h
+  [eval] val MSE 0.1012 (best 0.1012) | test {'all': 'MSE 0.045 R2 -0.02 AUC 0.56', 'natural': 'MSE 0.037 R2 0.03 AUC 0.58', 'perturbed': 'MSE 0.046 R2 -0.03 AUC 0.56'} | natural success 0.11 perturbed 0.10 | gated 9.5 selected 4.7 per rollout | arrival 0.94 bump 0.05
+rollouts 108 | samples train 1472 val 85 eval 1108 | grad 604 loss 0.0150 | 0.72 h
+rollouts 114 | samples train 1472 val 85 eval 1192 | grad 604 loss 0.0150 | 0.74 h
+rollouts 120 | samples train 1511 val 85 eval 1248 | grad 624 loss 0.0148 | 0.76 h
+rollouts 126 | samples train 1550 val 85 eval 1259 | grad 644 loss 0.0149 | 0.78 h
+rollouts 132 | samples train 1612 val 85 eval 1332 | grad 675 loss 0.0172 | 0.82 h
+rollouts 138 | samples train 1782 val 85 eval 1344 | grad 760 loss 0.0221 | 0.86 h
+rollouts 144 | samples train 1782 val 109 eval 1507 | grad 760 loss 0.0221 | 0.90 h
+rollouts 150 | samples train 1986 val 146 eval 1507 | grad 862 loss 0.0171 | 0.98 h
+  [eval] val MSE 0.0799 (best 0.0799) | test {'all': 'MSE 0.056 R2 -0.05 AUC 0.61', 'natural': 'MSE 0.058 R2 -0.05 AUC 0.62', 'perturbed': 'MSE 0.056 R2 -0.05 AUC 0.61'} | natural success 0.14 perturbed 0.13 | gated 9.0 selected 4.5 per rollout | arrival 0.93 bump 0.06
+rollouts 156 | samples train 2015 val 146 eval 1555 | grad 877 loss 0.0174 | 1.01 h
+rollouts 162 | samples train 2026 val 146 eval 1681 | grad 883 loss 0.0179 | 1.04 h
+rollouts 168 | samples train 2100 val 146 eval 1687 | grad 920 loss 0.0189 | 1.06 h
+Traceback (most recent call last):
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 851, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 362, in main
+    results = pool.run(jobs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 856, in next
+    self._cond.wait(timeout)
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 302, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 452, in <module>
+    main()
+  File "train.py", line 429, in main
+    pool.close()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 105, in close
+    self.pool.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 662, in join
+    self._worker_handler.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1011, in join
+    self._wait_for_tstate_lock()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1027, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt

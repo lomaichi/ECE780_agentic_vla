@@ -1,0 +1,48 @@
+rollouts 6 | samples train 9 val 0 eval 180 | grad 0 loss nan | 0.11 h
+rollouts 12 | samples train 152 val 0 eval 180 | grad 0 loss nan | 0.18 h
+rollouts 18 | samples train 443 val 18 eval 223 | grad 146 loss 0.0539 | 0.30 h
+rollouts 24 | samples train 527 val 18 eval 318 | grad 188 loss 0.0449 | 0.38 h
+  [eval] val MSE 0.0893 (best 0.0893) | test {'all': 'MSE 0.134 R2 -0.89 AUC 0.38', 'natural': 'MSE 0.103 R2 -0.55 AUC 0.51', 'perturbed': 'MSE 0.140 R2 -0.95 AUC 0.35'} | natural success 0.22 perturbed 0.28 | gated 12.2 selected 5.3 per rollout | arrival 0.89 bump 0.23
+rollouts 30 | samples train 527 val 18 eval 815 | grad 188 loss 0.0449 | 0.58 h
+rollouts 36 | samples train 597 val 48 eval 815 | grad 223 loss 0.0411 | 0.63 h
+rollouts 42 | samples train 665 val 142 eval 815 | grad 257 loss 0.0405 | 0.70 h
+  [eval] val MSE 0.0332 (best 0.0332) | test {'all': 'MSE 0.054 R2 0.19 AUC 0.79', 'natural': 'MSE 0.042 R2 0.34 AUC 0.88', 'perturbed': 'MSE 0.056 R2 0.16 AUC 0.78'} | natural success 0.19 perturbed 0.24 | gated 12.0 selected 5.6 per rollout | arrival 0.91 bump 0.22
+rollouts 48 | samples train 855 val 142 eval 815 | grad 352 loss 0.0401 | 0.77 h
+rollouts 54 | samples train 1005 val 142 eval 851 | grad 427 loss 0.0354 | 0.87 h
+rollouts 60 | samples train 1132 val 142 eval 905 | grad 491 loss 0.0337 | 0.93 h
+  [eval] val MSE 0.0418 (best 0.0332) | test {'all': 'MSE 0.074 R2 -0.11 AUC 0.80', 'natural': 'MSE 0.067 R2 -0.05 AUC 0.82', 'perturbed': 'MSE 0.075 R2 -0.12 AUC 0.79'} | natural success 0.22 perturbed 0.26 | gated 11.2 selected 5.3 per rollout | arrival 0.91 bump 0.23
+rollouts 66 | samples train 1178 val 142 eval 965 | grad 514 loss 0.0330 | 0.97 h
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/multiprocessing/pool.py", line 856, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 420, in main
+    results = pool.run(jobs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/usr/local/lib/python3.10/multiprocessing/pool.py", line 861, in next
+    self._cond.wait(timeout)
+  File "/usr/local/lib/python3.10/threading.py", line 320, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 514, in <module>
+    main()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 487, in main
+    pool.close()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 105, in close
+    self.pool.join()
+  File "/usr/local/lib/python3.10/multiprocessing/pool.py", line 665, in join
+    self._worker_handler.join()
+  File "/usr/local/lib/python3.10/threading.py", line 1096, in join
+    self._wait_for_tstate_lock()
+  File "/usr/local/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+    if lock.acquire(block, timeout):
+KeyboardInterrupt

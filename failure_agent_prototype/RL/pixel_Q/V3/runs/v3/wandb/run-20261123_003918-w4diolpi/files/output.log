@@ -1,0 +1,51 @@
+rollouts 168 | samples train 2140 val 188 eval 1681 | grad 57 loss 0.0194 | 0.04 h
+rollouts 174 | samples train 2140 val 205 eval 1753 | grad 57 loss 0.0194 | 0.06 h
+rollouts 180 | samples train 2146 val 205 eval 1918 | grad 60 loss 0.0190 | 0.10 h
+rollouts 186 | samples train 2254 val 205 eval 1918 | grad 114 loss 0.0185 | 0.12 h
+rollouts 192 | samples train 2332 val 274 eval 1918 | grad 153 loss 0.0183 | 0.16 h
+rollouts 198 | samples train 2355 val 274 eval 1987 | grad 165 loss 0.0179 | 0.19 h
+rollouts 204 | samples train 2404 val 274 eval 1999 | grad 190 loss 0.0182 | 0.21 h
+  [eval] val MSE 0.0828 (best 0.0828) | test {'all': 'MSE 0.057 R2 0.05 AUC 0.71', 'natural': 'MSE 0.052 R2 0.13 AUC 0.77', 'perturbed': 'MSE 0.058 R2 0.03 AUC 0.70'} | natural success 0.25 perturbed 0.27 | gated 7.1 selected 3.6 per rollout | arrival 0.91 bump 0.04
+rollouts 210 | samples train 2447 val 274 eval 2053 | grad 212 loss 0.0179 | 0.24 h
+rollouts 216 | samples train 2518 val 274 eval 2167 | grad 248 loss 0.0169 | 0.28 h
+rollouts 222 | samples train 2567 val 293 eval 2167 | grad 273 loss 0.0159 | 0.31 h
+rollouts 228 | samples train 2585 val 399 eval 2167 | grad 282 loss 0.0157 | 0.34 h
+rollouts 234 | samples train 2602 val 399 eval 2214 | grad 291 loss 0.0161 | 0.36 h
+rollouts 240 | samples train 2671 val 399 eval 2250 | grad 326 loss 0.0156 | 0.39 h
+rollouts 246 | samples train 2671 val 399 eval 2299 | grad 326 loss 0.0156 | 0.41 h
+rollouts 252 | samples train 2719 val 399 eval 2329 | grad 350 loss 0.0184 | 0.43 h
+  [eval] val MSE 0.1001 (best 0.0828) | test {'all': 'MSE 0.061 R2 -0.05 AUC 0.76', 'natural': 'MSE 0.055 R2 0.03 AUC 0.82', 'perturbed': 'MSE 0.063 R2 -0.07 AUC 0.75'} | natural success 0.25 perturbed 0.25 | gated 6.8 selected 3.4 per rollout | arrival 0.93 bump 0.09
+rollouts 258 | samples train 2806 val 399 eval 2409 | grad 394 loss 0.0220 | 0.47 h
+Traceback (most recent call last):
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 851, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 362, in main
+    jobs.append({"id": n_rollouts + len(jobs), "start": s, "kind": kind, "rc": rc, "cfg": cfg,
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 856, in next
+    self._cond.wait(timeout)
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 302, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 452, in <module>
+  File "train.py", line 429, in main
+    coll["success_natural"], coll["success_perturbed"], coll["gated_per_rollout"],
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 105, in close
+    self.pool.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/multiprocessing/pool.py", line 662, in join
+    self._worker_handler.join()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1011, in join
+    self._wait_for_tstate_lock()
+  File "/opt/uv-python/cpython-3.8-linux-x86_64-gnu/lib/python3.8/threading.py", line 1027, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt

@@ -139,7 +139,10 @@ FEEDBACK:--video-every 50 instead
   (400 control steps).
 - Gate (0c): pick not done; gripper open (last command open, finger gap >= 5 cm); target within 10 cm (xy) of
   the grasp point (3 cells x 2 cm + 4 cm); gripper empty. A gated tick also needs: no HL correction in the last
-  3 s, agentview sees >= 20 target pixels. No height / tilt condition.
+  3 s, agentview sees >= 20 target pixels. No tilt condition.
+  REVISED (2026-11-22): height condition added: grasp point (eef) at most 10 cm above the target's top
+  (--gate-max-above-cm 10; < 0 = off). In the first v3 shards, gated ticks > 12 cm above the top were ~1/3 of
+  the samples with a 4-11% pick rate within 3 s (vs 19-27% below 9 cm).
 - Flags: --tick-steps 4 (5 fps), --p-select 0.5, --n-perturb 5, --pos-cm 1.5, --dz-cm -0.5 1.5, --rot-deg 10,
   --move-cap 30, --h-max-s 3.0, --target-samples 10000 (branch episodes kept; est. 45-75 min on 6 workers),
   --workers 6, --hl privileged, --video-every 50. Seed fixed at 0 (no flag). Bump threshold 5 mm (no flag).

@@ -1,0 +1,46 @@
+rollouts 6 | samples train 18 val 0 eval 130 | grad 0 loss nan | 0.08 h
+rollouts 12 | samples train 245 val 0 eval 130 | grad 0 loss nan | 0.17 h
+rollouts 18 | samples train 346 val 17 eval 147 | grad 51 loss 0.1191 | 0.28 h
+rollouts 24 | samples train 346 val 17 eval 729 | grad 51 loss 0.1191 | 0.54 h
+  [eval] val MSE 0.1818 (best 0.1818) | test {'all': 'MSE 0.072 R2 -0.18 AUC 0.31', 'natural': 'MSE 0.065 R2 -0.17 AUC 0.28', 'perturbed': 'MSE 0.073 R2 -0.18 AUC 0.31'} | natural success 0.16 perturbed 0.19 | gated 14.6 selected 7.4 per rollout | arrival 0.81 bump 0.24
+rollouts 30 | samples train 481 val 17 eval 729 | grad 119 loss 0.0633 | 0.61 h
+rollouts 36 | samples train 664 val 26 eval 729 | grad 211 loss 0.0463 | 0.70 h
+multiprocessing.pool.RemoteTraceback:
+"""
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 84, in run_job
+    res = E.collect_rollout(_W["env"], job["start"], job["rc"], rng, net=net, video_path=job.get("video"))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/episodes.py", line 273, in collect_rollout
+    last_v = vpred(obs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/episodes.py", line 188, in vpred
+    return vnet.predict(net, obs) if (net is not None and obs is not None) else None
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 134, in predict
+    v = net(*obs_to_tensor([obs], device))[0].cpu().numpy()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 125, in obs_to_tensor
+    return batch_to_tensor(*(st(k) for k in OBS_FIELDS))
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/vnet.py", line 114, in batch_to_tensor
+    rgb = rgb.float().permute(0, 3, 1, 2) / 255.0 - 0.5
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 514, in <module>
+    main()
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V3/train.py", line 420, in main
+    results = pool.run(jobs)
+  File "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/shared/runlog.py", line 100, in run
+    return list(self.pool.imap_unordered(self.job_fn, jobs, chunksize=1))
+  File "/usr/local/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.

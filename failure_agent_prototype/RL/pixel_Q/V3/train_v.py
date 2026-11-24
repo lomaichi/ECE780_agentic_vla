@@ -224,7 +224,7 @@ def main():
     p.add_argument("--h-max-s", type=float, default=3.0, help="label window H (s), at most the episode cap (3 s)")
     p.add_argument("--gamma", type=float, default=0.85, help="discount per second")
     p.add_argument("--natural-weight", type=float, default=1.0, help="loss weight of natural vs perturbed samples")
-    p.add_argument("--arch", default="cnn", choices=["cnn", "proprio"])
+    p.add_argument("--arch", default="cnn", choices=["cnn", "attn", "proprio"])
     p.add_argument("--no-baselines", action="store_true", help="skip the proprio-only baseline")
     p.add_argument("--width", type=int, default=32)
     p.add_argument("--heads", type=int, default=5)

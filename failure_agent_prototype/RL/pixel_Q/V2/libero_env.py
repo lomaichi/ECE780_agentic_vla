@@ -3,7 +3,8 @@ gripper-centred heightmap, the local correction primitive, in-memory snapshots a
 
 pixel_Q_RL_V2.md sections:
   sec. 4  gate(): pick subtask (PickCheck not latched), gripper open (last command open and finger gap >=
-          gate_min_gap) and empty (no movable object grasped), target within r*2 cm + 4 cm (xy) of the grasp point.
+          gate_min_gap) and empty (no movable object grasped), target within r*2 cm + 4 cm (xy) of the grasp point,
+          and (only if cfg gate_max_above_m is set; V3) the grasp point at most that far above the target's top.
           Privileged sim quantities stand in for the VLM's judgements during training; with --hl moondream the
           gate reads the agent's own subtask / grounded target / held measurements instead.
   sec. 5  observe(): wrist + agentview depth unprojected to world points (camera pose at this tick), robot points
@@ -122,7 +123,7 @@ def rotx(deg):
 # ------------------------------------------------------------------ env ----------------------------
 
 class BranchingPickEnv(LiberoScene):
-    """See module docstring. cfg: reach, gate_margin_m, gate_min_gap, min_mask_px, agent_px, wrist_px, fill_holes,
+    """See module docstring. cfg: reach, gate_margin_m, gate_min_gap, gate_max_above_m, min_mask_px, agent_px, wrist_px, fill_holes,
     robot_mask (seg | fixed), finger_mask (path), mask_source (seg | box | mix), mix_p, box_jitter, clear_min,
     clear_to, hl (privileged | none | moondream), vlm_model, env_seed, seed, worker_id, host, port."""
 
@@ -299,20 +300,25 @@ class BranchingPickEnv(LiberoScene):
         q = np.asarray(obs["robot0_gripper_qpos"], dtype=np.float64)
         gap = float(q[0] - q[1])
         opened = bool(self.last_action[-1] < 0 and gap >= self.cfg.get("gate_min_gap", 0.05))
+        max_above = self.cfg.get("gate_max_above_m")    # None = no height condition (V2)
         gi = self.hl.gate_inputs()
         if gi is None:                                   # privileged stand-ins for the VLM's judgements
             tpos = P.obj_pos(self.env, self.obj)
             dxy = float(np.hypot(*(ee[:2] - tpos[:2])))
-            info = {"pick": not self.check.done, "open": opened, "target_dxy": dxy, "near": dxy <= self.gate_m}
-            if not (info["pick"] and opened and info["near"]):
+            above = float(ee[2] - tpos[2] - self.top_offset)
+            info = {"pick": not self.check.done, "open": opened, "target_dxy": dxy, "near": dxy <= self.gate_m,
+                    "above_top": above, "low": max_above is None or above <= max_above}
+            if not (info["pick"] and opened and info["near"] and info["low"]):
                 return False, info
             info["empty"] = not any(P.grasped(self.env, o) for o in self.movable)
             return info["empty"], info
-        tgt = gi["target"]
+        tgt = gi["target"]                               # the agent's grounded surface point on the target
         dxy = float("inf") if tgt is None else float(np.hypot(ee[0] - tgt[0], ee[1] - tgt[1]))
+        above = float("inf") if tgt is None else float(ee[2] - tgt[2])
         info = {"pick": bool(gi["pick"]), "open": opened, "empty": not gi["held"], "target_dxy": dxy,
-                "near": dxy <= self.gate_m, "grounded": tgt is not None}
-        return bool(info["pick"] and opened and info["empty"] and info["near"]), info
+                "near": dxy <= self.gate_m, "above_top": above, "low": max_above is None or above <= max_above,
+                "grounded": tgt is not None}
+        return bool(info["pick"] and opened and info["empty"] and info["near"] and info["low"]), info
 
     # ---- observation (sec. 5)
     def _robot_points(self, cl, is_wrist, p):

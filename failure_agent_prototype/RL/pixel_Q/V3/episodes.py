@@ -2,7 +2,8 @@
 
 The method of the tick-loop pilot (plan_the_algo.txt sec. 7):
   - pi0 (+ the HL stand-in, as V2) runs from a task init state; a tick every rc["tick_steps"] control steps.
-  - at a gate-open tick (V2 gate, no HL correction in the last 3 s) the heightmap is observed; target grounded =
+  - at a gate-open tick (V2 gate + grasp point <= gate_max_above_m above the target's top, no HL correction in
+    the last 3 s) the heightmap is observed; target grounded =
     a gated tick. With probability rc["p_select"] the tick is selected: snapshot -> episode 0 natural (pi0 alone
     from the snapshot) + n_perturb perturbed episodes (small OSC move around pi0's own pose, pi0's queue cleared,
     pi0 alone) -> restore -> the natural main rollout continues.
@@ -34,7 +35,7 @@ import vnet  # noqa: E402
 
 CTRL_HZ = 20
 FPS = 20
-COOLDOWN_S = 3.0          # no gated tick within this long after an HL correction (V2)
+COOLDOWN_S = 1.          # no gated tick within this long after an HL correction (V2)
 BUMP_M = 0.005            # target moved more than this during the perturbation move = bumped
 OBS_FIELDS = vnet.OBS_FIELDS
 
@@ -42,9 +43,11 @@ WHITE, YELLOW, GREEN, RED, CYAN = (235, 235, 235), (255, 220, 60), (80, 230, 80)
 GREY, MAGENTA = (150, 150, 150), (255, 120, 255)
 
 
-def env_cfg(hl, host, port, seed=0):
-    """V2 phase 1 backend settings."""
-    return {"env": "libero", "reach": 3, "gate_margin_m": 0.04, "gate_min_gap": 0.05, "min_mask_px": 20,
+def env_cfg(hl, host, port, seed=0, gate_max_above_m=0.10):
+    """V2 phase 1 backend settings, plus V3's gate height condition (grasp point at most gate_max_above_m above
+    the target's top; None = off, as V2)."""
+    return {"env": "libero", "reach": 3, "gate_margin_m": 0.04, "gate_min_gap": 0.05,
+            "gate_max_above_m": gate_max_above_m, "min_mask_px": 20,
             "agent_px": None, "wrist_px": None, "fill_holes": True, "robot_mask": "seg", "finger_mask": None,
             "mask_source": "seg", "mix_p": 0.5, "box_jitter": 0.05, "clear_min": 0.02, "clear_to": 0.03,
             "hl": hl, "vlm_model": None, "env_seed": 7, "seed": seed, "host": host, "port": port, "same_noise": False}
@@ -177,7 +180,7 @@ def collect_rollout(env, start, rc, rng, net=None, video_path=None, hold_tick=12
     samples = []
     st = {"gated_ticks": 0, "selected_ticks": 0, "natural_run": 0, "natural_success": 0, "perturbed_run": 0,
           "perturbed_arrived": 0, "perturbed_bumped": 0, "perturbed_kept": 0, "perturbed_success": 0,
-          "not_grounded": 0}
+          "not_grounded": 0, "hl_corrections": 0}
     video, first, last_v = [], None, None
     head = "{} | {} | MAIN natural rollout".format(tag, env.prompt[:44])
 
@@ -190,13 +193,38 @@ def collect_rollout(env, start, rc, rng, net=None, video_path=None, hold_tick=12
         n, end_step = len(env.frames), env.step_count
         for i, f in enumerate(env.frames):
             s = end_step - n + 1 + i
-            tt = "approach (gate not yet open)" if first is None else \
-                "{:.2f} s since first gated tick (budget {:.0f} s)".format((s - first) / float(CTRL_HZ),
-                                                                          env.budget / float(CTRL_HZ))
+            tt = "step {} | no gated tick yet".format(s) if first is None else \
+                "step {} | {:.2f} s since first gated tick (budget {:.0f} s)".format(
+                    s, (s - first) / float(CTRL_HZ), env.budget / float(CTRL_HZ))
             vt = "last V_est {:.2f} +- {:.2f}".format(*last_v) if last_v else "last V_est -"
             video.append(annotate(f, [head, tt, "{} | gated {} | selected {} | P(select) {:g}".format(
-                vt, st["gated_ticks"], st["selected_ticks"], rc["p_select"]), ""], [WHITE, WHITE, WHITE, WHITE]))
+                vt, st["gated_ticks"], st["selected_ticks"], rc["p_select"]), status[0]],
+                [WHITE, WHITE, WHITE, status[1]]))
         env.frames = []
+
+    def not_gated_why(gate_open, ginfo, cooling_s):
+        """Why a tick was not gated: the failed gate conditions, the HL cooldown, or (gate open, no cooldown) the
+        target not grounded in agentview."""
+        why = []
+        if not gate_open:
+            if ginfo.get("pick") is False:
+                why.append("pick done")
+            if ginfo.get("open") is False:
+                why.append("gripper not open")
+            if ginfo.get("grounded") is False:
+                why.append("target not grounded (HL)")
+            elif ginfo.get("near") is False:
+                why.append("{:.0f} cm from target xy (max {:.0f})".format(100 * ginfo["target_dxy"], 100 * env.gate_m))
+            if ginfo.get("low") is False:
+                why.append("{:.0f} cm above target top (max {:.0f})".format(
+                    100 * ginfo["above_top"], 100 * env.cfg["gate_max_above_m"]))
+            if ginfo.get("empty") is False:
+                why.append("holding an object")
+        if cooling_s > 0:
+            why.append("HL cooldown ({:.1f} s left)".format(cooling_s))
+        elif gate_open:
+            why.append("target not grounded in agentview")
+        return ", ".join(why) or "?"
 
     def pause(lines, colors, n):
         if record:
@@ -204,6 +232,7 @@ def collect_rollout(env, start, rc, rng, net=None, video_path=None, hold_tick=12
 
     last_tick, cooldown_until, end = None, -10 ** 9, None
     cooldown = int(COOLDOWN_S * CTRL_HZ)
+    status = ("gate: no tick yet", GREY)       # 4th banner line of the main-rollout frames: the last tick's gate
     while True:
         step = env.step_count
         if env.pick_done():
@@ -216,13 +245,25 @@ def collect_rollout(env, start, rc, rng, net=None, video_path=None, hold_tick=12
             break
         if step % rc["tick_steps"] == 0 and step != last_tick:
             last_tick = step
-            if env.hl_tick() is not None:
+            flush_main()                       # frames since the previous tick carry that tick's gate status
+            hl = env.hl_tick()
+            if hl is not None:
+                st["hl_corrections"] += 1
                 cooldown_until = env.step_count + cooldown
-                flush_main()
+                status = ("HL CORRECTION #{}: {} -> {} (scripted motion, no ticks)".format(
+                    st["hl_corrections"], hl.get("mode"), hl.get("action")), CYAN)
+                flush_main()                   # the correction's own frames
+                pause([head, "steps {}-{}: HL correction #{} ({} -> {})".format(
+                    step, env.step_count, st["hl_corrections"], hl.get("mode"), hl.get("action")),
+                       "HL CORRECTION done: no gated tick for the next {:g} s (HL cooldown)".format(COOLDOWN_S), ""],
+                      [WHITE, WHITE, CYAN, WHITE], hold_tick)
+                status = ("not gated: HL cooldown ({:.1f} s left)".format(COOLDOWN_S), MAGENTA)
                 continue
             gate_open, ginfo = env.gate()
-            obs = env.observe() if gate_open and step >= cooldown_until else None
+            cooling_s = max(0, cooldown_until - step) / float(CTRL_HZ)
+            obs = env.observe() if gate_open and cooling_s == 0 else None
             if obs is not None:
+                status = ("gate OPEN at step {} (tick #{})".format(step, st["gated_ticks"] + 1), GREEN)
                 if first is None:
                     first = step
                 st["gated_ticks"] += 1
@@ -271,18 +312,20 @@ def collect_rollout(env, start, rc, rng, net=None, video_path=None, hold_tick=12
                     pause([head, tsec, "back to the natural rollout (original state)",
                            "branch true V: " + " ".join("{:.2f}".format(y) for y in ys)], [WHITE, WHITE, CYAN, WHITE],
                           hold_tick)
-            elif first is not None and record:
-                why = "HL cooldown" if gate_open else "gate closed ({})".format(
-                    ", ".join(n for n in ("pick", "open", "near", "empty") if ginfo.get(n) is False) or "not grounded")
-                flush_main()
-                pause([head, "step {} ({:.2f} s since first gated tick)".format(step, (step - first) / float(CTRL_HZ)),
-                       "TICK  not gated: {}".format(why), ""], [WHITE, WHITE, RED, WHITE], hold_tick)
+            else:
+                if record:
+                    why = not_gated_why(gate_open, ginfo, cooling_s)
+                    status = ("not gated: " + why, MAGENTA if cooling_s > 0 else RED)
+                if first is not None and record:
+                    pause([head, "step {} ({:.2f} s since first gated tick)".format(
+                        step, (step - first) / float(CTRL_HZ)), "TICK  not gated: {}".format(why), ""],
+                          [WHITE, WHITE, RED, WHITE], hold_tick)
         env.pi0_step()
     st.update(end=end, main_picked=bool(env.pick_done()), steps=int(env.step_count), wall_s=round(time.time() - t_wall, 1))
     if record:
         flush_main()
-        pause([head, "MAIN rollout end: {}".format(end), "gated {} | selected {} | samples kept {}".format(
-            st["gated_ticks"], st["selected_ticks"], len(samples)), ""],
+        pause([head, "MAIN rollout end: {}".format(end), "gated {} | selected {} | samples kept {} | HL corrections {}".format(
+            st["gated_ticks"], st["selected_ticks"], len(samples), st["hl_corrections"]), ""],
               [WHITE, GREEN if end == "success" else RED, WHITE, WHITE], 40)
         import imageio
 
