@@ -188,29 +188,64 @@ def annotate_video(res, agent, wrist, info, path, a, scale=2):
 
 # ------------------------------------------------------------------ main -----------------------------
 
+_PI0_BASELINE = {}
+
+
+def pi0_baseline(suite, task_id, init_idx):
+    """Raw pi0 rollout (no failure agent) of the same episode from C.PI0_BASELINE_DIR: True / False, or None when
+    that (task, init) was never recorded (LIBERO-90: inits 0-1 only)."""
+    if suite not in _PI0_BASELINE:
+        f = C.PI0_BASELINE_DIR / suite / "meta.json"
+        eps = json.loads(f.read_text()).get("episodes", []) if f.exists() else []
+        _PI0_BASELINE[suite] = {(e["task_id"], e["init_state_idx"]): bool(e["success"])
+                                for e in eps if not e.get("error")}
+    return _PI0_BASELINE[suite].get((task_id, init_idx))
+
+
+def _yn(x):
+    return "-" if x is None else "yes" if x else "no"
+
+
 def write_summary(rows, out):
+    for r in rows:
+        if "error" not in r:
+            r["pi0_success"] = pi0_baseline(r["suite"], r["task_id"], r["init_state_idx"])
     (out / "summary.json").write_text(json.dumps(rows, indent=2, default=str))
-    head = ("| episode | split | success | sim s | Q (V-low / timeout / skipped) | HL (library) | V evals (low) | "
-            "VLM calls | wall s |\n|---|---|---|---|---|---|---|---|---|\n")
+    head = ("| episode | split | success | pi0 alone | sim s | Q (V-low / timeout / skipped) | HL (library) | "
+            "V evals (low) | VLM calls | wall s |\n|---|---|---|---|---|---|---|---|---|---|\n")
     body = ""
     for r in rows:
         if "error" in r:
-            body += "| {} | | ERROR: {} | | | | | | |\n".format(r["name"], r["error"][:80])
+            body += "| {} | | ERROR: {} | | | | | | | |\n".format(r["name"], r["error"][:80])
             continue
         p = r["report"]
         hl = ", ".join("{} x{}".format(k, v) for k, v in sorted(p["hl_by_library"].items())) or "-"
-        body += "| {} | {} | {} | {} | {} / {} / {} | {} | {} ({}) | {} | {} |\n".format(
-            r["name"], r["split"], "yes" if r["success"] else "no", r["sim_s"], p["q_v_low"], p["q_timeout"],
-            p["q_skipped"], hl, p["v_evals"], p["v_low_frames"], r.get("vlm_calls"), r["wall_s"])
+        body += "| {} | {} | {} | {} | {} | {} / {} / {} | {} | {} ({}) | {} | {} |\n".format(
+            r["name"], r["split"], _yn(r["success"]), _yn(r["pi0_success"]), r["sim_s"], p["q_v_low"],
+            p["q_timeout"], p["q_skipped"], hl, p["v_evals"], p["v_low_frames"], r.get("vlm_calls"), r["wall_s"])
     ok = [r for r in rows if "error" not in r]
+    both = [r for r in ok if r["pi0_success"] is not None]
     foot = "\nsuccess {}/{}\n".format(sum(r["success"] for r in ok), len(ok))
+    if both:
+        n = len(both)
+        fw, pi = sum(r["success"] for r in both), sum(r["pi0_success"] for r in both)
+        gained = sum(r["success"] and not r["pi0_success"] for r in both)
+        lost = sum(r["pi0_success"] and not r["success"] for r in both)
+        foot += ("\non the {} episodes with a raw pi0 rollout ({}): framework {}/{}, pi0 alone {}/{} "
+                 "(framework fixed {}, broke {})\n").format(n, C.PI0_BASELINE_DIR.name, fw, n, pi, n, gained, lost)
+        foot += ("pi0 alone ran the 20 s LIBERO-90 budget; the framework's budget is --full-timeout-s "
+                 "(default 30 s)\n")
+    else:
+        foot += "\nno raw pi0 rollout recorded for these episodes\n"
     (out / "summary.md").write_text(head + body + foot)
 
 
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--suite", default="libero_90")
-    p.add_argument("--tasks", type=int, nargs="+", required=True)
+    p.add_argument("--tasks", type=int, nargs="+")
+    p.add_argument("--resummarize", type=pathlib.Path, nargs="+", metavar="RUN_DIR",
+                   help="rewrite RUN_DIR/summary.{json,md} from its summary.json (adds the raw pi0 column); no sim")
     p.add_argument("--inits", type=int, nargs="+", default=[0])
     p.add_argument("--out", type=pathlib.Path, default=pathlib.Path("runs/pipeline"))
     p.add_argument("--pi0", default="server", choices=["server", "stub-hover", "stub-wander", "stub-idle"],
@@ -245,6 +280,13 @@ def parse_args(argv=None):
 def main(argv=None):
     a = parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
+    if a.resummarize:
+        for d in a.resummarize:
+            write_summary(json.loads((d / "summary.json").read_text()), d)
+            log.info("summary: %s", d / "summary.md")
+        return
+    if not a.tasks:
+        raise SystemExit("--tasks is required (or --resummarize RUN_DIR ...)")
     import torch
 
     torch.set_num_threads(a.torch_threads)

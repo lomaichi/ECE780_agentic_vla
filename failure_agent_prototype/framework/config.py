@@ -13,6 +13,9 @@ PIXQ = FAP / "RL" / "pixel_Q"
 V1_DIR, V2_DIR, V4_DIR = PIXQ / "V1", PIXQ / "V2", PIXQ / "V4"
 MOONDREAM_DIR = FAP.parent / "Documentation" / "VLM_inference_speed_test" / "moondreamV2"
 LIBRARY = FAP / "failure_survey" / "skill_library" / "library.json"
+# pi0-only rollouts (no failure agent): <suite>/meta.json, one entry per (task_id, init_state_idx). LIBERO-90 has
+# inits 0-1 only, with a 400-step (20 s) budget.
+PI0_BASELINE_DIR = FAP.parent / "Documentation" / "pi0_LIBERO_rollouts"
 
 # ------------------------------------------------------------------ psuedocode.txt -------------------
 THRESHOLD = 0.5               # V_est below this = pi0 is unlikely to pick from here

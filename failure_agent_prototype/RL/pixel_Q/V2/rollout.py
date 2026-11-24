@@ -26,7 +26,8 @@ Main rollout (sec. 9.2 / 10.3), at every tick:
   2. Gate (+ cooldown) open and target grounded -> a gated tick.
   3. Branch point with probability p_branch: snapshot -> no-op branch (pi0 alone) -> restore -> intervention
      branch (correction, then pi0 alone) -> restore. Each branch decides nothing after its first tick and gives
-     one label: gamma^(dt in s) if the pick predicate first fires dt <= H_max after the branch tick, else 0.
+     one label: gamma^(dt in s) if the pick predicate first fires dt <= H_max after the handoff to pi0 (the end
+     of the correction's primitive; the branch tick for the no-op branch), else 0.
   4. Trigger (phase 2, evaluation, deployment): A(s) > tau on N consecutive gated ticks -> run the best
      correction on the main rollout, then a cooldown. Gate closed / cooldown / not grounded resets the streak.
   Otherwise pi0 runs. The main rollout ends at pick success (until="pick") or task success (until="task"), an
@@ -109,15 +110,18 @@ def make_trigger(rc, rng):
 
 def run_branch(backend, action, cap_steps, h_max_steps, gamma, prim_cap):
     """One branch from the current (just restored) state: optional correction, then pi0 alone, until success,
-    an irrecoverable state, or cap_steps after the branch tick (sec. 10.2). Nothing is decided after the first
-    tick. Returns dict(label, t (steps to success or None), end, steps, prim)."""
-    t0 = backend.step_count
+    an irrecoverable state, or cap_steps after the pi0 handoff (sec. 10.2). Nothing is decided after the first
+    tick. The timer (window, label dt, steps) starts at the handoff to pi0: after the correction's primitive
+    (rise, level, move + yaw) has finished, or at the branch tick for the no-op branch. The primitive's own
+    duration is in prim["steps"] and does not count against the window or the discount.
+    Returns dict(label, t (steps from handoff to success or None), end, steps (from handoff), prim)."""
     prim = None
     if action is not None:
         prim = backend.execute_primitive(action, max_steps=prim_cap)
+    t0 = backend.step_count                       # handoff to pi0: the timer starts here
     while True:
         if backend.pick_done():
-            dt = int(backend.pick_step() - t0)
+            dt = max(0, int(backend.pick_step() - t0))
             return {"label": label_at(h_max_steps, dt, gamma), "t": dt, "end": "success",
                     "steps": backend.step_count - t0, "prim": prim}
         fail = backend.failure()

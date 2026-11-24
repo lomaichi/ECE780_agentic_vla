@@ -815,8 +815,8 @@ def parse_args(argv=None):
     p.add_argument("--phase0-cap-s", type=float, default=10.0, help="phase 0 branch length (s), to log success times")
     p.add_argument("--cooldown-s", type=float, default=3.0, help="after an intervention or an HL correction")
     p.add_argument("--persist", type=int, default=3, help="trigger: consecutive gated ticks with A > tau")
-    p.add_argument("--p-branch", type=float, default=0.1, help="branch probability per gated tick (training)")
-    p.add_argument("--eval-p-branch", type=float, default=0.25, help="branch probability in eval-branches")
+    p.add_argument("--p-branch", type=float, default=0.8, help="branch probability per gated tick (training)")
+    p.add_argument("--eval-p-branch", type=float, default=0.8, help="branch probability in eval-branches")
     p.add_argument("--same-noise", action="store_true", help="toy only: same pi0 noise in both branches (the "
                    "openpi server does not accept a noise seed, see the instructions)")
     # phase 0
@@ -854,7 +854,7 @@ def parse_args(argv=None):
                    choices=["pi0", "hl", "trigger", "random"])
     p.add_argument("--random-rate", type=float, default=None, help="random trigger: fire probability per eligible "
                    "gated tick (default: the trigger condition's rate in the same run)")
-    p.add_argument("--calib-p-branch", type=float, default=0.25)
+    p.add_argument("--calib-p-branch", type=float, default=0.8)
     p.add_argument("--calib-repeats", type=int, default=2)
     p.add_argument("--sweep-repeats", type=int, default=1)
     p.add_argument("--tau-sweep", type=float, nargs="*", default=None, help="tau values (default tau_noise + 0, "
