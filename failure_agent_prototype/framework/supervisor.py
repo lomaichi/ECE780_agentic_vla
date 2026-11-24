@@ -7,7 +7,8 @@ pseudocode's `While` loop:
   VLM monitor call (subtask tracking + high-level failure detection, Moondream2 grounded agent)
   if subtask == pick(bowl/mug):
       if timer2 < TIMEOUT:
-          if not HL and close_to_object():             (V4's gate, from the VLM's measurements)
+          if not HL and Qmax already issued in this pick subtask: pi0 (V is not checked again)
+          elif not HL and close_to_object():           (V4's gate, from the VLM's measurements)
               V_est = V(obs)                           (V2/V4 gripper-centred heightmap + proprio)
               V_est < THRESHOLD on THRESHOLD_COUNT consecutive frames
                   -> approach(Q_INITIAL_POSITION) -> argmax Q(obs) -> pi0
@@ -30,11 +31,15 @@ How the pseudocode was read where it is ambiguous (see README.md):
   - "consecutive" frames: the count also resets on frames where V is not evaluated (not close to the object,
     HL failure, correction).
   - close_to_object() includes V4's 1 s cooldown after any correction (CORRECTION_COOLDOWN_S).
+  - once a Q correction issues its argmax(Q) move (V-low or timeout trigger), V is no longer checked for the
+    rest of that pick subtask: pi0 carries on from the Qmax pose. A new pick subtask (incl. going back to the pick
+    after a lost grasp) re-arms V. The timeout and HL branches are unaffected.
   - the timeout branch has priority over an HL correction found at the same call (it sits outside the HL
     check in the pseudocode); the VLM agent is told its correction was dropped.
   - the timeout correction waits up to TIMEOUT_HELD_GRACE_S while the gripper is closed on something.
-  - a VLM "task complete" Stop is logged, not obeyed (the pseudocode stops only at the timeout), unless
-    stop_on_vlm_done.
+  - the VLM judges subtasks only, never the whole task: LIBERO's success check (the env's `done`) ends the
+    episode (run_episode stop_on_success). The VLM agent is built with task_done_stop=False; a Stop from it
+    anyway is logged and ignored.
 
 Collaborators (duck-typed; components.py has the real ones, test_supervisor.py fakes):
   vlm         reset(task, prompt); act(view) -> decision; subtask() -> (idx, kind, object phrase);
@@ -78,15 +83,13 @@ class FrameworkAgent(Agent):
 
     def __init__(self, vlm, perception, v_model, q_model, library=None, threshold=C.THRESHOLD,
                  threshold_count=C.THRESHOLD_COUNT, timeout_s=C.TIMEOUT_S, monitor_fps=C.MONITOR_FPS,
-                 cooldown_s=C.CORRECTION_COOLDOWN_S, held_grace_s=C.TIMEOUT_HELD_GRACE_S, stop_on_vlm_done=False,
-                 log=None):
+                 cooldown_s=C.CORRECTION_COOLDOWN_S, held_grace_s=C.TIMEOUT_HELD_GRACE_S, log=None):
         self.vlm, self.per, self.V, self.Q, self.library = vlm, perception, v_model, q_model, library
         self.threshold, self.threshold_count = float(threshold), int(threshold_count)
         self.timeout_steps = int(round(timeout_s * S))
         self.cooldown_steps = int(round(cooldown_s * S))
         self.held_grace_steps = int(round(held_grace_s * S))
         self.every_steps = max(1, int(round(S / float(monitor_fps))))
-        self.stop_on_vlm_done = bool(stop_on_vlm_done)
         self.log = log or logging.getLogger(__name__)
         self.q_enabled = perception is not None and v_model is not None and q_model is not None
 
@@ -96,10 +99,10 @@ class FrameworkAgent(Agent):
         self.sub_key = None          # (idx, kind) of the VLM's current subtask
         self.pick_start = None       # timer2: step the current pick(bowl/mug) subtask (re)started; None = other
         self.low_count = 0           # low_success_count
+        self.q_issued = False        # argmax(Q) move issued in the current pick subtask: V no longer checked
         self.defer_start = None      # step the timeout first fired while the gripper held something
         self.pending = None          # running correction: {"kind": q_approach | q_move | hl, ...}
         self.last_correction_end = None
-        self.vlm_done_step = None
         self.calls = []              # one record per call
         self.corrections = []        # one record per correction (Q or HL)
 
@@ -128,12 +131,8 @@ class FrameworkAgent(Agent):
         d = self.vlm.act(view)                    # subtask tracking + HL failure detection at 5 fps
         hl = self.vlm.hl_failure()
         rec.update(self.vlm.summary())
-        if isinstance(d, Stop):
-            rec["vlm_stop"] = d.reason
-            if self.vlm_done_step is None:
-                self.vlm_done_step = step
-            if self.stop_on_vlm_done:
-                return d
+        if isinstance(d, Stop):                   # task success is LIBERO's call, never the VLM's
+            rec["vlm_stop_ignored"] = d.reason
             d = CONTINUE
         self._track_subtask(step, rec)
 
@@ -154,6 +153,10 @@ class FrameworkAgent(Agent):
             return self._q_start(view, rec, "timeout")
 
         if not hl:
+            if self.q_issued:                     # Qmax already issued: carry on with it, V is not checked
+                rec["branch"] = "q_issued"
+                self.low_count = 0
+                return CONTINUE
             if self._close_to_object(view, rec):
                 v, sd = self.V.predict(self._vobs)
                 rec["v_est"], rec["v_std"] = round(float(v), 4), round(float(sd), 4)
@@ -183,7 +186,7 @@ class FrameworkAgent(Agent):
         if key == self.sub_key:
             return
         self.sub_key = key
-        self.low_count, self.defer_start = 0, None
+        self.low_count, self.defer_start, self.q_issued = 0, None, False
         pick = kind == "pick" and C.is_round_rim(obj) and self.q_enabled
         self.pick_start = step if pick else None
         rec["subtask_start"] = {"idx": idx, "kind": kind, "object": obj, "timer2": bool(pick)}
@@ -273,6 +276,7 @@ class FrameworkAgent(Agent):
         corr["move"] = _round(minfo)
         rec["q"] = {k: corr["q"][k] for k in ("k", "row", "col", "yaw_deg", "q") if k in corr["q"]}
         self.pending = {"kind": "q_move", "trigger": p["trigger"], "motion": motion}
+        self.q_issued = True                      # V is not checked again in this pick subtask
         return Override(motion, reason="Q[{}]: argmax cell ({}, {}) yaw {:+.0f} deg, Q {:.2f}".format(
             p["trigger"], qinfo["row"], qinfo["col"], qinfo["yaw_deg"], qinfo["q"]))
 
@@ -309,7 +313,6 @@ class FrameworkAgent(Agent):
             "q_skipped": n(lambda c: c["type"] == "Q" and "skipped" in c),
             "hl_corrections": n(lambda c: c["type"] == "HL"),
             "hl_by_library": _count(c.get("library_id") for c in self.corrections if c["type"] == "HL"),
-            "vlm_done_step": self.vlm_done_step,
             "errors": sum(1 for c in self.calls if "error" in c),
         }
 

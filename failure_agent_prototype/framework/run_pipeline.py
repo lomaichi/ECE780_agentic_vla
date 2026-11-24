@@ -83,8 +83,7 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
             log.warning("%s: no pick-and-place goal: VLM high-level monitoring only", name)
         agent = FrameworkAgent(vlm, per, models["v"], models["q"], library=library, threshold=a.threshold,
                                threshold_count=a.threshold_count, timeout_s=a.timeout_s, monitor_fps=a.monitor_fps,
-                               cooldown_s=a.cooldown_s, held_grace_s=a.held_grace_s,
-                               stop_on_vlm_done=a.stop_on_vlm_done, log=log)
+                               cooldown_s=a.cooldown_s, held_grace_s=a.held_grace_s, log=log)
         client = pi0_client(a, env, obj)
         wrist = {}
 
@@ -234,7 +233,6 @@ def parse_args(argv=None):
     p.add_argument("--monitor-fps", type=float, default=C.MONITOR_FPS)
     p.add_argument("--cooldown-s", type=float, default=C.CORRECTION_COOLDOWN_S)
     p.add_argument("--held-grace-s", type=float, default=C.TIMEOUT_HELD_GRACE_S)
-    p.add_argument("--stop-on-vlm-done", action="store_true", help="end the episode when the VLM judges the task done")
     p.add_argument("--video", action="store_true", help="also write the annotated video")
     p.add_argument("--no-trace", action="store_true", help="do not write trace/*.npy")
     p.add_argument("--env-seed", type=int, default=7)

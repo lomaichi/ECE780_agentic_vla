@@ -131,12 +131,46 @@ class TestFramework(unittest.TestCase):
         n = v.calls
         self.assertIsInstance(ag.act(View(80)), Continue)     # move finished: correction ends, cooldown starts
         self.assertEqual(vlm.external, [80])
-        self.assertIsInstance(ag.act(View(84)), Continue)     # cooldown: V not evaluated
+        for s in range(84, 200, EVERY):                      # Qmax issued: V never checked again, pi0 carries on
+            self.assertIsInstance(ag.act(View(s)), Continue, s)
+            self.assertEqual(ag.calls[-1]["branch"], "q_issued")
         self.assertEqual(v.calls, n)
-        self.assertEqual(ag.calls[-1]["gate"].get("cooldown_s") is not None, True)
-        ag.act(View(100))                                     # cooldown over: counting starts again from 0
+
+    def test_v_rearmed_on_new_pick_subtask_after_q(self):
+        ag, vlm, _, v = make([0.2])
+        for s in (10, 14, 18):
+            ag.act(View(s))
+        ag.act(View(60))                         # argmax Q issued
+        ag.act(View(80))                         # move done
+        n = v.calls
+        ag.act(View(84))
+        self.assertEqual(v.calls, n)
+        vlm.kind, vlm.idx = "place", 1
+        ag.act(View(100))
+        vlm.kind, vlm.idx = "pick", 0            # grasp lost: back to the pick -> V checked again
+        ag.act(View(150))
         self.assertEqual(v.calls, n + 1)
         self.assertEqual(ag.calls[-1]["low_count"], 1)
+
+    def test_timeout_still_fires_after_q_issued(self):
+        ag, _, _, v = make([0.2])
+        for s in (10, 14, 18):
+            ag.act(View(s))
+        ag.act(View(60))
+        ag.act(View(80))
+        n = v.calls
+        for s in range(84, 210, EVERY):
+            self.assertIsInstance(ag.act(View(s)), Continue)
+        self.assertTrue(is_q(ag.act(View(210)), "Q[timeout]"))
+        self.assertEqual(v.calls, n)
+
+    def test_q_skipped_at_handoff_keeps_v_armed(self):
+        ag, _, per, v = make([0.2])
+        per.visible = False
+        for s in (10, 14, 18):
+            ag.act(View(s))
+        ag.act(View(50))                         # skipped: no argmax issued
+        self.assertFalse(ag.q_issued)
 
     def test_high_v_resets_count(self):
         ag, _, _, _ = make([0.2, 0.2, 0.9, 0.2, 0.2, 0.2])
@@ -260,15 +294,14 @@ class TestFramework(unittest.TestCase):
         self.assertEqual(vlm.external, [50])
         self.assertIsNone(ag.pending)
 
-    def test_vlm_stop_is_logged_not_obeyed(self):
+    def test_vlm_never_ends_the_episode(self):
+        # task success is LIBERO's call: a VLM Stop is logged and ignored, pi0 continues
         ag, vlm, _, _ = make([0.9])
         vlm.kind = "place"
         vlm.decision = Stop("VLM: task complete")
         self.assertIsInstance(ag.act(View(10)), Continue)
-        self.assertEqual(ag.vlm_done_step, 10)
-        ag2, vlm2, _, _ = make([0.9], stop_on_vlm_done=True)
-        vlm2.decision = Stop("VLM: task complete")
-        self.assertIsInstance(ag2.act(View(10)), Stop)
+        self.assertEqual(ag.calls[-1]["vlm_stop_ignored"], "VLM: task complete")
+        self.assertNotIn("vlm_done_step", ag.report())
 
     def test_error_in_perception_lets_pi0_continue(self):
         ag, _, per, _ = make([0.2])

@@ -25,7 +25,7 @@ MONITOR_FPS = 5.0             # the VLM samples the world view at 5 fps; V is ev
 # ------------------------------------------------------------------ additions -------------------------
 # V4's gate: no tick within 1 s after a correction (V was never trained on those states). Applied after
 # every correction (HL or Q) as part of close_to_object().
-CORRECTION_COOLDOWN_S = 1.0
+CORRECTION_COOLDOWN_S = 0.2
 # The timeout correction opens the gripper. If the gripper is closed on something when timer2 runs out
 # (pi0 may be lifting the bowl while the pick judge still lags), wait up to this long before firing.
 TIMEOUT_HELD_GRACE_S = 2.0

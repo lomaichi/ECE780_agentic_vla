@@ -26,7 +26,8 @@ correction (GRACE_S after it).
     missed_grasp           LL-4/LL-5  gripper closed on nothing next to the target   (reported only)
     pregrasp_hesitation    LL-8       open gripper next to the target, EE still over WINDOW_S (reported only)
   Destination point: inside the destination box (its highest surface for "on top of"); for "in the ... drawer",
-  point("open drawer") instead (detect boxes the whole cabinet).
+  point("open drawer") instead (detect boxes the whole cabinet); for "to the right of / left of / front of /
+  behind X", the table in a strip beside X's box on that side of the image (SIDE_DEST_DEPTH).
 
   place (target carried)
     wrong_destination      HL-6       carried object descending, EE within RELEASE_LOW_DZ of the destination
@@ -72,6 +73,8 @@ STALL_M = 0.01                   # EE moved less than this over WINDOW_S = stall
 TARGET_MOVING = 0.03             # target box moved this much (normalised) since the start = it is the one held
 COOLDOWN_S = 3.0
 MAX_CORRECTIONS = 6
+SIDE_DEST_DEPTH = 0.12           # spatial relations: destination strip this deep (image fraction) beside the reference
+                                 # box (task 76: the BDDL region's centre is ~0.06 beyond the caddy box's edge)
 
 
 class GroundedCamera(object):
@@ -119,8 +122,9 @@ def xy_dist(a, b):
 class GroundedRecoveryAgent(J.GroundedSuccessJudge):
     name = "vlm_grounded_recovery"
 
-    def __init__(self, vlm, cam, log=None, cooldown_s=COOLDOWN_S, max_corrections=MAX_CORRECTIONS):
-        super().__init__(vlm, log=log)
+    def __init__(self, vlm, cam, log=None, cooldown_s=COOLDOWN_S, max_corrections=MAX_CORRECTIONS,
+                 task_done_stop=True):
+        super().__init__(vlm, log=log, task_done_stop=task_done_stop)
         self.cam, self.cooldown_steps, self.max_corrections = cam, int(cooldown_s * S), max_corrections
 
     def reset(self, task_language, prompt):
@@ -156,6 +160,9 @@ class GroundedRecoveryAgent(J.GroundedSuccessJudge):
                 u, v = pts[0]["x"] * self.cam.size, pts[0]["y"] * self.cam.size
                 self.geo["dest"] = np.asarray(camera.unproject(self.cam.env, u, v, self.cam.size, depth=depth))
                 out["dest_point"] = pts[0]
+        side = self.plan.get("side")
+        if self.geo["dest"] is None and B["destination"] is not None and side is not None:
+            self.geo["dest"] = self._side_point(depth, B["destination"], side)
         if self.geo["dest"] is None and B["destination"] is not None:
             # on top of a fixture: its highest surface (the upper part of the box)
             top = self.plan["on_top"]
@@ -166,6 +173,23 @@ class GroundedRecoveryAgent(J.GroundedSuccessJudge):
                 self.geo[k + "_px"] = self.cam.project(self.geo[k])
         out.update({k: None if self.geo[k] is None else np.round(self.geo[k], 3).tolist() for k in ("target", "dest")})
         return out
+
+    def _side_point(self, depth, box, side):
+        """Destination of "to the right of X" etc. (J.SIDE_RELATIONS): next to reference X, on `side` of its box in
+        the image. The offset along that image axis comes from the table surface in a strip beside the box
+        (keep="low": not X, nor anything taller standing in the strip); the position along the other axis is X's own
+        (its surface point), so an object standing in front of the strip (task 76: the book) does not pull it.
+        Axes: the world horizontal directions that move the projection along image u / v at X."""
+        ref = surface_point(self.cam, depth, box, keep="all")
+        strip = surface_point(self.cam, depth, J.side_region(box, side, SIDE_DEST_DEPTH), xs=(0.2, 0.8),
+                              ys=(0.2, 0.8), keep="low", band=0.03)
+        p0 = np.asarray(self.cam.project(ref))
+        jac = np.stack([np.asarray(self.cam.project(ref + d)) - p0 for d in ([0.01, 0, 0], [0, 0.01, 0])], axis=1)
+        img_axis = [1.0, 0.0] if side in ("left", "right") else [0.0, 1.0]
+        axis = np.linalg.solve(jac, img_axis)               # world xy step that moves the projection along img_axis
+        axis /= np.linalg.norm(axis)
+        off = float(np.dot(strip[:2] - ref[:2], axis))
+        return np.array([ref[0] + off * axis[0], ref[1] + off * axis[1], strip[2]])
 
     def _measure(self, view):
         m = super()._measure(view)

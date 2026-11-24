@@ -22,10 +22,14 @@ While time<FULL_TASK_TIMEOUT:
         time = timer2()
         obs = [l, proprio, height_map(wrist_cam_frame)] #same as those used to train V
         low_success_count = 0
+        Qmax_issued = False # reset only when a new pick subtask starts
 
         if time < TIMEOUT:
             
-            if (not VLM.HL) AND VLM.close_to_object(): 
+            if (not VLM.HL) AND Qmax_issued: # Qmax already issued in this pick subtask: don't check V
+                continue(pi0)
+
+            elif (not VLM.HL) AND VLM.close_to_object(): 
                 # use V to estimate low-level failure and Qmax to correct it
                 V_est = V(obs)
 
@@ -35,6 +39,7 @@ While time<FULL_TASK_TIMEOUT:
                     if low_success_count >= THRESHOLD_COUNT:
                         execute(approach(Q_INITIAL_POSITION))
                         execute(argmax(Q(obs)))
+                        Qmax_issued = True
                         continue(pi0)
                         low_success_count = 0
                     else:
@@ -53,6 +58,7 @@ While time<FULL_TASK_TIMEOUT:
         else: #timeout
             execute(approach(Q_INITIAL_POSITION))
             execute(argmax(Q(obs)))
+            Qmax_issued = True
             continue(pi0)
             reset(timer2)
 

@@ -87,6 +87,15 @@ points instead of a VLM pixel). Destination point: inside the destination box (h
 of"); for "in the ... drawer" `point("open drawer")`, because `detect` boxes the whole cabinet for every drawer
 phrase. Instructions that are not one pick-and-place: success judge only, no recovery.
 
+Spatial relations (2026-11-24): `parse_instruction` also reads "to the right of / to the left of / to the front of /
+in front of / behind X" (libero_90 tasks 34, 37, 69, 70, 76, 84, 85; all other LIBERO instructions parse as
+before). left / right are the robot's: "right of X" is the IMAGE LEFT of X's detect box (checked against the BDDL
+goal regions projected into the image). Place success: the object's box centre within 0.25 (image fraction) of X's
+box edge on that side. Destination point: offset along that image axis from the table in a strip beside X's box,
+X's own position along the other axis. With real `detect` boxes it falls inside the BDDL goal region in 6 of 7
+tasks (0.9-2.4 cm from its centre; `failure_agent_prototype/framework/runs/_test/check_side_dest.py`); in task 34
+`detect("white mug")` boxes the yellow-and-white mug, so the reference is wrong. "under" (task 42) still falls back.
+
 Live window (pi0 server up, a display):
 ```
 MUJOCO_GL=egl /opt/openpi/examples/libero/.venv/bin/python live_judge.py --task 2 --init 0 --vlm moondream2 \

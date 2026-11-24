@@ -32,6 +32,7 @@ after a scripted motion (override) ends. Each call is one iteration of the pseud
 | `V(obs) < THRESHOLD`, `THRESHOLD_COUNT` | `V.predict(obs)` (ensemble mean) < 0.5 on 3 consecutive gated frames |
 | `approach(Q_INITIAL_POSITION)` | V1's handoff: open gripper 7 cm above the target's top, over the centre of its mask box, approach axis −z |
 | `argmax(Q(obs))` | at the handoff pose: V1 wrist crop → Q-map (9 yaw bins × 10×10 cells) → masked argmax → horizontal move to that cell's surface point with that yaw |
+| `Qmax issued` | `q_issued`: set once the argmax(Q) move is issued (V-low or timeout); V is then not checked again in that pick subtask (branch `q_issued`) and pi0 carries on from the Qmax pose. Reset when a new pick subtask starts |
 | `continue(pi0)` | `CONTINUE`; pi0 replans from a fresh chunk after every override |
 | `VLM.HL`, `execute(VLM.HL_correction)` | a confirmed high-level failure at this call; the VLM agent's `Override` (point_approach / carry_to / release_and_retreat) passed through |
 
@@ -43,6 +44,10 @@ after a scripted motion (override) ends. Each call is one iteration of the pseud
   the same points.
 - **"Consecutive" frames.** The count resets on any frame where V is not evaluated: not close to the object, an HL
   failure, or a correction.
+- **After Qmax.** Once the argmax(Q) move is issued, V is not evaluated again for the rest of that pick subtask: pi0
+  carries on from the Qmax pose. A new pick subtask (including going back to the pick after a lost grasp) re-arms V.
+  The timeout and HL branches still run. A Q correction skipped before its argmax move (target not located / not
+  visible at the handoff) does not count as issued.
 - **Cooldown.** `close_to_object()` includes V4's 1 s cooldown after any correction. V never saw states inside it in
   training.
 - **Timeout vs HL.** At the same call, the timeout branch wins over an HL correction, because it sits outside the HL
@@ -53,8 +58,12 @@ after a scripted motion (override) ends. Each call is one iteration of the pseud
   scale depends on that height).
 - **Correction time.** timer2 keeps running during corrections, as in the pseudocode. A slow correction can therefore
   use up most of the 10 s (see the smoke tests below).
-- **VLM "task complete".** It is logged, not obeyed, since the pseudocode stops only at the timeout. LIBERO success
-  still ends the episode. `--stop-on-vlm-done` obeys it instead.
+- **Task success.** LIBERO's success check (the env's `done`, i.e. the BDDL goal) ends the episode and is the
+  reported success. The VLM never judges the whole task: it judges subtasks only (pick, place). Its agent is built
+  with `task_done_stop=False` (`judge_agent.GroundedSuccessJudge`), so a place judged done is recorded as the
+  subtask's `done_step` (cleared again if a later call judges it not done) and pi0 continues until LIBERO succeeds or
+  the 30 s budget runs out. (Before 2026-11-24 the VLM still made a "task complete" call after two consecutive
+  place successes. The framework only logged it, but the recovery agent skipped HL detection on those calls.)
 - **Approach path.** V1's three handoff legs are kept. A third leg that repeats the second leg's goal is dropped (same
   end pose). A stalled travel leg otherwise cost another 60 steps.
 
@@ -128,9 +137,21 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
 
 ## Status
 
-- V is not trained yet. A V4 checkpoint saved with torch 2.7 (`train_v.py`'s venv) was checked to load and predict in
-  the LIBERO venv (torch 1.11) with a randomly initialised net (`runs/_test/v_random_attn.pt`).
-- The pipeline has not been run with the real pi0 or Moondream2. Only the offline smoke tests below have run.
+- V4 is trained (`../RL/pixel_Q/V4/runs/v4_train/v_attn.pt`).
+- First real run (2026-11-24, pi0 server + Moondream2 + V4 + Q-map, libero_90 task 76 init 0,
+  `runs/full_v4_task76_fixed/`): no success. pi0 grasped the book; `wrong_grasp` (HL-3/4) released it and approached
+  the mug at step 86 (~5.7 s); timer2 ran out 1 s after that, so the timeout Q fired (step 212); pi0 then picked the
+  mug (GT step 331). In the place phase `carry_to` (HL-6, step 402) started from pi0's 1.29 m carry height, could
+  not hold the orientation travelling there toward the base (0.78 rad error) and the mug slipped out. V4 was never
+  evaluated: before the HL correction pi0 was 10-17 cm from the mug, after the Q correction the gripper closed at
+  once. An earlier run (`runs/full_v4_task76/`) had no pick subtask at all: Moondream2's parser did not read "to
+  the right of" (fixed, see the moondreamV2 README).
+- `runs/eval_v1/` (2026-11-24, tasks 13 15 24 36 65 76 × inits 0 1, after the VLM stopped judging task
+  success): 3/12 (15 init0/1, 24 init0), against 4/12 in `runs/eval_v0/`. Every success ended at LIBERO's goal step.
+  The VLM did not judge any place done in either run, so its old "task complete" call never fired. The difference
+  comes from pi0's stochasticity: task 24 init1 succeeded in v0, while in v1 the bowl was released outside the drawer
+  after the pick (VLM pick lost at step 441). Then a `stall` point_approach (HL-1/S1) went to a bad target point
+  142 cm away (step 533): a depth/box localisation error to look into.
 - `test_supervisor.py`: 18 tests of every branch pass.
 
 ### Offline smoke tests (2026-11-23, `runs/_test/`)
@@ -156,5 +177,6 @@ Found and fixed by these runs:
 - **timer2 during corrections.** timer2 keeps running through V-low and HL corrections. A slow correction (task 13:
   12 s) leaves pi0 no time before the timeout correction. Pausing timer2 during corrections, or restarting it after
   them, is a one-line change in `supervisor.py` (`_end_correction`).
-- **V-low frequency.** With a pessimistic V, a Q correction can repeat every ~1.4 s of pi0 time (1 s cooldown, then
-  3 frames at 5 fps). V1 judged each correction over 5 s of pi0. `--cooldown-s` controls the gap.
+- **V-low frequency.** Since 2026-11-24 a V-low Q correction fires at most once per pick subtask (V is not checked
+  after Qmax is issued). Before that, a pessimistic V could repeat it every ~1.4 s of pi0 time. A further Q correction
+  in the same subtask can still come from the timeout.

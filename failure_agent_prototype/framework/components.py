@@ -286,9 +286,11 @@ def make_vlm_backend(backend, model=None, log=None):
 
 
 def make_vlm_monitor(vlm, env, every_steps, log=None):
-    """A fresh GroundedRecoveryAgent for one episode (its camera wraps this episode's env)."""
+    """A fresh GroundedRecoveryAgent for one episode (its camera wraps this episode's env). The VLM judges subtasks
+    only (task_done_stop=False): it never declares the task complete; LIBERO's success check ends the episode."""
     recovery_agent, _ = load_moondream()
-    agent = recovery_agent.GroundedRecoveryAgent(vlm, recovery_agent.GroundedCamera(env), log=log)
+    agent = recovery_agent.GroundedRecoveryAgent(vlm, recovery_agent.GroundedCamera(env), log=log,
+                                                 task_done_stop=False)
     return VLMMonitor(agent, every_steps)
 
 

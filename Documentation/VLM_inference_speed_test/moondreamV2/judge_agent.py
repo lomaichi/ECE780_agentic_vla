@@ -346,9 +346,37 @@ point at the CENTRE of the destination surface/opening in image 1; it is carried
 import re  # noqa: E402
 
 # LIBERO instructions with one pick-and-place: "put the X on/in Y", "pick up the X and place it in Y",
-# "stack the X on Y", optionally followed by "and close it" etc.
+# "stack the X on Y", "put the X to the right of Y", optionally followed by "and close it" etc.
 _PICK_PLACE = re.compile(r"^(?:pick up|put|place|stack) the (?P<obj>.+?) (?:and (?:put|place) it )?"
-                         r"(?P<rel>on top of|on|in|inside|into) (?:the )?(?P<dest>.+?)(?: and (?P<rest>.+))?$")
+                         r"(?P<rel>on top of|on|in front of|in|inside|into|to the (?:right|left|front) of|behind) "
+                         r"(?:the )?(?P<dest>.+?)(?: and (?P<rest>.+))?$")
+
+# Spatial relations: the object goes on the table next to a reference object (the "destination"), on one side of
+# the reference's detect box in the upright front image. left / right are the ROBOT's (as fa_core judge_agent
+# SCENE_NOTES): the robot's right is the IMAGE LEFT; front = closer to the camera = lower in the image. Checked
+# against the BDDL goal regions projected into the image (libero_90 tasks 34, 69, 70, 76).
+#   relation phrase -> (label, image side of the reference box)
+SIDE_RELATIONS = {"to the right of": ("right_of", "left"), "to the left of": ("left_of", "right"),
+                  "to the front of": ("front_of", "down"), "in front of": ("front_of", "down"),
+                  "behind": ("behind", "up")}
+SIDE_AT = 0.25           # place success: the object's box centre within this much (image fraction) of the
+                         # reference box's edge, on the relation's side
+SIDE_SLACK = 0.05        # ... and inside the reference box's extent along the other axis, give or take this much
+
+
+def side_region(d, side, depth, overlap=0.0):
+    """Normalised box next to detect box d on `side` of the image ('left' / 'right' / 'up' / 'down'): `depth` deep
+    away from d's edge (reaching `overlap` back into d), as wide as d along the edge."""
+    x0, x1, y0, y1 = d["x_min"], d["x_max"], d["y_min"], d["y_max"]
+    if side == "left":
+        x0, x1 = x0 - depth, x0 + overlap
+    elif side == "right":
+        x0, x1 = x1 - overlap, x1 + depth
+    elif side == "up":
+        y0, y1 = y0 - depth, y0 + overlap
+    else:
+        y0, y1 = y1 - overlap, y1 + depth
+    return {"x_min": x0, "x_max": x1, "y_min": y0, "y_max": y1}
 
 SUCCESS_QUESTIONS = {
     "pick": "Is the {object} held in the robot gripper and lifted up off the surface it was on? Answer yes or no.",
@@ -361,17 +389,22 @@ def parse_instruction(task):
     """Rule-based plan (stand-in for the coordinator): pick / place / finish subtasks with their questions."""
     m = _PICK_PLACE.match(task.strip().lower())
     if not m:
-        return {"object": None, "destination": None, "relation": None, "on_top": False,
+        return {"object": None, "destination": None, "relation": None, "on_top": False, "side": None,
                 "subtasks": [{"kind": "finish", "label": "finish(task)"}]}
-    obj, dest = m.group("obj"), m.group("dest")
-    rel = "in" if m.group("rel") in ("in", "inside", "into") else "on"
-    top = m.group("rel") == "on top of"
+    obj, dest, r = m.group("obj"), m.group("dest"), m.group("rel")
+    side = SIDE_RELATIONS.get(r)
+    if side is not None:
+        rel, rel_label = r, side[0]         # relation keeps the phrase ("resting to the right of the caddy")
+    else:
+        rel = rel_label = "in" if r in ("in", "inside", "into") else "on"
+    top = r == "on top of"
     lab = lambda s: re.sub(r"\W+", "_", s).strip("_")  # noqa: E731
     subs = [{"kind": "pick", "label": f"pick({lab(obj)})"},
-            {"kind": "place", "label": f"place({lab(obj)}, {lab(dest)}, {rel})"}]
+            {"kind": "place", "label": f"place({lab(obj)}, {lab(dest)}, {rel_label})"}]
     if m.group("rest"):
         subs.append({"kind": "finish", "label": f"finish({lab(m.group('rest'))})"})
-    return {"object": obj, "destination": dest, "relation": rel, "on_top": top, "subtasks": subs}
+    return {"object": obj, "destination": dest, "relation": rel, "on_top": top,
+            "side": None if side is None else side[1], "subtasks": subs}
 
 
 class SubtaskSuccessJudge(SubtaskJudgeAgent):
@@ -496,8 +529,9 @@ class GroundedSuccessJudge(SubtaskSuccessJudge):
       pick  success = gripper closed on something (proprioception) AND the object box rose >= PICK_RISE
                       above its start (lifted with the gripper)
       place success = gripper open AND the object box is at the destination box (on: its centre inside the
-                      destination box, on top of: in the box's upper half; in: inside) AND it did not move
-                      since the previous call (resting, not carried).
+                      destination box, on top of: in the box's upper half; in: inside; to the right of / left of
+                      / front of / behind: within SIDE_AT of the box's edge on that side, SIDE_RELATIONS) AND it
+                      did not move since the previous call (resting, not carried).
     Non pick-and-place instructions fall back to the yes/no question (SubtaskSuccessJudge).
 
     Monitoring is continuous: a success is not final. Every call also re-checks the completed subtasks with
@@ -511,14 +545,20 @@ class GroundedSuccessJudge(SubtaskSuccessJudge):
     and the judge goes back to it (the lost completion is kept in the subtask's "history"). After a lost
     pick, the lift reference is re-based to where the object comes to rest (updated while the gripper is
     open), so the re-grasp is judged against the object's new position, not its initial one. The final
-    subtask is not monitored: its success ends the episode after the confirm-twice rule."""
+    subtask is not monitored: its success ends the episode after the confirm-twice rule.
+
+    task_done_stop=False (the framework, failure_agent_prototype/framework): the judge never decides the task is
+    complete and never returns Stop; the environment's success check ends the episode. The final subtask is still
+    judged at every call like the others: its done_step is set when it is judged done and cleared when a later
+    call judges it not done (its latest verdict)."""
 
     name = "vlm_grounded_judge"
 
-    def __init__(self, vlm, log=None, lost_confirm=LOST_CONFIRM):
+    def __init__(self, vlm, log=None, lost_confirm=LOST_CONFIRM, task_done_stop=True):
         super().__init__(vlm, log=log, wrist=False)
         self.phase = "plan"
         self.lost_confirm = lost_confirm
+        self.task_done_stop = task_done_stop
 
     def reset(self, task_language, prompt):
         super().reset(task_language, prompt)
@@ -586,7 +626,16 @@ class GroundedSuccessJudge(SubtaskSuccessJudge):
         pc = centre(B["prev"]) if B["prev"] is not None else (cx, cy)
         m["still"] = float(np.hypot(cx - pc[0], cy - pc[1])) < STABLE
         d = B["destination"]
-        if d is not None:
+        side = self.plan.get("side")
+        if d is not None and side is not None:
+            # next to the reference object, on the relation's side of its box (SIDE_RELATIONS)
+            r = side_region(d, side, SIDE_AT)
+            if side in ("left", "right"):
+                r["y_min"], r["y_max"] = r["y_min"] - SIDE_SLACK, r["y_max"] + SIDE_SLACK
+            else:
+                r["x_min"], r["x_max"] = r["x_min"] - SIDE_SLACK, r["x_max"] + SIDE_SLACK
+            m["at"] = r["x_min"] <= cx <= r["x_max"] and r["y_min"] <= cy <= r["y_max"]
+        elif d is not None:
             inside_x = d["x_min"] <= cx <= d["x_max"]
             if self.plan["on_top"]:
                 m["at"] = inside_x and d["y_min"] - 0.1 <= cy <= 0.5 * (d["y_min"] + d["y_max"])
@@ -691,7 +740,16 @@ class GroundedSuccessJudge(SubtaskSuccessJudge):
             rec["observation"] += f" | {rec['monitor']}"
         if regressed:
             return CONTINUE
-        if self.idx >= len(self.subtasks) - 1 and self.confirm_final:
+        final = self.idx >= len(self.subtasks) - 1
+        if final and not self.task_done_stop:      # subtask verdict only; task success is the environment's
+            if yes and cur["done_step"] is None:
+                cur["done_step"] = view.step
+                rec["decision"] = "final subtask judged done (task success left to the environment)"
+            elif not yes and cur["done_step"] is not None:
+                cur["done_step"] = None
+                rec["decision"] = "final subtask judged not done again"
+            return CONTINUE
+        if final and self.confirm_final:
             if yes:
                 rec["decision"] = "task complete (confirmed twice)"
                 return Stop("VLM: task complete")
