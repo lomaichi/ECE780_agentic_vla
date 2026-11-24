@@ -1,0 +1,69 @@
+
+TRESHOLD = 0.5 # V_est value
+THRESHOLD_COUNT = 3 #number of consecutive frames with V below threshold to execute Qmax
+TIMEOUT = 10 # second
+Q_INITIAL_POSITION = [target_object_x, target_object_y, target_object_z+7cm, -z] 
+                    # gripper x,y,z (cm) and align with -z axis
+FULL_TASK_TIMEOUT = 30 #second
+
+Begin(pi0)
+Begin(VLM, --mode failure_detection, prompt = "monitor pi0 rollout by sampling world view at 5fps. \
+                     Detect high-level failure and command corrective action according to failure recovery library" )
+Begin(VLM, --mode estimate_object_location, prompt = "segment target object and map object center to 3D point")
+Begin(timer1)
+
+time = timer1() # monitor full episode timeout
+
+While time<FULL_TASK_TIMEOUT:
+
+    If subtask == pick(bowl/mug):
+
+        Begin(timer2) #monitor subtask timeout
+        time = timer2()
+        obs = [l, proprio, height_map(wrist_cam_frame)] #same as those used to train V
+        low_success_count = 0
+
+        if time < TIMEOUT:
+            
+            if (not VLM.HL) AND VLM.close_to_object(): 
+                # use V to estimate low-level failure and Qmax to correct it
+                V_est = V(obs)
+
+                if V_est < THRESHOLD:
+                    low_success_count += 1
+
+                    if low_success_count >= THRESHOLD_COUNT:
+                        execute(approach(Q_INITIAL_POSITION))
+                        execute(argmax(Q(obs)))
+                        continue(pi0)
+                        low_success_count = 0
+                    else:
+                        continue(pi0)
+
+                else:
+                    continue(pi0)
+                    low_success_count = 0
+                
+            elif VLM.HL: #HL override
+                execute(VLM.HL_correction)
+
+            else: #no HL and far from object
+                continue(pi0)
+
+        else: #timeout
+            execute(approach(Q_INITIAL_POSITION))
+            execute(argmax(Q(obs)))
+            continue(pi0)
+            reset(timer2)
+
+    else: #different subtask, do VLM HL correction only
+        if VLM.HL:
+            execute(VLM.HL_correction)
+        else:
+            continue(pi0)
+
+stop(episode)
+
+
+
+
