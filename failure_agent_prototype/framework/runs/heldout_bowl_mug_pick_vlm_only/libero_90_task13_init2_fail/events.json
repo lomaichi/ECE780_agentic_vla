@@ -1,0 +1,1407 @@
+{
+  "success": false,
+  "num_steps": 610,
+  "error": null,
+  "stop_reason": null,
+  "agent": {
+    "name": "framework",
+    "privileged": false,
+    "every_steps": 4
+  },
+  "agent_calls": 82,
+  "interventions": 3,
+  "checks": [
+    {
+      "spec": "pick(akita_black_bowl_1)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "place(akita_black_bowl_1, plate_1, on)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "goal()",
+      "done": false,
+      "done_step": null
+    }
+  ],
+  "wall_time_s": 16.3,
+  "events": [
+    {
+      "step": 0,
+      "type": "start",
+      "prompt": "put the black bowl at the front on the plate"
+    },
+    {
+      "step": 78,
+      "type": "override_start",
+      "reason": "release_and_retreat [z 1.05, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 13 cm from the black bowl at the front"
+    },
+    {
+      "step": 154,
+      "type": "override_end",
+      "started": 78,
+      "reason": "release_and_retreat [z 1.05, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 13 cm from the black bowl at the front",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.04905626336066384,
+              0.16227239489342454,
+              1.0487450127627247
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.004767807869339953,
+            "rot_err_rad": 0.003038759808987379
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.08159123769417587,
+              0.1575680137098443,
+              1.0487450127627247
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.004902767805700496,
+            "rot_err_rad": 0.02145945280790329
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.08159123769417587,
+              0.1575680137098443,
+              0.9818648595210717
+            ],
+            "grip": -1.0,
+            "steps": 26,
+            "reached": true,
+            "pos_err_m": 0.004524431637666195,
+            "rot_err_rad": 0.012470973655581474
+          }
+        ]
+      }
+    },
+    {
+      "step": 238,
+      "type": "override_start",
+      "reason": "point_approach [z 1.03, +0 cm]: wrong_approach (HL-2/HL-3/HL-4): descended to 3 cm above the target height but 17 cm away from the black bowl at the front"
+    },
+    {
+      "step": 305,
+      "type": "override_end",
+      "started": 238,
+      "reason": "point_approach [z 1.03, +0 cm]: wrong_approach (HL-2/HL-3/HL-4): descended to 3 cm above the target height but 17 cm away from the black bowl at the front",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0930287326384871,
+              0.15494540744942067,
+              1.032074447045095
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.004490157086298413,
+            "rot_err_rad": 0.0014294087886810303
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.08029664565002526,
+              0.15859234026534205,
+              1.032074447045095
+            ],
+            "grip": -1.0,
+            "steps": 24,
+            "reached": true,
+            "pos_err_m": 0.004882009222603892,
+            "rot_err_rad": 0.0193316787481308
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.08029664565002526,
+              0.15859234026534205,
+              0.9820744470450951
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.004583125531326102,
+            "rot_err_rad": 0.014514915645122528
+          }
+        ]
+      }
+    },
+    {
+      "step": 397,
+      "type": "override_start",
+      "reason": "point_approach [z 1.03, +0 cm]: target_not_approached (HL-7): 22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm"
+    },
+    {
+      "step": 540,
+      "type": "override_end",
+      "started": 397,
+      "reason": "point_approach [z 1.03, +0 cm]: target_not_approached (HL-7): 22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.10503395699479881,
+              0.26571883509877975,
+              1.031683694776655
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.004831142288012439,
+            "rot_err_rad": 0.01999840699136257
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0802966457023071,
+              0.1578714653155249,
+              1.031683694776655
+            ],
+            "grip": -1.0,
+            "steps": 60,
+            "reached": false,
+            "pos_err_m": 0.05863364008495169,
+            "rot_err_rad": 0.2459237426519394
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0802966457023071,
+              0.1578714653155249,
+              0.981683694776655
+            ],
+            "grip": -1.0,
+            "steps": 60,
+            "reached": false,
+            "pos_err_m": 0.06139258190493756,
+            "rot_err_rad": 0.24471037089824677
+          }
+        ]
+      }
+    },
+    {
+      "step": 610,
+      "type": "end",
+      "success": false,
+      "error": null,
+      "stop_reason": null
+    }
+  ],
+  "framework": {
+    "name": "libero_90_task13_init2",
+    "suite": "libero_90",
+    "task_id": 13,
+    "init_state_idx": 2,
+    "language": "put the black bowl at the front on the plate",
+    "split": "held_out",
+    "target_object": "akita_black_bowl_1",
+    "success": false,
+    "success_criterion": "pick",
+    "task_success": false,
+    "stop_reason": null,
+    "num_steps": 610,
+    "sim_s": 30.5,
+    "wall_s": 17.1,
+    "report": {
+      "calls": 82,
+      "v_evals": 0,
+      "v_low_frames": 0,
+      "v_mean": null,
+      "q_corrections": 0,
+      "q_v_low": 0,
+      "q_timeout": 0,
+      "q_skipped": 0,
+      "hl_corrections": 3,
+      "hl_by_library": {
+        "HL-3/HL-4": 1,
+        "HL-2/HL-3/HL-4": 1,
+        "HL-7": 1
+      },
+      "errors": 0
+    },
+    "gt": {
+      "pick(akita_black_bowl_1)": null,
+      "place(akita_black_bowl_1, plate_1, on)": null,
+      "goal()": null
+    }
+  },
+  "config": {
+    "suite": "libero_90",
+    "tasks": [
+      2,
+      12,
+      13,
+      15,
+      16,
+      24,
+      29,
+      30,
+      36,
+      43,
+      60,
+      65,
+      66,
+      68,
+      76,
+      84
+    ],
+    "resummarize": null,
+    "inits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "out": "runs/heldout_bowl_mug_pick_vlm_only",
+    "pi0": "server",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "vlm": "moondream2",
+    "target_mask": "seg",
+    "q_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+    "v_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+    "v_const": null,
+    "threshold": 0.5,
+    "threshold_count": 3,
+    "timeout_s": 10.0,
+    "full_timeout_s": 30.0,
+    "approach_dz": 0.07,
+    "monitor_fps": 5.0,
+    "cooldown_s": 0.2,
+    "held_grace_s": 2.0,
+    "success": "pick",
+    "no_qv": true,
+    "video": true,
+    "raw_pi0": false,
+    "no_plain_video": true,
+    "label_dirs": true,
+    "no_trace": false,
+    "env_seed": 7,
+    "seed": 7,
+    "device": "cpu",
+    "torch_threads": 2,
+    "q_model": null,
+    "v_model": null
+  },
+  "vlm": {
+    "vlm_calls": 84,
+    "vlm_latency_s": 7.98,
+    "plan": {
+      "object": "black bowl at the front",
+      "destination": "plate",
+      "relation": "on"
+    },
+    "subtasks": [
+      {
+        "kind": "pick",
+        "label": "pick(black_bowl_at_the_front)",
+        "done_step": null,
+        "history": []
+      },
+      {
+        "kind": "place",
+        "label": "place(black_bowl_at_the_front, plate, on)",
+        "done_step": null,
+        "history": []
+      }
+    ],
+    "hl_failures": [
+      {
+        "step": 78,
+        "last_step": 78,
+        "level": "high_level",
+        "mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 13 cm from the black bowl at the front",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "action": "release_and_retreat"
+      },
+      {
+        "step": 238,
+        "last_step": 238,
+        "level": "high_level",
+        "mode": "wrong_approach",
+        "library": "HL-2/HL-3/HL-4",
+        "reason": "descended to 3 cm above the target height but 17 cm away from the black bowl at the front",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "action": "point_approach"
+      },
+      {
+        "step": 397,
+        "last_step": 397,
+        "level": "high_level",
+        "mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "action": "point_approach"
+      }
+    ],
+    "hl_corrections": [
+      {
+        "step": 78,
+        "action": "release_and_retreat",
+        "failure_mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 13 cm from the black bowl at the front",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "target_world": [
+          0.082,
+          0.158,
+          0.912
+        ],
+        "point_img": [
+          72.6520873584357,
+          190.46834361500143
+        ],
+        "travel": {
+          "z": 1.049,
+          "rule_z": 1.049,
+          "obstacle_top_z": 0.974,
+          "obstacle_top_now": 0.974,
+          "obstacle_top_plan": 0.952,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 154
+      },
+      {
+        "step": 238,
+        "action": "point_approach",
+        "failure_mode": "wrong_approach",
+        "library": "HL-2/HL-3/HL-4",
+        "reason": "descended to 3 cm above the target height but 17 cm away from the black bowl at the front",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "target_world": [
+          0.08,
+          0.159,
+          0.912
+        ],
+        "point_img": [
+          72.34991891501278,
+          190.06676196667246
+        ],
+        "travel": {
+          "z": 1.032,
+          "rule_z": 1.032,
+          "obstacle_top_z": 0.952,
+          "obstacle_top_now": 0.952,
+          "obstacle_top_plan": 0.952,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 305
+      },
+      {
+        "step": 397,
+        "action": "point_approach",
+        "failure_mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm",
+        "subtask": "pick(black_bowl_at_the_front)",
+        "target_world": [
+          0.08,
+          0.158,
+          0.912
+        ],
+        "point_img": [
+          72.6157635887009,
+          190.15516938145566
+        ],
+        "travel": {
+          "z": 1.032,
+          "rule_z": 1.032,
+          "obstacle_top_z": 0.952,
+          "obstacle_top_now": 0.952,
+          "obstacle_top_plan": 0.952,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 540
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "type": "HL",
+      "step": 78,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "mode": "wrong_grasp",
+      "library_id": "HL-3/HL-4",
+      "action": "release_and_retreat",
+      "reason": "gripper closed on something 13 cm from the black bowl at the front",
+      "target_world": [
+        0.082,
+        0.158,
+        0.912
+      ],
+      "travel": {
+        "z": 1.049,
+        "rule_z": 1.049,
+        "obstacle_top_z": 0.974,
+        "obstacle_top_now": 0.974,
+        "obstacle_top_plan": 0.952,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-3",
+          "name": "wrong_object_category",
+          "level": "high",
+          "remedy": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE"
+        },
+        {
+          "id": "HL-4",
+          "name": "referring_expression_instance_error",
+          "level": "high",
+          "remedy": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE"
+        }
+      ],
+      "end_step": 154,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0491,
+              0.1623,
+              1.0487
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.003
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0816,
+              0.1576,
+              1.0487
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.0049,
+            "rot_err_rad": 0.0215
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0816,
+              0.1576,
+              0.9819
+            ],
+            "grip": -1.0,
+            "steps": 26,
+            "reached": true,
+            "pos_err_m": 0.0045,
+            "rot_err_rad": 0.0125
+          }
+        ]
+      }
+    },
+    {
+      "type": "HL",
+      "step": 238,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "mode": "wrong_approach",
+      "library_id": "HL-2/HL-3/HL-4",
+      "action": "point_approach",
+      "reason": "descended to 3 cm above the target height but 17 cm away from the black bowl at the front",
+      "target_world": [
+        0.08,
+        0.159,
+        0.912
+      ],
+      "travel": {
+        "z": 1.032,
+        "rule_z": 1.032,
+        "obstacle_top_z": 0.952,
+        "obstacle_top_now": 0.952,
+        "obstacle_top_plan": 0.952,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-2",
+          "name": "scene_default_skill_override",
+          "level": "high",
+          "remedy": "HALT -> RETREAT 10 cm + 5 cm from attractor -> INSERT_SUBTASK to restore any broken protected state -> POINT_APPROACH(target) -> REPROMPT object-first sentence -> WATCH 5 s; retry 15 cm -> ESCALATE"
+        },
+        {
+          "id": "HL-3",
+          "name": "wrong_object_category",
+          "level": "high",
+          "remedy": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE"
+        },
+        {
+          "id": "HL-4",
+          "name": "referring_expression_instance_error",
+          "level": "high",
+          "remedy": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE"
+        }
+      ],
+      "end_step": 305,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.093,
+              0.1549,
+              1.0321
+            ],
+            "grip": -1.0,
+            "steps": 20,
+            "reached": true,
+            "pos_err_m": 0.0045,
+            "rot_err_rad": 0.0014
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0803,
+              0.1586,
+              1.0321
+            ],
+            "grip": -1.0,
+            "steps": 24,
+            "reached": true,
+            "pos_err_m": 0.0049,
+            "rot_err_rad": 0.0193
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0803,
+              0.1586,
+              0.9821
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.0046,
+            "rot_err_rad": 0.0145
+          }
+        ]
+      }
+    },
+    {
+      "type": "HL",
+      "step": 397,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "mode": "target_not_approached",
+      "library_id": "HL-7",
+      "action": "point_approach",
+      "reason": "22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm",
+      "target_world": [
+        0.08,
+        0.158,
+        0.912
+      ],
+      "travel": {
+        "z": 1.032,
+        "rule_z": 1.032,
+        "obstacle_top_z": 0.952,
+        "obstacle_top_now": 0.952,
+        "obstacle_top_plan": 0.952,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-7",
+          "name": "target_never_approached",
+          "level": "high",
+          "remedy": "early heading check (2-3 frames) -> HALT -> RETREAT -> POINT_APPROACH(target) -> REPROMPT -> WATCH 3 s -> ESCALATE"
+        }
+      ],
+      "end_step": 540,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.105,
+              0.2657,
+              1.0317
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.02
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0803,
+              0.1579,
+              1.0317
+            ],
+            "grip": -1.0,
+            "steps": 60,
+            "reached": false,
+            "pos_err_m": 0.0586,
+            "rot_err_rad": 0.2459
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0803,
+              0.1579,
+              0.9817
+            ],
+            "grip": -1.0,
+            "steps": 60,
+            "reached": false,
+            "pos_err_m": 0.0614,
+            "rot_err_rad": 0.2447
+          }
+        ]
+      }
+    }
+  ],
+  "calls": [
+    {
+      "step": 10,
+      "t_s": 0.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.7 cm)",
+      "subtask_start": {
+        "idx": 0,
+        "kind": "pick",
+        "object": "black bowl at the front",
+        "timer2": false
+      },
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 14,
+      "t_s": 0.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 18,
+      "t_s": 0.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 22,
+      "t_s": 0.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 26,
+      "t_s": 0.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 30,
+      "t_s": 1.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 34,
+      "t_s": 1.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 38,
+      "t_s": 1.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 42,
+      "t_s": 1.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 46,
+      "t_s": 1.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 50,
+      "t_s": 2.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 54,
+      "t_s": 2.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 58,
+      "t_s": 2.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 62,
+      "t_s": 2.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 66,
+      "t_s": 2.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 6.0 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 70,
+      "t_s": 3.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 3.1 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 74,
+      "t_s": 3.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 1.0 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 78,
+      "t_s": 3.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 0.7 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "wrong_grasp",
+      "vlm_library": "HL-3/HL-4",
+      "branch": "hl",
+      "decision": "override: release_and_retreat [z 1.05, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 13 cm from the black bowl at the front"
+    },
+    {
+      "step": 154,
+      "t_s": 7.2,
+      "correction_end": "hl",
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 158,
+      "t_s": 7.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 162,
+      "t_s": 7.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 166,
+      "t_s": 7.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 170,
+      "t_s": 8.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 174,
+      "t_s": 8.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 5.2 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 178,
+      "t_s": 8.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 1.4 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 182,
+      "t_s": 8.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 0.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 186,
+      "t_s": 8.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 0.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 190,
+      "t_s": 9.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 1.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 194,
+      "t_s": 9.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 4.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 198,
+      "t_s": 9.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 4.7 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 202,
+      "t_s": 9.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 1.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 206,
+      "t_s": 9.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 0.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 210,
+      "t_s": 10.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper closed 0.2 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 214,
+      "t_s": 10.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 0.6 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 218,
+      "t_s": 10.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 3.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 222,
+      "t_s": 10.6,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.2 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 226,
+      "t_s": 10.8,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.7 cm)",
+      "vlm_failure_suspected": "wrong_approach",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 230,
+      "t_s": 11.0,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "vlm_failure_suspected": "wrong_approach",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 234,
+      "t_s": 11.2,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "vlm_failure_suspected": "wrong_approach",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 238,
+      "t_s": 11.4,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.6 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "wrong_approach",
+      "vlm_library": "HL-2/HL-3/HL-4",
+      "branch": "hl",
+      "decision": "override: point_approach [z 1.03, +0 cm]: wrong_approach (HL-2/HL-3/HL-4): descended to 3 cm above the target height but 17 cm away from the black bowl at the front"
+    },
+    {
+      "step": 305,
+      "t_s": 14.75,
+      "correction_end": "hl",
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 309,
+      "t_s": 14.95,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 313,
+      "t_s": 15.15,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 317,
+      "t_s": 15.35,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 321,
+      "t_s": 15.55,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 325,
+      "t_s": 15.75,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 329,
+      "t_s": 15.95,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 333,
+      "t_s": 16.15,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.7 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 337,
+      "t_s": 16.35,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.6 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 341,
+      "t_s": 16.55,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 345,
+      "t_s": 16.75,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 349,
+      "t_s": 16.95,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 353,
+      "t_s": 17.15,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 357,
+      "t_s": 17.35,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 361,
+      "t_s": 17.55,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 365,
+      "t_s": 17.75,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 369,
+      "t_s": 17.95,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 373,
+      "t_s": 18.15,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 377,
+      "t_s": 18.35,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.7 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 381,
+      "t_s": 18.55,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.7 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 385,
+      "t_s": 18.75,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.7 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 389,
+      "t_s": 18.95,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 393,
+      "t_s": 19.15,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 397,
+      "t_s": 19.35,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.8 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "target_not_approached",
+      "vlm_library": "HL-7",
+      "branch": "hl",
+      "decision": "override: point_approach [z 1.03, +0 cm]: target_not_approached (HL-7): 22 cm from the pre-grasp point over the black bowl at the front, -9.1 cm closer in 3 s, EE moved 9.9 cm"
+    },
+    {
+      "step": 540,
+      "t_s": 26.5,
+      "correction_end": "hl",
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 544,
+      "t_s": 26.7,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 548,
+      "t_s": 26.9,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 552,
+      "t_s": 27.1,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 556,
+      "t_s": 27.3,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 560,
+      "t_s": 27.5,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 564,
+      "t_s": 27.7,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 568,
+      "t_s": 27.9,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 572,
+      "t_s": 28.1,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 576,
+      "t_s": 28.3,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 580,
+      "t_s": 28.5,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 584,
+      "t_s": 28.7,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 588,
+      "t_s": 28.9,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 592,
+      "t_s": 29.1,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 596,
+      "t_s": 29.3,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 600,
+      "t_s": 29.5,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 604,
+      "t_s": 29.7,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 608,
+      "t_s": 29.9,
+      "subtask": "pick(black_bowl_at_the_front)",
+      "vlm_observation": "pick(black_bowl_at_the_front): not yet (black bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    }
+  ]
+}

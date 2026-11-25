@@ -134,6 +134,9 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
   for 10 steps) ends the episode and is its success; otherwise it runs to `--full-timeout-s`. LIBERO's goal no longer
   stops it (`task_success` in events.json still records it). It applies to the framework and the `--raw-pi0` rollout
   (`fa_core.loop.run_episode(stop_checks=...)`). Use it while there is no Q / V for place().
+- `--no-qv` (ablation): the VLM part of the framework only. Q, V and the perception wrappers are not built, so
+  `FrameworkAgent.q_enabled` is False: a pick never starts timer2, there is no V trigger and no timeout Q correction,
+  and every call is "HL correction if HL, else pi0".
 - The default 30 s budget (pseudocode) is longer than the 20 s LIBERO-90 budget used for the pi0 baselines. Pass
   `--full-timeout-s 20` for a like-for-like comparison.
 
@@ -191,7 +194,25 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
     breaks (60 init 0/3/5). In task 43 (3 breaks) pi0 alone finishes in 7-9 s; the framework episodes had a
     correction by step 54-186 (V-low Q, carry_to, grasp_loss release) and never placed the bowl. 68 init 0 began
     with a real wrong grasp.
-- `test_supervisor.py`: 21 tests pass.
+- `runs/heldout_bowl_mug_pick/` (2026-11-25): the same 96 episodes with `--success pick`, since there is no Q / V for
+  place() yet. Each rollout stops once pick(target) is done (privileged), otherwise it runs the full 30 s. Framework
+  63/96, pi0 alone 31/96: the framework fixed 37 and broke 5. By task (framework / pi0): 2 6/0, 12 6/2, 15 6/0,
+  16 1/2, 24 6/6, 29 5/5, 30 5/0, 43 6/5, 60 3/5, 65 4/0, 66 4/0, 68 6/6, 76 5/0, and 0/0 for 13 36 84.
+  - Breaks: task 60 x3, each starting with the false-positive wrong_grasp release at step 62-66 (see above); 16
+    init 1 and 29 init 0 had early V-low Q / point_approach corrections.
+  - V fires early on picks pi0 makes alone. Of the 21 episodes where pi0 alone picked within 10 s, the framework ran
+    a V-low Q correction in 11. Where both picked (26), the framework's median pick time is 15.5 s, against 6.75 s
+    for pi0 alone (task 29 init 2: 21.3 s vs 5.8 s, task 43 init 4: 15.8 s vs 4.3 s).
+- `runs/heldout_bowl_mug_pick_vlm_only/` (2026-11-25): VLM-only ablation (`--no-qv --success pick`) on the same 96
+  episodes, without a new raw pi0 run. Pick success: VLM only 55/96, full framework 63/96, pi0 alone 31/96 (the
+  last two from `runs/heldout_bowl_mug_pick/`).
+  - Per episode, full beats VLM-only in 15 and VLM-only beats full in 7 (McNemar p ~ 0.09: one stochastic rollout
+    each, so the Q / V gain is suggestive, not established).
+  - By task (VLM only / full / pi0): 2 6/6/0, 12 4/6/2, 15 4/6/0, 16 2/1/2, 24 6/6/6, 29 5/5/5, 30 4/5/0,
+    43 6/6/5, 60 3/3/5, 65 2/4/0, 66 4/4/0, 68 5/6/6, 76 4/5/0, and 0/0/0 for 13 36 84.
+  - Median pick time where all three picked (22): VLM only 8.9 s, full 12.3 s, pi0 alone 6.6 s. The V-low / timeout Q
+    corrections cost time on picks pi0 makes anyway.
+- `test_supervisor.py`: 22 tests pass.
 
 ### Offline smoke tests (2026-11-23, `runs/_test/`)
 

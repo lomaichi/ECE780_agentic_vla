@@ -257,6 +257,20 @@ class TestFramework(unittest.TestCase):
         vlm.hl, vlm.decision = True, Override(Motion(), reason="carry_to: wrong_destination (HL-6)")
         self.assertIs(ag.act(View(400)), vlm.decision)
 
+    def test_vlm_only_without_q_v(self):
+        """run_pipeline --no-qv: no perception / V / Q. A pick(bowl) is HL-only: no timer2, no timeout, no V."""
+        vlm = FakeVLM()
+        ag = FrameworkAgent(vlm, None, None, None)
+        ag.reset("put the black bowl on the plate", "put the black bowl on the plate")
+        for s in range(10, 400, EVERY):       # well past the 10 s timer2
+            self.assertIsInstance(ag.act(View(s)), Continue)
+            self.assertEqual(ag.calls[-1]["branch"], "other_subtask")
+        self.assertIsNone(ag.pick_start)
+        vlm.hl, vlm.decision = True, Override(Motion(), reason="point_approach: target_not_approached (HL-7)")
+        self.assertIs(ag.act(View(400)), vlm.decision)
+        self.assertEqual([c["type"] for c in ag.corrections], ["HL"])
+        self.assertEqual(ag.report()["q_corrections"], 0)
+
     def test_pick_of_non_round_rim_object_is_other_subtask(self):
         ag, vlm, _, v = make([0.2])
         vlm.obj = "ketchup"

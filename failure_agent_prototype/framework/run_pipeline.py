@@ -77,7 +77,10 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
         calls0, lat0 = getattr(vlm_backend, "calls", 0), getattr(vlm_backend, "latency_s", 0.0)
         vlm = K.make_vlm_monitor(vlm_backend, env, every, log=log)
         per = None
-        if obj is not None:
+        if a.no_qv:
+            log.info("%s: --no-qv: VLM high-level monitoring and correction only (no V trigger, no Q correction, "
+                     "no timer2)", name)
+        elif obj is not None:
             per = K.Perception(env, obj, vlm, target_mask=a.target_mask, approach_dz=a.approach_dz,
                                q_cfg=models["q"].train_cfg, seed=a.seed)
         else:
@@ -169,8 +172,9 @@ def run_raw_pi0(a, env, init, language, obj):
 
 def config_dict(a, models):
     c = {k: (str(v) if isinstance(v, pathlib.Path) else v) for k, v in vars(a).items()}
-    c["q_model"] = {"ckpt": models["q"].ckpt, "width": models["q"].width}
-    c["v_model"] = {"ckpt": models["v"].ckpt, "meta": getattr(models["v"], "meta", None)}
+    c["q_model"] = None if models["q"] is None else {"ckpt": models["q"].ckpt, "width": models["q"].width}
+    c["v_model"] = None if models["v"] is None else {"ckpt": models["v"].ckpt,
+                                                     "meta": getattr(models["v"], "meta", None)}
     return c
 
 
@@ -350,6 +354,9 @@ def parse_args(argv=None):
                    help="task: LIBERO's goal ends the episode and is its success; pick: the privileged pick(target) "
                         "check (grasped, lifted >= 5 cm, 10 steps) ends it and is its success, else it runs to "
                         "--full-timeout-s. Applies to the framework and the --raw-pi0 rollout")
+    p.add_argument("--no-qv", action="store_true",
+                   help="ablation: the VLM part of the framework only (HL failure detection + corrections); no V "
+                        "trigger, no Q correction, no timer2 timeout")
     p.add_argument("--video", action="store_true", help="also write the annotated video")
     p.add_argument("--raw-pi0", action="store_true",
                    help="also roll out pi0 alone from the same init (same budget and stop rule): <name>_pi0.mp4, "
@@ -376,15 +383,19 @@ def main(argv=None):
         return
     if not a.tasks:
         raise SystemExit("--tasks is required (or --resummarize RUN_DIR ...)")
-    import torch
+    if a.no_qv:     # FrameworkAgent without Q / V: q_enabled is False, every call is "HL correction if HL else pi0"
+        models = {"q": None, "v": None}
+        log.info("--no-qv: no Q / V models (VLM part of the framework only)")
+    else:
+        import torch
 
-    torch.set_num_threads(a.torch_threads)
-    if a.v_const is None and not a.v_ckpt.exists():
-        raise SystemExit("no V checkpoint at {} (train it with V4/train_v.py, pass --v-ckpt, or use --v-const X for a "
-                         "stand-in)".format(a.v_ckpt))
-    models = {"q": K.QModel(a.q_ckpt, a.device),
-              "v": K.ConstantV(a.v_const) if a.v_const is not None else K.VModel(a.v_ckpt, a.device)}
-    log.info("Q: %s (width %d) | V: %s", models["q"].ckpt, models["q"].width, models["v"].ckpt)
+        torch.set_num_threads(a.torch_threads)
+        if a.v_const is None and not a.v_ckpt.exists():
+            raise SystemExit("no V checkpoint at {} (train it with V4/train_v.py, pass --v-ckpt, or use --v-const X "
+                             "for a stand-in)".format(a.v_ckpt))
+        models = {"q": K.QModel(a.q_ckpt, a.device),
+                  "v": K.ConstantV(a.v_const) if a.v_const is not None else K.VModel(a.v_ckpt, a.device)}
+        log.info("Q: %s (width %d) | V: %s", models["q"].ckpt, models["q"].width, models["v"].ckpt)
     library = K.SkillLibrary()
     vlm_backend = K.make_vlm_backend(a.vlm, log=log)
     out = a.out
