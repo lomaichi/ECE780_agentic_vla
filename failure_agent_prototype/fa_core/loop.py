@@ -119,7 +119,8 @@ class EpisodeResult(object):
 
 def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(), task_language=None,
                 num_steps_wait=common.NUM_STEPS_WAIT, replan_steps=common.REPLAN_STEPS, resize=common.RESIZE,
-                stop_on_success=True, record=True, start_step=0, init_state=None, log=None, step_hook=None):
+                stop_on_success=True, record=True, start_step=0, init_state=None, log=None, step_hook=None,
+                stop_checks=()):
     """Run one episode from the env's current state; `obs` is the observation of that state.
 
     max_steps: policy steps after the wait steps (record_suites.py uses MAX_STEPS[suite]).
@@ -129,6 +130,8 @@ def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(),
     checks: fa_core.predicates checks, updated after every step (logged; privileged).
     step_hook: optional callable(step, obs) for logging, called for the first state and after every step
         (after the checks are updated), so step indexes the state like states[step].
+    stop_checks: specs of checks (e.g. "pick(akita_black_bowl_1)") whose completion ends the episode
+        (stop_reason "check <spec> done"); res.success stays the env's own success.
     """
     log = log or logging.getLogger(__name__)
     task_language = prompt if task_language is None else task_language
@@ -268,6 +271,11 @@ def run_episode(env, obs, prompt, max_steps, client=None, agent=None, checks=(),
         if step_hook is not None:
             step_hook(start_step + t, obs)
         if done and stop_on_success:
+            break
+        hit = [c.spec for c in checks if c.spec in stop_checks and c.done]
+        if hit:
+            res.stop_reason = "check {} done".format(hit[0])
+            event("stop", start_step + t, reason=res.stop_reason)
             break
 
     if motion is not None:

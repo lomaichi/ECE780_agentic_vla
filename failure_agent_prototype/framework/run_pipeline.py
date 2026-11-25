@@ -93,13 +93,14 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
                 wrist[step] = common.upright(o["robot0_eye_in_hand_image"])
 
         res = loop.run_episode(env, obs, language, int(round(a.full_timeout_s * S)), client=client, agent=agent,
-                               checks=checks, task_language=language, init_state=init, stop_on_success=True,
-                               step_hook=hook, log=log)
+                               checks=checks, task_language=language, init_state=init, step_hook=hook, log=log,
+                               **stop_rule(a, obj))
         held_out = suite == "libero_90" and task_id in library.held_out_tasks()
         report = agent.report()
         info = {"name": name, "suite": suite, "task_id": task_id, "init_state_idx": init_idx, "language": language,
-                "split": "held_out" if held_out else "survey", "target_object": obj, "success": res.success,
-                "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
+                "split": "held_out" if held_out else "survey", "target_object": obj,
+                "success": episode_success(a, res, obj), "success_criterion": a.success, "task_success": res.success,
+                "stop_reason": res.stop_reason, "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
                 "wall_s": round(time.time() - t_wall, 1), "report": report,
                 "gt": {c["spec"]: c.get("done_step") for c in res.checks}}
         raw_frames = None
@@ -122,10 +123,10 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
             imageio.mimwrite(str(d / "{}_pi0.mp4".format(name)), raw_frames, fps=S)
         if a.no_plain_video and (d / "{}.mp4".format(name)).exists():
             (d / "{}.mp4".format(name)).unlink()
-        if a.label_dirs:     # <name>_success / <name>_fail: the framework rollout's LIBERO success
+        if a.label_dirs:     # <name>_success / <name>_fail: the framework rollout's success (--success)
             for tag in ("success", "fail"):
                 shutil.rmtree(str(out / "{}_{}".format(name, tag)), ignore_errors=True)
-            d = d.rename(out / "{}_{}".format(name, "success" if res.success else "fail"))
+            d = d.rename(out / "{}_{}".format(name, "success" if info["success"] else "fail"))
         info["dir"] = d.name
         info["vlm_calls"] = extra["vlm"]["vlm_calls"]
         return info
@@ -133,18 +134,35 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
         env.close()
 
 
+def stop_rule(a, obj):
+    """run_episode kwargs of --success: task = stop at LIBERO's goal; pick = stop once pick(<target>) is done
+    (privileged PickCheck: grasped and lifted >= 5 cm for 10 steps), else run to the budget."""
+    if a.success == "task":
+        return {"stop_on_success": True}
+    if obj is None:
+        raise RuntimeError("--success pick needs a pick-and-place goal")
+    return {"stop_on_success": False, "stop_checks": ("pick({})".format(obj),)}
+
+
+def episode_success(a, res, obj):
+    if a.success == "task":
+        return res.success
+    return any(c.get("done") for c in res.checks if c["spec"] == "pick({})".format(obj))
+
+
 def run_raw_pi0(a, env, init, language, obj):
     """pi0 alone (no agent) from the same init state, with the framework's budget (--full-timeout-s) and the same
-    stop-on-success rule: the like-for-like baseline of the episode. Returns (result dict, agentview frames)."""
+    stop rule (--success): the like-for-like baseline of the episode. Returns (result dict, agentview frames)."""
     t0 = time.time()
     np.random.seed(a.seed)
     env.reset()
     obs = env.set_init_state(init)
     checks = [c for c in P.goal_checks(env) if c.kind in ("pick", "place")] + [P.GoalCheck()]
     res = loop.run_episode(env, obs, language, int(round(a.full_timeout_s * S)), client=pi0_client(a, env, obj),
-                           agent=None, checks=checks, task_language=language, init_state=init, stop_on_success=True,
-                           log=log)
-    return ({"success": res.success, "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
+                           agent=None, checks=checks, task_language=language, init_state=init, log=log,
+                           **stop_rule(a, obj))
+    return ({"success": episode_success(a, res, obj), "task_success": res.success, "stop_reason": res.stop_reason,
+             "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
              "wall_s": round(time.time() - t0, 1), "gt": {c["spec"]: c.get("done_step") for c in res.checks}},
             res.frames)
 
@@ -244,7 +262,9 @@ def _yn(x):
 def write_summary(rows, out):
     for r in rows:
         if "error" not in r:
-            r["pi0_success"] = pi0_baseline(r["suite"], r["task_id"], r["init_state_idx"])
+            # the recorded baseline judged the whole task: no comparison for other criteria
+            r["pi0_success"] = pi0_baseline(r["suite"], r["task_id"], r["init_state_idx"]) \
+                if r.get("success_criterion", "task") == "task" else None
     (out / "summary.json").write_text(json.dumps(rows, indent=2, default=str))
     raw = any("pi0_raw" in r for r in rows)
     head = ("| episode | split | success | {}pi0 alone (baseline dir) | sim s | Q (V-low / timeout / skipped) | "
@@ -266,7 +286,10 @@ def write_summary(rows, out):
             p["q_timeout"], p["q_skipped"], hl, p["v_evals"], p["v_low_frames"], r.get("vlm_calls"), r["wall_s"])
     ok = [r for r in rows if "error" not in r]
     both = [r for r in ok if r["pi0_success"] is not None]
-    foot = "\nsuccess {}/{}\n".format(sum(r["success"] for r in ok), len(ok))
+    crit = sorted(set(r.get("success_criterion", "task") for r in ok))
+    foot = "\nsuccess {}/{} (criterion: {})\n".format(sum(r["success"] for r in ok), len(ok), ", ".join(
+        {"task": "LIBERO goal", "pick": "pick(target): grasped and lifted >= 5 cm for 10 steps; the episode stops "
+                                        "there, else runs to the budget"}.get(c, c) for c in crit))
     rr = [r for r in ok if "success" in (r.get("pi0_raw") or {})]
     if rr:
         n = len(rr)
@@ -291,7 +314,7 @@ def write_summary(rows, out):
         foot += ("pi0 alone ran the 20 s LIBERO-90 budget; the framework's budget is --full-timeout-s "
                  "(default 30 s)\n")
     else:
-        foot += "\nno raw pi0 rollout recorded for these episodes\n"
+        foot += "\nno recorded pi0 baseline ({}, LIBERO goal only) for these episodes\n".format(C.PI0_BASELINE_DIR.name)
     (out / "summary.md").write_text(head + body + foot)
 
 
@@ -323,6 +346,10 @@ def parse_args(argv=None):
     p.add_argument("--monitor-fps", type=float, default=C.MONITOR_FPS)
     p.add_argument("--cooldown-s", type=float, default=C.CORRECTION_COOLDOWN_S)
     p.add_argument("--held-grace-s", type=float, default=C.TIMEOUT_HELD_GRACE_S)
+    p.add_argument("--success", default="task", choices=["task", "pick"],
+                   help="task: LIBERO's goal ends the episode and is its success; pick: the privileged pick(target) "
+                        "check (grasped, lifted >= 5 cm, 10 steps) ends it and is its success, else it runs to "
+                        "--full-timeout-s. Applies to the framework and the --raw-pi0 rollout")
     p.add_argument("--video", action="store_true", help="also write the annotated video")
     p.add_argument("--raw-pi0", action="store_true",
                    help="also roll out pi0 alone from the same init (same budget and stop rule): <name>_pi0.mp4, "

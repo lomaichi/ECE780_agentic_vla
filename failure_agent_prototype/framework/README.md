@@ -129,7 +129,11 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
 - `--raw-pi0`: for each episode, also roll out pi0 alone from the same init, with the same budget and stop rule
   (`<name>_pi0.mp4`, `framework.pi0_raw` in events.json, a summary column with a per-task table).
   `--no-plain-video` deletes the un-annotated framework video. `--label-dirs` names the episode folders
-  `<name>_success` / `<name>_fail` after the framework rollout's LIBERO success.
+  `<name>_success` / `<name>_fail` after the framework rollout's success.
+- `--success pick` (default `task`): the privileged `pick(<target>)` check (both fingers on the target, lifted >= 5 cm,
+  for 10 steps) ends the episode and is its success; otherwise it runs to `--full-timeout-s`. LIBERO's goal no longer
+  stops it (`task_success` in events.json still records it). It applies to the framework and the `--raw-pi0` rollout
+  (`fa_core.loop.run_episode(stop_checks=...)`). Use it while there is no Q / V for place().
 - The default 30 s budget (pseudocode) is longer than the 20 s LIBERO-90 budget used for the pi0 baselines. Pass
   `--full-timeout-s 20` for a like-for-like comparison.
 
@@ -142,7 +146,7 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
 | `<name>/<name>_pi0.mp4` | `--raw-pi0`: agentview of pi0 alone from the same init |
 | `<name>/events.json` | loop events; `framework` (success, report); `corrections` (Q: trigger, Q_INITIAL_POSITION, approach result, Q-map, cell / yaw, move result, library tag; HL: mode, library entry, action, `travel`: z, obstacle top, below-EE, cap); `calls` (every supervisor call: branch, gate, V, timer2, VLM verdict); `vlm` (plan, subtasks, HL failures); `config` |
 | `<name>/trace/*.npy` | `fa_core.loop` trace, restorable with `tools/scene_restore.py` |
-| `summary.md`, `summary.json` | one row per episode: success, Q corrections (V-low / timeout / skipped), HL corrections by library entry, V evaluations |
+| `summary.md`, `summary.json` | one row per episode: success (by `--success`), Q corrections (V-low / timeout / skipped), HL corrections by library entry, V evaluations |
 
 ## Files
 
@@ -172,7 +176,22 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
   comes from pi0's stochasticity: task 24 init1 succeeded in v0, while in v1 the bowl was released outside the drawer
   after the pick (VLM pick lost at step 441). Then a `stall` point_approach (HL-1/S1) went to a bad target point
   142 cm away (step 533): a depth/box localisation error to look into.
-- `test_supervisor.py`: 18 tests of every branch pass.
+- `runs/heldout_bowl_mug/` (2026-11-25): every held-out pick-and-place task with a bowl or mug (libero_90 2 12 13
+  15 16 24 29 30 36 43 60 65 66 68 76 84), inits 0-5, default parameters, obstacle-aware HL travel, `--raw-pi0`.
+  Framework 31/96, pi0 alone (same init, 30 s budget, stop rule) 22/96: the framework fixed 16 and broke 7. By task
+  (framework / pi0): 2 5/0, 12 1/0, 15 4/0, 24 6/6, 29 1/0, 43 3/6, 60 2/4, 66 3/0, 68 5/6, 76 1/0, and 0/0 for 13
+  16 30 36 65 84.
+  - HL travel: 130 corrections, 39 raised by more than 1 cm, 3 capped. Over the 119 that completed, no non-held
+    object moved more than 2 cm, except the book released by a task 76 wrong_grasp.
+  - Task 65 never reached the place phase, so no carry_to ran. In all 6 inits pi0 first grasped the white mug
+    (wrong_grasp, a correct call). The red mug was picked in 2 inits only, once lying on its side; the VLM judged
+    neither pick done.
+  - Of the 57 wrong_grasp calls, 49 were real and 8 were false positives, all in task 60 ("black bowl on the
+    left"): the VLM target point sits on the other bowl, so pi0's correct grasp is released. That starts 3 of the 7
+    breaks (60 init 0/3/5). In task 43 (3 breaks) pi0 alone finishes in 7-9 s; the framework episodes had a
+    correction by step 54-186 (V-low Q, carry_to, grasp_loss release) and never placed the bowl. 68 init 0 began
+    with a real wrong grasp.
+- `test_supervisor.py`: 21 tests pass.
 
 ### Offline smoke tests (2026-11-23, `runs/_test/`)
 
