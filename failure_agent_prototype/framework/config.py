@@ -35,6 +35,24 @@ TIMEOUT_HELD_GRACE_S = 2.0
 
 ROUND_RIM = ("bowl", "mug", "cup")   # = shared.scene.ROUND_RIM: the objects the Q-map was trained on
 
+# HL corrections (the VLM agent's point_approach / release_and_retreat / carry_to: lift, travel, descend) travel
+# above the obstacles on their way (components.ClearanceRecoveryAgent). Obstacle = highest robot-free agentview
+# depth point whose xy lies within the corridor around the straight start -> goal path (current frame + the plan-time
+# frame, for what the arm now hides). Travel z = max(the moondreamV2 rule, obstacle + clearance + what hangs below
+# the EE), capped for reach.
+HL_ROBOT_DILATE_PX = 2        # robot self-filter dilated by this (segmentation / depth disagree on the arm's outline)
+HL_TRAVEL_CLEAR_M = 0.05      # gap between the lowest point of the fingers / carried object and the obstacle top
+HL_FINGER_BELOW_M = 0.02      # open fingertips below the EE point (robot0_eef_pos)
+HL_CORRIDOR_M = 0.08          # half-width of the swept path, empty gripper (hand + open fingers)
+HL_CORRIDOR_HELD_M = 0.11     # ... carrying a bowl / mug (radius up to ~7 cm, mug handle included)
+HL_HELD_EXCLUDE_M = 0.09      # carrying: current points this close (xy) to the EE, down to the carried object's
+                              # bottom - 3 cm, are that object
+HL_HEIGHT_RADIUS_M = 0.08     # target height: detect-box points within this (xy) of the box centre's surface
+HL_HANG_DEFAULT_M = 0.10      # carried bowl / mug extends this far below the EE when its height was not measured
+HL_HANG_RANGE_M = (0.03, 0.15)   # measured target height (plan time, depth in its detect box) clipped to this
+HL_TRAVEL_MAX_ABOVE_BASE_M = 0.45   # travel cap above the robot base (top-down hand still reaches ~0.7 m out;
+                                    # pi0's own carry height in task 76 was base + 0.38)
+
 # ------------------------------------------------------------------ models -----------------------------
 DEFAULT_Q_CKPT = V1_DIR / "runs" / "pick_v0" / "ckpt_best.pt"
 DEFAULT_V_CKPT = V4_DIR / "runs" / "v4_train" / "v_attn.pt"      # written by V4/train_v.py (not trained yet)

@@ -23,6 +23,7 @@ import bisect
 import json
 import logging
 import pathlib
+import shutil
 import time
 
 import numpy as np
@@ -101,6 +102,13 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
                 "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
                 "wall_s": round(time.time() - t_wall, 1), "report": report,
                 "gt": {c["spec"]: c.get("done_step") for c in res.checks}}
+        raw_frames = None
+        if a.raw_pi0:
+            try:
+                info["pi0_raw"], raw_frames = run_raw_pi0(a, env, init, language, obj)
+            except Exception as e:
+                log.exception("%s: raw pi0 rollout failed", name)
+                info["pi0_raw"] = {"error": repr(e)[:300]}
         extra = {"framework": info, "config": config_dict(a, models),
                  "vlm": vlm.stats(calls0, lat0), "corrections": agent.corrections, "calls": agent.calls}
         if a.no_trace:
@@ -108,10 +116,37 @@ def run_one(a, suite, task_id, init_idx, models, library, vlm_backend, out):
         d = loop.write_episode(res, out, name, extra=extra)
         if a.video:
             annotate_video(res, agent, wrist, info, d / "{}_annotated.mp4".format(name), a)
+        if raw_frames:
+            import imageio
+
+            imageio.mimwrite(str(d / "{}_pi0.mp4".format(name)), raw_frames, fps=S)
+        if a.no_plain_video and (d / "{}.mp4".format(name)).exists():
+            (d / "{}.mp4".format(name)).unlink()
+        if a.label_dirs:     # <name>_success / <name>_fail: the framework rollout's LIBERO success
+            for tag in ("success", "fail"):
+                shutil.rmtree(str(out / "{}_{}".format(name, tag)), ignore_errors=True)
+            d = d.rename(out / "{}_{}".format(name, "success" if res.success else "fail"))
+        info["dir"] = d.name
         info["vlm_calls"] = extra["vlm"]["vlm_calls"]
         return info
     finally:
         env.close()
+
+
+def run_raw_pi0(a, env, init, language, obj):
+    """pi0 alone (no agent) from the same init state, with the framework's budget (--full-timeout-s) and the same
+    stop-on-success rule: the like-for-like baseline of the episode. Returns (result dict, agentview frames)."""
+    t0 = time.time()
+    np.random.seed(a.seed)
+    env.reset()
+    obs = env.set_init_state(init)
+    checks = [c for c in P.goal_checks(env) if c.kind in ("pick", "place")] + [P.GoalCheck()]
+    res = loop.run_episode(env, obs, language, int(round(a.full_timeout_s * S)), client=pi0_client(a, env, obj),
+                           agent=None, checks=checks, task_language=language, init_state=init, stop_on_success=True,
+                           log=log)
+    return ({"success": res.success, "num_steps": res.num_steps, "sim_s": round(res.num_steps / float(S), 2),
+             "wall_s": round(time.time() - t0, 1), "gt": {c["spec"]: c.get("done_step") for c in res.checks}},
+            res.frames)
 
 
 def config_dict(a, models):
@@ -211,27 +246,47 @@ def write_summary(rows, out):
         if "error" not in r:
             r["pi0_success"] = pi0_baseline(r["suite"], r["task_id"], r["init_state_idx"])
     (out / "summary.json").write_text(json.dumps(rows, indent=2, default=str))
-    head = ("| episode | split | success | pi0 alone | sim s | Q (V-low / timeout / skipped) | HL (library) | "
-            "V evals (low) | VLM calls | wall s |\n|---|---|---|---|---|---|---|---|---|---|\n")
+    raw = any("pi0_raw" in r for r in rows)
+    head = ("| episode | split | success | {}pi0 alone (baseline dir) | sim s | Q (V-low / timeout / skipped) | "
+            "HL (library) | V evals (low) | VLM calls | wall s |\n|---|---|---|{}---|---|---|---|---|---|---|\n")
+    head = head.format("pi0 raw (same budget) | " if raw else "", "---|" if raw else "")
     body = ""
     for r in rows:
         if "error" in r:
-            body += "| {} | | ERROR: {} | | | | | | | |\n".format(r["name"], r["error"][:80])
+            body += "| {} | | ERROR: {} | | | | | | | |{}\n".format(r["name"], r["error"][:80], " |" if raw else "")
             continue
         p = r["report"]
         hl = ", ".join("{} x{}".format(k, v) for k, v in sorted(p["hl_by_library"].items())) or "-"
-        body += "| {} | {} | {} | {} | {} | {} / {} / {} | {} | {} ({}) | {} | {} |\n".format(
-            r["name"], r["split"], _yn(r["success"]), _yn(r["pi0_success"]), r["sim_s"], p["q_v_low"],
+        pr = r.get("pi0_raw") or {}
+        pr_txt = ("ERROR" if "error" in pr else "{} ({} s)".format(_yn(pr.get("success")), pr.get("sim_s"))) \
+            if pr else "-"
+        body += "| {} | {} | {} | {}{} | {} | {} / {} / {} | {} | {} ({}) | {} | {} |\n".format(
+            r["name"], r["split"], _yn(r["success"]), pr_txt + " | " if raw else "", _yn(r["pi0_success"]),
+            r["sim_s"], p["q_v_low"],
             p["q_timeout"], p["q_skipped"], hl, p["v_evals"], p["v_low_frames"], r.get("vlm_calls"), r["wall_s"])
     ok = [r for r in rows if "error" not in r]
     both = [r for r in ok if r["pi0_success"] is not None]
     foot = "\nsuccess {}/{}\n".format(sum(r["success"] for r in ok), len(ok))
+    rr = [r for r in ok if "success" in (r.get("pi0_raw") or {})]
+    if rr:
+        n = len(rr)
+        foot += ("\npi0 raw, same init / budget / stop rule as the framework ({} episodes): framework {}/{}, pi0 alone "
+                 "{}/{} (framework fixed {}, broke {})\n").format(
+            n, sum(r["success"] for r in rr), n, sum(r["pi0_raw"]["success"] for r in rr), n,
+            sum(r["success"] and not r["pi0_raw"]["success"] for r in rr),
+            sum(r["pi0_raw"]["success"] and not r["success"] for r in rr))
+        tasks = sorted(set(r["task_id"] for r in rr))
+        foot += "\n| task | framework | pi0 raw |\n|---|---|---|\n" + "".join(
+            "| {} | {}/{} | {}/{} |\n".format(
+                t, sum(r["success"] for r in rr if r["task_id"] == t), sum(1 for r in rr if r["task_id"] == t),
+                sum(r["pi0_raw"]["success"] for r in rr if r["task_id"] == t),
+                sum(1 for r in rr if r["task_id"] == t)) for t in tasks)
     if both:
         n = len(both)
         fw, pi = sum(r["success"] for r in both), sum(r["pi0_success"] for r in both)
         gained = sum(r["success"] and not r["pi0_success"] for r in both)
         lost = sum(r["pi0_success"] and not r["success"] for r in both)
-        foot += ("\non the {} episodes with a raw pi0 rollout ({}): framework {}/{}, pi0 alone {}/{} "
+        foot += ("\non the {} episodes with a recorded pi0 baseline ({}): framework {}/{}, pi0 alone {}/{} "
                  "(framework fixed {}, broke {})\n").format(n, C.PI0_BASELINE_DIR.name, fw, n, pi, n, gained, lost)
         foot += ("pi0 alone ran the 20 s LIBERO-90 budget; the framework's budget is --full-timeout-s "
                  "(default 30 s)\n")
@@ -269,6 +324,13 @@ def parse_args(argv=None):
     p.add_argument("--cooldown-s", type=float, default=C.CORRECTION_COOLDOWN_S)
     p.add_argument("--held-grace-s", type=float, default=C.TIMEOUT_HELD_GRACE_S)
     p.add_argument("--video", action="store_true", help="also write the annotated video")
+    p.add_argument("--raw-pi0", action="store_true",
+                   help="also roll out pi0 alone from the same init (same budget and stop rule): <name>_pi0.mp4, "
+                        "events.json framework.pi0_raw, a summary column")
+    p.add_argument("--no-plain-video", action="store_true",
+                   help="delete the un-annotated framework video <name>.mp4 (keep --video's annotated one)")
+    p.add_argument("--label-dirs", action="store_true",
+                   help="name episode folders <name>_success / <name>_fail (the framework rollout's LIBERO success)")
     p.add_argument("--no-trace", action="store_true", help="do not write trace/*.npy")
     p.add_argument("--env-seed", type=int, default=7)
     p.add_argument("--seed", type=int, default=7)

@@ -30,6 +30,7 @@ import config as C
 
 C.ensure_paths()
 from fa_core import camera, common, motion  # noqa: E402
+from fa_core.loop import Override  # noqa: E402
 
 _MODS = {}
 
@@ -216,7 +217,8 @@ class VLMMonitor(object):
         r = self.rec or {}
         if not r.get("failure") or r.get("failure") == "none":
             return None
-        return {k: r.get(k) for k in ("failure", "failure_mode", "library", "reason", "action", "target_world")}
+        return {k: r.get(k) for k in ("failure", "failure_mode", "library", "reason", "action", "target_world",
+                                      "travel")}
 
     def held(self):
         return bool((getattr(self.agent, "meas", None) or {}).get("held"))
@@ -286,12 +288,172 @@ def make_vlm_backend(backend, model=None, log=None):
 
 
 def make_vlm_monitor(vlm, env, every_steps, log=None):
-    """A fresh GroundedRecoveryAgent for one episode (its camera wraps this episode's env). The VLM judges subtasks
-    only (task_done_stop=False): it never declares the task complete; LIBERO's success check ends the episode."""
+    """A fresh ClearanceRecoveryAgent (GroundedRecoveryAgent + obstacle-aware HL travel) for one episode (its camera
+    wraps this episode's env). The VLM judges subtasks only (task_done_stop=False): it never declares the task
+    complete; LIBERO's success check ends the episode."""
     recovery_agent, _ = load_moondream()
-    agent = recovery_agent.GroundedRecoveryAgent(vlm, recovery_agent.GroundedCamera(env), log=log,
-                                                 task_done_stop=False)
+    agent = clearance_agent_cls()(vlm, recovery_agent.GroundedCamera(env), log=log, task_done_stop=False)
     return VLMMonitor(agent, every_steps)
+
+
+def dilate(mask, px):
+    """Binary dilation of a 2-D bool mask by a (2 px + 1)^2 square."""
+    if px <= 0:
+        return mask
+    h, w = mask.shape
+    pad = np.pad(mask, px)
+    out = np.zeros_like(mask)
+    for dy in range(2 * px + 1):
+        for dx in range(2 * px + 1):
+            out |= pad[dy:dy + h, dx:dx + w]
+    return out
+
+
+def corridor_top(pts, start, goal, radius):
+    """Highest z of the points (N, 3) whose xy lies within `radius` of the segment start -> goal (xy), or None."""
+    if pts is None or not len(pts):
+        return None
+    a, ab = np.asarray(start[:2], float), np.asarray(goal[:2], float) - np.asarray(start[:2], float)
+    p = pts[:, :2] - a
+    L2 = float(ab @ ab)
+    t = np.clip(p @ ab / L2, 0.0, 1.0) if L2 > 1e-12 else np.zeros(len(p))
+    sel = np.linalg.norm(p - t[:, None] * ab, axis=1) <= radius
+    return float(pts[sel, 2].max()) if sel.any() else None
+
+
+def clearance_agent_cls():
+    if "clearance_agent" in _MODS:
+        return _MODS["clearance_agent"]
+    recovery_agent, _ = load_moondream()
+    m = load_modules()
+    SC, v2, J = m["scene"], m["v2_env"], recovery_agent.J
+
+    class ClearanceRecoveryAgent(recovery_agent.GroundedRecoveryAgent):
+        """GroundedRecoveryAgent whose HL corrections travel high enough to clear the obstacles on their way.
+
+        moondreamV2's motions lift to a height set by the start / goal points only (point_approach: 5 cm above the
+        higher of the EE and the pre-grasp point; release_and_retreat: EE + 10 cm; carry_to: destination + 18 cm),
+        then travel horizontally. That ignores what stands between them and, for carry_to, the carried object
+        hanging below the gripper: in task 65 (runs/eval, init 0/2) carry_to swept the red mug through the other
+        two mugs. Here the travel height is also at least
+            obstacle top + HL_TRAVEL_CLEAR_M + below,
+        obstacle top = the highest robot-free agentview depth point within the corridor (HL_CORRIDOR_M, carrying
+        HL_CORRIDOR_HELD_M) around the straight start -> goal path, in the current frame and in the plan-time frame
+        (the arm at home: what it hides now), below = HL_FINGER_BELOW_M, or for carry_to the carried object's
+        height measured at plan time (depth in its detect box; a bowl / mug held at the rim hangs about that far
+        below the EE). When carrying, current points around the EE down to the object's bottom are the object
+        itself and are skipped. Capped at the robot base + HL_TRAVEL_MAX_ABOVE_BASE_M (reach).
+        Path: [release] -> straight up to the travel height -> across -> straight down to the goal [-> release, up].
+        Privileged stand-in: the robot self-filter (sim segmentation of the robot's geoms), as for V's heightmap."""
+
+        def reset(self, task_language, prompt):
+            super(ClearanceRecoveryAgent, self).reset(task_language, prompt)
+            self.robot_ids = v2.robot_geom_ids(self.cam.env)
+            self.scene0 = None            # robot-free agentview points at the plan call
+            self.target_height = None     # target's height above its support, measured at the plan call
+            self.travel = None            # travel record of the latest correction motion
+
+        def _scene_points(self, box=None):
+            """Robot-free world points (N, 3) of the agentview depth image (only inside `box`, normalised, if
+            given). The robot mask is dilated by C.HL_ROBOT_DILATE_PX: on the arm's silhouette the segmentation
+            and depth renders disagree by a pixel (task 65: 17 'background' pixels 25-37 cm above the table).
+            Pixels that are not a geom are dropped too: robosuite's site markers on the hand (6-7 px, up to 0.4 m
+            above the table in tasks 36 / 65); every physical obstacle is a geom."""
+            env, res = self.cam.env, self.cam.size
+            depth = common.upright(camera.depth_image(env, res))
+            seg = common.upright(SC.segmentation_geom_ids(env, res))
+            robot = dilate(np.isin(seg, self.robot_ids), C.HL_ROBOT_DILATE_PX)
+            vv, uu = np.mgrid[0:res, 0:res]
+            keep = ~robot & (seg >= 0)
+            if box is not None:
+                keep &= (uu >= box["x_min"] * res) & (uu < box["x_max"] * res) & \
+                    (vv >= box["y_min"] * res) & (vv < box["y_max"] * res)
+            return SC.pixels_to_world(env, uu[keep], vv[keep], depth[keep], res)
+
+        def _plan(self, view):
+            out = super(ClearanceRecoveryAgent, self)._plan(view)
+            self.scene0 = self._scene_points()
+            box = (getattr(self, "boxes", None) or {}).get("object")
+            if box is not None:
+                # box_mask_agent's rule (top = 95th pct above the floor, floor = 10th pct) on the box points within
+                # C.HL_HEIGHT_RADIUS_M (xy) of the median of the box's central part: not the background behind the
+                # object. Matches the mesh heights within 1 cm (13 held-out scenes after the wait steps; init
+                # states hold objects a few cm above their support until then)
+                pts = self._scene_points(box)
+                w, h = box["x_max"] - box["x_min"], box["y_max"] - box["y_min"]
+                mid = self._scene_points({"x_min": box["x_min"] + 0.3 * w, "x_max": box["x_max"] - 0.3 * w,
+                                          "y_min": box["y_min"] + 0.3 * h, "y_max": box["y_max"] - 0.3 * h})
+                z = pts[:, 2][np.hypot(*(pts[:, :2] - np.median(mid[:, :2], axis=0)).T) <= C.HL_HEIGHT_RADIUS_M] \
+                    if len(mid) else pts[:, 2]
+                if len(z) >= 20:
+                    floor = float(np.percentile(z, 10))
+                    above = z[z >= floor + 0.005]
+                    if len(above) >= 5:
+                        self.target_height = float(np.percentile(above, 95)) - floor
+                        out["target_height"] = round(self.target_height, 3)
+            return out
+
+        def _motion_world(self, action, target, view):
+            if target is None:            # plain release_and_retreat (no target point): lift only
+                self.travel = None
+                return super(ClearanceRecoveryAgent, self)._motion_world(action, target, view)
+            ee = np.array(view.ee_pos, dtype=np.float64)
+            quat = np.array(view.ee_quat, dtype=np.float64)
+            target = np.asarray(target, dtype=np.float64)
+            OPEN, CLOSE = common.GRIPPER_OPEN, common.GRIPPER_CLOSE
+            if action == "release_and_retreat":
+                grip, goal = OPEN, target + [0, 0, J.APPROACH_DZ]
+                rule = max(ee[2] + 0.10, goal[2] + 0.05)
+            elif action == "point_approach":
+                grip, goal = OPEN, target + [0, 0, J.APPROACH_DZ]
+                rule = max(ee[2], goal[2]) + 0.05
+            else:  # carry_to
+                grip, goal = CLOSE, target + [0, 0, J.RELEASE_DZ]
+                rule = max(ee[2], target[2] + J.TRAVEL_DZ)
+            carry = action == "carry_to"
+            if carry:
+                h = self.target_height
+                below = C.HL_HANG_DEFAULT_M if h is None else float(np.clip(h, *C.HL_HANG_RANGE_M))
+            else:
+                below = C.HL_FINGER_BELOW_M
+            radius = C.HL_CORRIDOR_HELD_M if carry else C.HL_CORRIDOR_M
+            now = self._scene_points()
+            if carry:   # the carried object itself (and the gripper's surroundings down to its bottom)
+                near = np.hypot(now[:, 0] - ee[0], now[:, 1] - ee[1]) <= C.HL_HELD_EXCLUDE_M
+                now = now[~(near & (now[:, 2] >= ee[2] - below - 0.03))]
+            tops = {"now": corridor_top(now, ee, goal, radius), "plan": corridor_top(self.scene0, ee, goal, radius)}
+            known = [t for t in tops.values() if t is not None]
+            top = max(known) if known else None
+            cap = float(self.cam.env.env.robots[0].base_pos[2]) + C.HL_TRAVEL_MAX_ABOVE_BASE_M
+            need = None if top is None else top + C.HL_TRAVEL_CLEAR_M + below
+            z = rule if need is None else max(rule, min(need, cap))
+            legs = [motion.Hold(OPEN, 10)] if action == "release_and_retreat" else []
+            legs += [motion.MoveTo([ee[0], ee[1], z], grip, quat=quat),
+                     motion.MoveTo([goal[0], goal[1], z], grip, quat=quat),
+                     motion.MoveTo(goal, grip, quat=quat)]
+            if carry:
+                legs += [motion.Hold(OPEN, 15), motion.MoveTo(goal + [0, 0, 0.10], OPEN, quat=quat)]
+            r = lambda x: None if x is None else round(float(x), 3)   # noqa: E731
+            self.travel = {"z": r(z), "rule_z": r(rule), "obstacle_top_z": r(top), "obstacle_top_now": r(tops["now"]),
+                           "obstacle_top_plan": r(tops["plan"]), "below_ee_m": r(below), "corridor_m": radius,
+                           "cap_z": r(cap), "capped": bool(need is not None and need > cap and cap > rule),
+                           "raised_m": r(z - rule)}
+            return motion.Sequence(legs)
+
+        def _report(self, view, rec, det, confirmed=False):
+            n0 = len(self.corrections)
+            out = super(ClearanceRecoveryAgent, self)._report(view, rec, det, confirmed)
+            if len(self.corrections) > n0 and self.travel is not None and isinstance(out, Override):
+                t = self.corrections[-1]["travel"] = rec["travel"] = dict(self.travel)
+                head, _, rest = out.reason.partition(": ")      # "<action>: <mode> (<lib>): <reason>"
+                out.reason = "{} [z {:.2f}, +{:.0f} cm{}]: {}".format(
+                    head, t["z"], 100 * t["raised_m"], ", capped" if t["capped"] else "", rest)
+                if self.log:
+                    self.log.info("step %d: %s travel %s", view.step, self.corrections[-1]["action"], t)
+            return out
+
+    _MODS["clearance_agent"] = ClearanceRecoveryAgent
+    return ClearanceRecoveryAgent
 
 
 # ------------------------------------------------------------------ perception -----------------------

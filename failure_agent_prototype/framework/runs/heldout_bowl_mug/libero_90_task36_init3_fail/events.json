@@ -1,0 +1,5403 @@
+{
+  "success": false,
+  "num_steps": 610,
+  "error": null,
+  "stop_reason": null,
+  "agent": {
+    "name": "framework",
+    "privileged": false,
+    "every_steps": 4
+  },
+  "agent_calls": 78,
+  "interventions": 8,
+  "checks": [
+    {
+      "spec": "pick(white_bowl_1)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "place(white_bowl_1, plate_1, on)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "goal()",
+      "done": false,
+      "done_step": null
+    }
+  ],
+  "wall_time_s": 12.0,
+  "events": [
+    {
+      "step": 0,
+      "type": "start",
+      "prompt": "put the white bowl on the plate"
+    },
+    {
+      "step": 74,
+      "type": "override_start",
+      "reason": "release_and_retreat [z 1.24, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 30 cm from the white bowl"
+    },
+    {
+      "step": 191,
+      "type": "override_end",
+      "started": 74,
+      "reason": "release_and_retreat [z 1.24, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 30 cm from the white bowl",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.14163397575647213,
+              0.009533239355035071,
+              1.2378290839398187
+            ],
+            "grip": -1.0,
+            "steps": 36,
+            "reached": true,
+            "pos_err_m": 0.004344028054756955,
+            "rot_err_rad": 0.0011681809555739164
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.01645528340595226,
+              -0.26504058780907624,
+              1.2378290839398187
+            ],
+            "grip": -1.0,
+            "steps": 56,
+            "reached": true,
+            "pos_err_m": 0.004496929516220394,
+            "rot_err_rad": 0.017345663160085678
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.01645528340595226,
+              -0.26504058780907624,
+              1.1878290839398187
+            ],
+            "grip": -1.0,
+            "steps": 15,
+            "reached": true,
+            "pos_err_m": 0.0049980832546550205,
+            "rot_err_rad": 0.002100372454151511
+          }
+        ]
+      }
+    },
+    {
+      "step": 203,
+      "type": "override_start",
+      "reason": "Q[v_low]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 241,
+      "type": "override_end",
+      "started": 203,
+      "reason": "Q[v_low]: approach Q_INITIAL_POSITION",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.03851950940984358,
+              -0.23871444478963016,
+              1.219635023297332
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.004413250418837867,
+            "rot_err_rad": 0.005535089876502752
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.010928705531817018,
+              -0.25469500162876185,
+              1.219635023297332
+            ],
+            "grip": -1.0,
+            "steps": 16,
+            "reached": true,
+            "pos_err_m": 0.004532206788145949,
+            "rot_err_rad": 0.0267853494733572
+          }
+        ]
+      }
+    },
+    {
+      "step": 241,
+      "type": "override_start",
+      "reason": "Q[v_low]: argmax cell (9, 0) yaw -10 deg, Q 0.21"
+    },
+    {
+      "step": 261,
+      "type": "override_end",
+      "started": 241,
+      "reason": "Q[v_low]: argmax cell (9, 0) yaw -10 deg, Q 0.21",
+      "motion": {
+        "type": "move_to",
+        "pos": [
+          -0.07098816221552617,
+          -0.333187071977671,
+          1.2199579938832315
+        ],
+        "grip": -1.0,
+        "steps": 20,
+        "reached": true,
+        "pos_err_m": 0.004522861779006775,
+        "rot_err_rad": 0.012188630178570747
+      }
+    },
+    {
+      "step": 261,
+      "type": "override_start",
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 289,
+      "type": "override_end",
+      "started": 261,
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.06765506004152685,
+              -0.33013538950014754,
+              1.2201422291297441
+            ],
+            "grip": -1.0,
+            "steps": 0,
+            "reached": true,
+            "pos_err_m": 0.0,
+            "rot_err_rad": 0.0
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.008665969080995595,
+              -0.2565549652208901,
+              1.2201422291297441
+            ],
+            "grip": -1.0,
+            "steps": 21,
+            "reached": true,
+            "pos_err_m": 0.004076085179773501,
+            "rot_err_rad": 0.003978871274739504
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.008665969080995595,
+              -0.2565549652208901,
+              1.2119186381640012
+            ],
+            "grip": -1.0,
+            "steps": 7,
+            "reached": true,
+            "pos_err_m": 0.0047683494707204425,
+            "rot_err_rad": 0.007722898386418819
+          }
+        ]
+      }
+    },
+    {
+      "step": 289,
+      "type": "override_start",
+      "reason": "Q[timeout]: argmax cell (5, 4) yaw +10 deg, Q 0.15"
+    },
+    {
+      "step": 300,
+      "type": "override_end",
+      "started": 289,
+      "reason": "Q[timeout]: argmax cell (5, 4) yaw +10 deg, Q 0.15",
+      "motion": {
+        "type": "move_to",
+        "pos": [
+          -0.0022706862816143465,
+          -0.259686146233446,
+          1.216418109679226
+        ],
+        "grip": -1.0,
+        "steps": 11,
+        "reached": true,
+        "pos_err_m": 0.004667725023208277,
+        "rot_err_rad": 0.041522007435560226
+      }
+    },
+    {
+      "step": 448,
+      "type": "override_start",
+      "reason": "point_approach [z 1.24, +0 cm]: target_not_approached (HL-7): 10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm"
+    },
+    {
+      "step": 504,
+      "type": "override_end",
+      "started": 448,
+      "reason": "point_approach [z 1.24, +0 cm]: target_not_approached (HL-7): 10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.04660780063318963,
+              -0.20812716148878774,
+              1.2374956145973766
+            ],
+            "grip": -1.0,
+            "steps": 15,
+            "reached": true,
+            "pos_err_m": 0.004874571716735039,
+            "rot_err_rad": 0.030148373916745186
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.022738463288116906,
+              -0.2496598356444335,
+              1.2374956145973766
+            ],
+            "grip": -1.0,
+            "steps": 18,
+            "reached": true,
+            "pos_err_m": 0.004813313917362175,
+            "rot_err_rad": 0.005609980784356594
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.022738463288116906,
+              -0.2496598356444335,
+              1.1874956145973765
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.004795809097983105,
+            "rot_err_rad": 0.013583228923380375
+          }
+        ]
+      }
+    },
+    {
+      "step": 504,
+      "type": "override_start",
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 537,
+      "type": "override_end",
+      "started": 504,
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              0.025719037785075057,
+              -0.24916494854553825,
+              1.2116348676551023
+            ],
+            "grip": -1.0,
+            "steps": 14,
+            "reached": true,
+            "pos_err_m": 0.004718791556129465,
+            "rot_err_rad": 0.009392463602125645
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.04026707630912374,
+              -0.24245610255212388,
+              1.2116348676551023
+            ],
+            "grip": -1.0,
+            "steps": 19,
+            "reached": true,
+            "pos_err_m": 0.004830961324623444,
+            "rot_err_rad": 0.034366197884082794
+          }
+        ]
+      }
+    },
+    {
+      "step": 537,
+      "type": "override_start",
+      "reason": "Q[timeout]: argmax cell (9, 0) yaw -10 deg, Q 0.18"
+    },
+    {
+      "step": 556,
+      "type": "override_end",
+      "started": 537,
+      "reason": "Q[timeout]: argmax cell (9, 0) yaw -10 deg, Q 0.18",
+      "motion": {
+        "type": "move_to",
+        "pos": [
+          -0.0016578450723693378,
+          -0.34245886078784105,
+          1.21056615396474
+        ],
+        "grip": -1.0,
+        "steps": 19,
+        "reached": true,
+        "pos_err_m": 0.004632613550611708,
+        "rot_err_rad": 0.013989454135298729
+      }
+    },
+    {
+      "step": 610,
+      "type": "end",
+      "success": false,
+      "error": null,
+      "stop_reason": null
+    }
+  ],
+  "framework": {
+    "name": "libero_90_task36_init3",
+    "suite": "libero_90",
+    "task_id": 36,
+    "init_state_idx": 3,
+    "language": "put the white bowl on the plate",
+    "split": "held_out",
+    "target_object": "white_bowl_1",
+    "success": false,
+    "num_steps": 610,
+    "sim_s": 30.5,
+    "wall_s": 12.6,
+    "report": {
+      "calls": 78,
+      "v_evals": 3,
+      "v_low_frames": 3,
+      "v_mean": 0.014,
+      "q_corrections": 3,
+      "q_v_low": 1,
+      "q_timeout": 2,
+      "q_skipped": 0,
+      "hl_corrections": 2,
+      "hl_by_library": {
+        "HL-3/HL-4": 1,
+        "HL-7": 1
+      },
+      "errors": 0
+    },
+    "gt": {
+      "pick(white_bowl_1)": null,
+      "place(white_bowl_1, plate_1, on)": null,
+      "goal()": null
+    },
+    "pi0_raw": {
+      "success": false,
+      "num_steps": 610,
+      "sim_s": 30.5,
+      "wall_s": 10.0,
+      "gt": {
+        "pick(white_bowl_1)": null,
+        "place(white_bowl_1, plate_1, on)": null,
+        "goal()": null
+      }
+    }
+  },
+  "config": {
+    "suite": "libero_90",
+    "tasks": [
+      2,
+      12,
+      13,
+      15,
+      16,
+      24,
+      29,
+      30,
+      36,
+      43,
+      60,
+      65,
+      66,
+      68,
+      76,
+      84
+    ],
+    "resummarize": null,
+    "inits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "out": "runs/heldout_bowl_mug",
+    "pi0": "server",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "vlm": "moondream2",
+    "target_mask": "seg",
+    "q_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+    "v_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+    "v_const": null,
+    "threshold": 0.5,
+    "threshold_count": 3,
+    "timeout_s": 10.0,
+    "full_timeout_s": 30.0,
+    "approach_dz": 0.07,
+    "monitor_fps": 5.0,
+    "cooldown_s": 0.2,
+    "held_grace_s": 2.0,
+    "video": true,
+    "raw_pi0": true,
+    "no_plain_video": true,
+    "label_dirs": true,
+    "no_trace": false,
+    "env_seed": 7,
+    "seed": 7,
+    "device": "cpu",
+    "torch_threads": 2,
+    "q_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+      "width": 32
+    },
+    "v_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+      "meta": {
+        "arch": "attn",
+        "width": 32,
+        "heads": 5,
+        "h_max_s": 5.0,
+        "gamma": 0.85,
+        "best_val_mse": 0.07003479450941086,
+        "data": "runs/v4/data"
+      }
+    }
+  },
+  "vlm": {
+    "vlm_calls": 77,
+    "vlm_latency_s": 5.36,
+    "plan": {
+      "object": "white bowl",
+      "destination": "plate",
+      "relation": "on"
+    },
+    "subtasks": [
+      {
+        "kind": "pick",
+        "label": "pick(white_bowl)",
+        "done_step": null,
+        "history": []
+      },
+      {
+        "kind": "place",
+        "label": "place(white_bowl, plate, on)",
+        "done_step": null,
+        "history": []
+      }
+    ],
+    "hl_failures": [
+      {
+        "step": 74,
+        "last_step": 74,
+        "level": "high_level",
+        "mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 30 cm from the white bowl",
+        "subtask": "pick(white_bowl)",
+        "action": "release_and_retreat"
+      },
+      {
+        "step": 448,
+        "last_step": 448,
+        "level": "high_level",
+        "mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm",
+        "subtask": "pick(white_bowl)",
+        "action": "point_approach"
+      }
+    ],
+    "hl_corrections": [
+      {
+        "step": 74,
+        "action": "release_and_retreat",
+        "failure_mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 30 cm from the white bowl",
+        "subtask": "pick(white_bowl)",
+        "target_world": [
+          -0.016,
+          -0.265,
+          1.118
+        ],
+        "point_img": [
+          225.62969879033,
+          112.34130643622743
+        ],
+        "travel": {
+          "z": 1.238,
+          "rule_z": 1.238,
+          "obstacle_top_z": 1.144,
+          "obstacle_top_now": 1.143,
+          "obstacle_top_plan": 1.144,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 191
+      },
+      {
+        "step": 448,
+        "action": "point_approach",
+        "failure_mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm",
+        "subtask": "pick(white_bowl)",
+        "target_world": [
+          0.023,
+          -0.25,
+          1.117
+        ],
+        "point_img": [
+          223.41516020004127,
+          121.33044803491376
+        ],
+        "travel": {
+          "z": 1.237,
+          "rule_z": 1.237,
+          "obstacle_top_z": 1.144,
+          "obstacle_top_now": 1.143,
+          "obstacle_top_plan": 1.144,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 504
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "type": "HL",
+      "step": 74,
+      "subtask": "pick(white_bowl)",
+      "mode": "wrong_grasp",
+      "library_id": "HL-3/HL-4",
+      "action": "release_and_retreat",
+      "reason": "gripper closed on something 30 cm from the white bowl",
+      "target_world": [
+        -0.016,
+        -0.265,
+        1.118
+      ],
+      "travel": {
+        "z": 1.238,
+        "rule_z": 1.238,
+        "obstacle_top_z": 1.144,
+        "obstacle_top_now": 1.143,
+        "obstacle_top_plan": 1.144,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-3",
+          "name": "wrong_object_category",
+          "level": "high",
+          "remedy": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE"
+        },
+        {
+          "id": "HL-4",
+          "name": "referring_expression_instance_error",
+          "level": "high",
+          "remedy": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE"
+        }
+      ],
+      "end_step": 191,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.1416,
+              0.0095,
+              1.2378
+            ],
+            "grip": -1.0,
+            "steps": 36,
+            "reached": true,
+            "pos_err_m": 0.0043,
+            "rot_err_rad": 0.0012
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0165,
+              -0.265,
+              1.2378
+            ],
+            "grip": -1.0,
+            "steps": 56,
+            "reached": true,
+            "pos_err_m": 0.0045,
+            "rot_err_rad": 0.0173
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0165,
+              -0.265,
+              1.1878
+            ],
+            "grip": -1.0,
+            "steps": 15,
+            "reached": true,
+            "pos_err_m": 0.005,
+            "rot_err_rad": 0.0021
+          }
+        ]
+      }
+    },
+    {
+      "type": "Q",
+      "trigger": "v_low",
+      "step": 203,
+      "subtask": "pick(white_bowl)",
+      "timer2_s": 9.65,
+      "v_est": 0.0027,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "handoff": {
+        "q_initial_position": [
+          0.0109,
+          -0.2547,
+          1.2196
+        ],
+        "object_centre": [
+          0.0109,
+          -0.2547,
+          1.1341
+        ],
+        "object_top_z": 1.1496,
+        "mask_px": 585,
+        "target_mask": "seg"
+      },
+      "approach": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0385,
+              -0.2387,
+              1.2196
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.0044,
+            "rot_err_rad": 0.0055
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0109,
+              -0.2547,
+              1.2196
+            ],
+            "grip": -1.0,
+            "steps": 16,
+            "reached": true,
+            "pos_err_m": 0.0045,
+            "rot_err_rad": 0.0268
+          }
+        ]
+      },
+      "approach_end_step": 241,
+      "q": {
+        "action": 290,
+        "k": 2,
+        "row": 9,
+        "col": 0,
+        "yaw_deg": -10.0,
+        "q": 0.2078,
+        "q_max_per_rot": [
+          0.1693,
+          0.1717,
+          0.2078,
+          0.1265,
+          0.1189,
+          0.1572,
+          0.1818,
+          0.1277,
+          0.0947
+        ],
+        "qmap": [
+          [
+            [
+              -0.083,
+              -0.082,
+              0.016,
+              -0.034,
+              -0.036,
+              0.109,
+              0.06,
+              0.044,
+              0.036,
+              0.099
+            ],
+            [
+              -0.119,
+              -0.116,
+              -0.101,
+              0.006,
+              0.047,
+              0.088,
+              -0.003,
+              -0.08,
+              -0.016,
+              0.105
+            ],
+            [
+              -0.161,
+              -0.147,
+              -0.1,
+              -0.002,
+              -0.028,
+              -0.019,
+              0.002,
+              -0.113,
+              0.04,
+              0.169
+            ],
+            [
+              -0.111,
+              -0.022,
+              -0.153,
+              -0.019,
+              -0.016,
+              -0.014,
+              0.017,
+              -0.001,
+              -0.082,
+              0.029
+            ],
+            [
+              0.003,
+              -0.066,
+              -0.014,
+              -0.025,
+              0.093,
+              0.087,
+              -0.005,
+              0.049,
+              -0.129,
+              0.041
+            ],
+            [
+              -0.02,
+              -0.056,
+              -0.023,
+              -0.079,
+              -0.131,
+              0.047,
+              0.032,
+              0.023,
+              -0.046,
+              -0.07
+            ],
+            [
+              0.091,
+              -0.041,
+              -0.029,
+              -0.084,
+              -0.206,
+              -0.0,
+              -0.016,
+              0.07,
+              0.043,
+              -0.103
+            ],
+            [
+              0.068,
+              -0.002,
+              0.005,
+              -0.101,
+              -0.152,
+              -0.11,
+              -0.031,
+              0.001,
+              0.065,
+              0.022
+            ],
+            [
+              0.03,
+              -0.033,
+              0.026,
+              -0.122,
+              -0.205,
+              -0.088,
+              0.003,
+              -0.12,
+              0.027,
+              0.017
+            ],
+            [
+              -0.009,
+              -0.021,
+              -0.077,
+              -0.126,
+              -0.066,
+              -0.039,
+              -0.094,
+              -0.059,
+              0.013,
+              -0.033
+            ]
+          ],
+          [
+            [
+              -0.021,
+              -0.039,
+              0.035,
+              -0.016,
+              0.008,
+              0.066,
+              0.014,
+              -0.017,
+              0.026,
+              0.064
+            ],
+            [
+              0.017,
+              -0.039,
+              -0.024,
+              -0.007,
+              -0.036,
+              -0.07,
+              -0.029,
+              -0.054,
+              -0.037,
+              0.067
+            ],
+            [
+              0.003,
+              0.006,
+              0.052,
+              0.007,
+              0.001,
+              -0.047,
+              -0.072,
+              -0.078,
+              -0.117,
+              0.009
+            ],
+            [
+              -0.011,
+              0.057,
+              0.051,
+              0.062,
+              0.035,
+              0.049,
+              -0.027,
+              -0.084,
+              -0.153,
+              -0.02
+            ],
+            [
+              0.099,
+              0.147,
+              0.101,
+              0.064,
+              0.04,
+              0.091,
+              -0.026,
+              0.02,
+              -0.101,
+              -0.054
+            ],
+            [
+              0.015,
+              0.04,
+              0.039,
+              0.049,
+              -0.044,
+              -0.022,
+              -0.045,
+              -0.011,
+              -0.023,
+              -0.052
+            ],
+            [
+              0.114,
+              -0.044,
+              0.009,
+              -0.017,
+              -0.011,
+              0.016,
+              0.051,
+              0.018,
+              0.156,
+              -0.017
+            ],
+            [
+              0.065,
+              0.038,
+              -0.017,
+              -0.096,
+              -0.127,
+              -0.042,
+              0.062,
+              -0.045,
+              0.072,
+              0.033
+            ],
+            [
+              0.071,
+              -0.0,
+              -0.033,
+              -0.08,
+              -0.097,
+              -0.002,
+              0.003,
+              -0.036,
+              -0.01,
+              -0.019
+            ],
+            [
+              0.172,
+              -0.034,
+              -0.068,
+              -0.08,
+              0.009,
+              -0.008,
+              -0.012,
+              -0.027,
+              -0.035,
+              -0.001
+            ]
+          ],
+          [
+            [
+              -0.01,
+              0.013,
+              -0.006,
+              0.026,
+              0.074,
+              0.013,
+              0.027,
+              -0.002,
+              0.051,
+              0.065
+            ],
+            [
+              -0.012,
+              0.003,
+              -0.076,
+              -0.097,
+              -0.048,
+              -0.054,
+              -0.057,
+              -0.053,
+              -0.069,
+              0.045
+            ],
+            [
+              0.004,
+              0.045,
+              0.016,
+              -0.021,
+              0.04,
+              0.078,
+              -0.051,
+              -0.067,
+              -0.097,
+              -0.055
+            ],
+            [
+              0.017,
+              0.02,
+              0.026,
+              -0.038,
+              -0.039,
+              0.107,
+              -0.01,
+              -0.022,
+              -0.061,
+              -0.01
+            ],
+            [
+              0.077,
+              0.087,
+              0.172,
+              -0.005,
+              0.022,
+              0.076,
+              -0.088,
+              -0.004,
+              -0.037,
+              0.026
+            ],
+            [
+              -0.034,
+              -0.025,
+              -0.045,
+              -0.028,
+              0.033,
+              0.016,
+              -0.031,
+              -0.017,
+              -0.071,
+              -0.037
+            ],
+            [
+              0.069,
+              -0.022,
+              -0.094,
+              0.048,
+              -0.046,
+              0.004,
+              0.016,
+              0.079,
+              0.096,
+              0.039
+            ],
+            [
+              0.023,
+              0.015,
+              -0.02,
+              -0.019,
+              -0.058,
+              -0.081,
+              0.042,
+              0.098,
+              0.133,
+              0.039
+            ],
+            [
+              0.013,
+              -0.022,
+              -0.014,
+              -0.08,
+              -0.047,
+              -0.027,
+              0.062,
+              0.023,
+              0.078,
+              0.035
+            ],
+            [
+              0.208,
+              0.047,
+              -0.091,
+              -0.103,
+              -0.043,
+              0.027,
+              0.081,
+              0.03,
+              0.096,
+              0.036
+            ]
+          ],
+          [
+            [
+              -0.012,
+              -0.012,
+              -0.027,
+              -0.028,
+              -0.079,
+              0.011,
+              0.005,
+              -0.081,
+              -0.039,
+              -0.071
+            ],
+            [
+              -0.022,
+              -0.013,
+              -0.09,
+              -0.126,
+              -0.06,
+              -0.083,
+              0.006,
+              0.016,
+              -0.018,
+              -0.041
+            ],
+            [
+              0.044,
+              -0.007,
+              -0.067,
+              -0.144,
+              -0.029,
+              -0.057,
+              -0.022,
+              -0.001,
+              -0.003,
+              -0.108
+            ],
+            [
+              -0.025,
+              -0.121,
+              -0.033,
+              -0.171,
+              -0.069,
+              -0.036,
+              -0.046,
+              -0.093,
+              0.056,
+              -0.036
+            ],
+            [
+              -0.077,
+              -0.12,
+              -0.08,
+              -0.038,
+              -0.155,
+              -0.14,
+              -0.119,
+              -0.043,
+              0.047,
+              -0.048
+            ],
+            [
+              -0.026,
+              -0.007,
+              -0.051,
+              -0.028,
+              -0.059,
+              -0.152,
+              -0.051,
+              -0.012,
+              -0.044,
+              0.021
+            ],
+            [
+              -0.106,
+              0.022,
+              0.016,
+              -0.006,
+              0.075,
+              -0.086,
+              0.021,
+              0.054,
+              0.127,
+              0.064
+            ],
+            [
+              -0.05,
+              -0.041,
+              0.062,
+              -0.043,
+              0.027,
+              -0.077,
+              -0.013,
+              0.003,
+              0.106,
+              0.034
+            ],
+            [
+              -0.06,
+              -0.012,
+              0.056,
+              -0.066,
+              -0.037,
+              -0.094,
+              -0.094,
+              -0.014,
+              -0.067,
+              -0.093
+            ],
+            [
+              -0.062,
+              -0.008,
+              -0.041,
+              -0.001,
+              -0.04,
+              -0.142,
+              -0.044,
+              -0.02,
+              0.014,
+              0.044
+            ]
+          ],
+          [
+            [
+              -0.031,
+              -0.003,
+              -0.063,
+              0.029,
+              0.038,
+              -0.004,
+              -0.002,
+              0.051,
+              0.051,
+              0.074
+            ],
+            [
+              -0.028,
+              0.024,
+              -0.061,
+              -0.079,
+              -0.028,
+              0.065,
+              0.035,
+              0.051,
+              0.077,
+              0.087
+            ],
+            [
+              -0.098,
+              0.033,
+              -0.112,
+              -0.05,
+              -0.1,
+              -0.17,
+              0.015,
+              0.022,
+              0.073,
+              0.071
+            ],
+            [
+              -0.033,
+              0.029,
+              -0.103,
+              -0.02,
+              -0.105,
+              -0.137,
+              -0.059,
+              -0.024,
+              -0.058,
+              -0.039
+            ],
+            [
+              -0.075,
+              -0.016,
+              0.032,
+              0.119,
+              -0.029,
+              0.048,
+              0.005,
+              -0.069,
+              -0.018,
+              0.096
+            ],
+            [
+              -0.064,
+              -0.006,
+              0.067,
+              0.03,
+              0.056,
+              0.046,
+              0.006,
+              -0.09,
+              -0.092,
+              -0.099
+            ],
+            [
+              -0.049,
+              -0.072,
+              0.049,
+              0.048,
+              0.041,
+              0.07,
+              -0.054,
+              -0.142,
+              -0.138,
+              -0.082
+            ],
+            [
+              -0.034,
+              -0.075,
+              -0.049,
+              0.012,
+              0.033,
+              0.017,
+              -0.091,
+              -0.027,
+              -0.143,
+              -0.002
+            ],
+            [
+              0.017,
+              0.079,
+              0.071,
+              0.006,
+              0.053,
+              0.011,
+              -0.027,
+              -0.017,
+              0.039,
+              0.059
+            ],
+            [
+              -0.011,
+              0.015,
+              0.089,
+              0.04,
+              0.105,
+              0.047,
+              0.041,
+              0.084,
+              0.03,
+              0.038
+            ]
+          ],
+          [
+            [
+              0.02,
+              0.065,
+              0.071,
+              0.096,
+              -0.009,
+              -0.04,
+              0.019,
+              0.045,
+              0.066,
+              0.043
+            ],
+            [
+              0.005,
+              0.026,
+              0.092,
+              0.112,
+              -0.053,
+              -0.042,
+              0.016,
+              0.022,
+              0.003,
+              0.002
+            ],
+            [
+              0.068,
+              0.154,
+              0.078,
+              0.079,
+              0.108,
+              -0.015,
+              0.006,
+              -0.019,
+              -0.044,
+              -0.118
+            ],
+            [
+              0.057,
+              0.046,
+              0.036,
+              0.017,
+              0.055,
+              0.023,
+              -0.019,
+              -0.008,
+              -0.07,
+              -0.078
+            ],
+            [
+              0.015,
+              0.157,
+              0.044,
+              -0.054,
+              0.005,
+              -0.084,
+              0.049,
+              0.008,
+              -0.007,
+              -0.026
+            ],
+            [
+              0.063,
+              -0.035,
+              -0.001,
+              0.009,
+              -0.009,
+              -0.025,
+              -0.028,
+              -0.017,
+              -0.039,
+              -0.058
+            ],
+            [
+              0.095,
+              0.005,
+              0.021,
+              -0.015,
+              0.089,
+              -0.053,
+              -0.003,
+              -0.06,
+              -0.045,
+              0.044
+            ],
+            [
+              -0.029,
+              0.013,
+              -0.014,
+              0.022,
+              0.039,
+              -0.042,
+              0.052,
+              -0.051,
+              -0.011,
+              0.016
+            ],
+            [
+              -0.024,
+              0.051,
+              0.002,
+              0.008,
+              0.033,
+              -0.005,
+              -0.011,
+              -0.018,
+              0.002,
+              0.054
+            ],
+            [
+              0.051,
+              0.018,
+              0.073,
+              0.051,
+              -0.012,
+              -0.014,
+              0.016,
+              0.019,
+              0.016,
+              0.04
+            ]
+          ],
+          [
+            [
+              -0.016,
+              0.047,
+              0.027,
+              0.053,
+              0.09,
+              0.101,
+              0.016,
+              -0.038,
+              0.015,
+              0.044
+            ],
+            [
+              0.016,
+              0.036,
+              0.031,
+              0.007,
+              0.033,
+              0.07,
+              -0.015,
+              0.017,
+              0.028,
+              0.052
+            ],
+            [
+              0.08,
+              0.182,
+              0.087,
+              0.13,
+              0.178,
+              -0.031,
+              -0.053,
+              0.018,
+              -0.018,
+              -0.022
+            ],
+            [
+              0.127,
+              0.118,
+              0.052,
+              0.087,
+              0.045,
+              -0.063,
+              -0.063,
+              -0.004,
+              0.004,
+              -0.019
+            ],
+            [
+              0.112,
+              0.155,
+              0.131,
+              0.13,
+              -0.033,
+              0.059,
+              -0.008,
+              -0.017,
+              0.142,
+              0.07
+            ],
+            [
+              0.085,
+              -0.028,
+              -0.037,
+              0.022,
+              0.066,
+              -0.002,
+              -0.008,
+              0.002,
+              0.022,
+              0.017
+            ],
+            [
+              0.092,
+              0.047,
+              -0.01,
+              -0.01,
+              -0.006,
+              0.0,
+              -0.07,
+              -0.04,
+              0.053,
+              0.114
+            ],
+            [
+              0.116,
+              0.046,
+              0.067,
+              0.018,
+              0.048,
+              -0.017,
+              -0.071,
+              -0.031,
+              0.101,
+              0.014
+            ],
+            [
+              0.066,
+              0.022,
+              0.072,
+              0.019,
+              0.048,
+              0.01,
+              0.002,
+              0.036,
+              0.073,
+              0.16
+            ],
+            [
+              0.042,
+              -0.013,
+              0.085,
+              0.094,
+              0.073,
+              0.093,
+              0.057,
+              0.062,
+              0.166,
+              0.114
+            ]
+          ],
+          [
+            [
+              0.002,
+              0.06,
+              0.019,
+              0.01,
+              0.03,
+              -0.039,
+              -0.031,
+              -0.016,
+              -0.073,
+              -0.038
+            ],
+            [
+              -0.01,
+              -0.018,
+              0.094,
+              0.073,
+              -0.026,
+              0.02,
+              -0.021,
+              0.039,
+              -0.022,
+              -0.031
+            ],
+            [
+              0.017,
+              0.024,
+              0.094,
+              0.09,
+              0.109,
+              0.035,
+              -0.05,
+              0.027,
+              -0.032,
+              -0.034
+            ],
+            [
+              0.006,
+              0.128,
+              0.06,
+              0.054,
+              0.107,
+              0.047,
+              -0.065,
+              -0.025,
+              -0.044,
+              -0.038
+            ],
+            [
+              0.053,
+              0.117,
+              0.015,
+              0.065,
+              -0.026,
+              0.033,
+              -0.022,
+              -0.073,
+              -0.032,
+              -0.062
+            ],
+            [
+              -0.065,
+              -0.007,
+              -0.031,
+              -0.044,
+              0.026,
+              0.011,
+              -0.071,
+              -0.063,
+              -0.035,
+              -0.051
+            ],
+            [
+              -0.048,
+              -0.089,
+              -0.029,
+              -0.0,
+              0.088,
+              -0.006,
+              -0.008,
+              -0.062,
+              -0.01,
+              -0.031
+            ],
+            [
+              0.02,
+              -0.07,
+              -0.036,
+              0.034,
+              0.031,
+              -0.019,
+              0.039,
+              -0.026,
+              -0.009,
+              -0.019
+            ],
+            [
+              0.014,
+              0.008,
+              0.007,
+              0.082,
+              0.124,
+              0.066,
+              -0.068,
+              -0.021,
+              -0.064,
+              -0.014
+            ],
+            [
+              -0.047,
+              -0.082,
+              0.04,
+              0.059,
+              0.117,
+              0.125,
+              -0.024,
+              -0.093,
+              -0.035,
+              -0.018
+            ]
+          ],
+          [
+            [
+              -0.002,
+              -0.003,
+              -0.031,
+              -0.008,
+              -0.046,
+              -0.004,
+              -0.005,
+              0.036,
+              0.027,
+              0.055
+            ],
+            [
+              -0.023,
+              -0.023,
+              -0.024,
+              0.014,
+              -0.049,
+              -0.038,
+              -0.04,
+              0.001,
+              0.05,
+              0.054
+            ],
+            [
+              0.016,
+              0.052,
+              -0.002,
+              0.006,
+              -0.011,
+              -0.009,
+              -0.028,
+              -0.014,
+              0.01,
+              0.031
+            ],
+            [
+              -0.006,
+              0.025,
+              0.01,
+              0.013,
+              -0.002,
+              0.021,
+              0.017,
+              0.003,
+              0.028,
+              0.019
+            ],
+            [
+              0.027,
+              0.041,
+              0.073,
+              0.053,
+              0.057,
+              0.077,
+              0.039,
+              -0.011,
+              0.042,
+              0.064
+            ],
+            [
+              0.037,
+              -0.025,
+              -0.036,
+              0.017,
+              0.006,
+              0.008,
+              0.012,
+              0.003,
+              0.067,
+              -0.017
+            ],
+            [
+              0.059,
+              0.013,
+              -0.045,
+              -0.058,
+              0.076,
+              0.009,
+              -0.021,
+              0.019,
+              0.053,
+              0.022
+            ],
+            [
+              0.062,
+              -0.041,
+              -0.036,
+              0.008,
+              0.095,
+              0.016,
+              0.004,
+              -0.036,
+              -0.004,
+              -0.063
+            ],
+            [
+              -0.059,
+              -0.077,
+              -0.076,
+              -0.029,
+              -0.036,
+              -0.036,
+              -0.029,
+              -0.051,
+              0.058,
+              0.066
+            ],
+            [
+              0.001,
+              -0.066,
+              -0.009,
+              0.04,
+              -0.037,
+              -0.038,
+              -0.027,
+              0.029,
+              0.067,
+              0.083
+            ]
+          ]
+        ]
+      },
+      "move": {
+        "cell_point": [
+          -0.071,
+          -0.3332,
+          1.1195
+        ],
+        "goal": [
+          -0.071,
+          -0.3332,
+          1.22
+        ],
+        "yaw_deg": -10.0,
+        "obj_tilt_deg": 10.366,
+        "valid_cells": 100
+      },
+      "end_step": 261,
+      "motion_end": {
+        "type": "move_to",
+        "pos": [
+          -0.071,
+          -0.3332,
+          1.22
+        ],
+        "grip": -1.0,
+        "steps": 20,
+        "reached": true,
+        "pos_err_m": 0.0045,
+        "rot_err_rad": 0.0122
+      }
+    },
+    {
+      "type": "Q",
+      "trigger": "timeout",
+      "step": 261,
+      "subtask": "pick(white_bowl)",
+      "timer2_s": 12.55,
+      "v_est": null,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "handoff": {
+        "q_initial_position": [
+          0.0087,
+          -0.2566,
+          1.2119
+        ],
+        "object_centre": [
+          0.0087,
+          -0.2566,
+          1.1276
+        ],
+        "object_top_z": 1.1419,
+        "mask_px": 675,
+        "target_mask": "seg"
+      },
+      "approach": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0677,
+              -0.3301,
+              1.2201
+            ],
+            "grip": -1.0,
+            "steps": 0,
+            "reached": true,
+            "pos_err_m": 0.0,
+            "rot_err_rad": 0.0
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0087,
+              -0.2566,
+              1.2201
+            ],
+            "grip": -1.0,
+            "steps": 21,
+            "reached": true,
+            "pos_err_m": 0.0041,
+            "rot_err_rad": 0.004
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0087,
+              -0.2566,
+              1.2119
+            ],
+            "grip": -1.0,
+            "steps": 7,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.0077
+          }
+        ]
+      },
+      "approach_end_step": 289,
+      "q": {
+        "action": 654,
+        "k": 6,
+        "row": 5,
+        "col": 4,
+        "yaw_deg": 10.0,
+        "q": 0.1485,
+        "q_max_per_rot": [
+          0.1401,
+          0.1092,
+          0.1339,
+          0.0765,
+          0.1448,
+          0.1165,
+          0.1485,
+          0.1349,
+          0.1171
+        ],
+        "qmap": [
+          [
+            [
+              -0.065,
+              -0.102,
+              -0.008,
+              -0.001,
+              0.083,
+              0.101,
+              0.051,
+              0.013,
+              -0.008,
+              0.14
+            ],
+            [
+              -0.084,
+              -0.142,
+              -0.068,
+              -0.025,
+              0.064,
+              0.046,
+              -0.052,
+              -0.07,
+              -0.007,
+              0.049
+            ],
+            [
+              -0.092,
+              -0.164,
+              -0.103,
+              -0.028,
+              0.044,
+              -0.019,
+              0.01,
+              -0.075,
+              -0.034,
+              0.085
+            ],
+            [
+              -0.081,
+              -0.109,
+              -0.122,
+              -0.113,
+              -0.043,
+              0.003,
+              0.111,
+              -0.061,
+              -0.076,
+              0.061
+            ],
+            [
+              -0.041,
+              -0.127,
+              -0.086,
+              -0.042,
+              -0.024,
+              0.057,
+              0.015,
+              -0.03,
+              -0.006,
+              -0.04
+            ],
+            [
+              0.057,
+              -0.017,
+              -0.011,
+              -0.055,
+              -0.155,
+              -0.051,
+              -0.046,
+              -0.054,
+              0.021,
+              -0.004
+            ],
+            [
+              0.004,
+              -0.044,
+              -0.064,
+              -0.104,
+              -0.215,
+              -0.084,
+              0.004,
+              0.044,
+              -0.02,
+              -0.019
+            ],
+            [
+              -0.06,
+              -0.032,
+              -0.043,
+              -0.15,
+              -0.191,
+              -0.029,
+              -0.023,
+              0.047,
+              0.057,
+              -0.004
+            ],
+            [
+              -0.017,
+              -0.055,
+              -0.057,
+              -0.089,
+              -0.208,
+              -0.01,
+              -0.013,
+              -0.093,
+              0.071,
+              -0.016
+            ],
+            [
+              -0.062,
+              -0.143,
+              -0.113,
+              -0.08,
+              -0.084,
+              -0.106,
+              -0.098,
+              -0.08,
+              -0.115,
+              -0.101
+            ]
+          ],
+          [
+            [
+              0.012,
+              0.037,
+              0.028,
+              -0.01,
+              0.048,
+              0.038,
+              0.026,
+              0.0,
+              0.017,
+              0.109
+            ],
+            [
+              0.046,
+              -0.028,
+              -0.006,
+              -0.012,
+              -0.055,
+              -0.064,
+              -0.069,
+              -0.096,
+              -0.087,
+              0.041
+            ],
+            [
+              0.014,
+              0.045,
+              0.032,
+              0.028,
+              -0.041,
+              -0.038,
+              -0.064,
+              -0.143,
+              -0.143,
+              -0.054
+            ],
+            [
+              0.074,
+              0.066,
+              0.011,
+              0.056,
+              0.007,
+              0.029,
+              -0.006,
+              -0.105,
+              -0.149,
+              -0.014
+            ],
+            [
+              0.058,
+              0.029,
+              0.061,
+              0.109,
+              -0.005,
+              0.039,
+              -0.011,
+              -0.034,
+              -0.085,
+              -0.065
+            ],
+            [
+              0.092,
+              0.079,
+              0.036,
+              0.082,
+              -0.042,
+              -0.01,
+              -0.008,
+              0.023,
+              0.004,
+              0.014
+            ],
+            [
+              0.041,
+              -0.029,
+              0.014,
+              -0.02,
+              -0.069,
+              -0.006,
+              -0.033,
+              0.002,
+              0.034,
+              -0.006
+            ],
+            [
+              -0.017,
+              -0.024,
+              0.013,
+              -0.001,
+              -0.094,
+              -0.061,
+              -0.047,
+              -0.002,
+              0.006,
+              0.042
+            ],
+            [
+              0.023,
+              -0.008,
+              -0.009,
+              -0.025,
+              -0.12,
+              -0.05,
+              -0.045,
+              -0.034,
+              0.019,
+              0.02
+            ],
+            [
+              0.104,
+              -0.052,
+              -0.03,
+              0.007,
+              -0.036,
+              -0.029,
+              0.038,
+              0.025,
+              -0.016,
+              0.019
+            ]
+          ],
+          [
+            [
+              0.002,
+              0.003,
+              -0.009,
+              -0.031,
+              0.064,
+              0.013,
+              0.004,
+              -0.039,
+              0.018,
+              -0.013
+            ],
+            [
+              0.019,
+              -0.037,
+              -0.05,
+              -0.049,
+              -0.034,
+              -0.045,
+              -0.065,
+              -0.104,
+              -0.046,
+              0.044
+            ],
+            [
+              -0.029,
+              0.057,
+              -0.024,
+              -0.051,
+              -0.051,
+              -0.002,
+              -0.056,
+              -0.061,
+              -0.123,
+              -0.04
+            ],
+            [
+              0.022,
+              -0.02,
+              -0.023,
+              -0.058,
+              -0.035,
+              -0.01,
+              -0.045,
+              -0.075,
+              -0.022,
+              0.017
+            ],
+            [
+              -0.012,
+              0.009,
+              0.077,
+              0.007,
+              -0.012,
+              0.012,
+              -0.055,
+              -0.041,
+              -0.081,
+              0.002
+            ],
+            [
+              0.053,
+              0.039,
+              0.016,
+              0.071,
+              -0.001,
+              -0.067,
+              0.011,
+              0.008,
+              -0.004,
+              0.012
+            ],
+            [
+              0.004,
+              0.044,
+              -0.016,
+              0.076,
+              -0.109,
+              -0.034,
+              0.011,
+              -0.047,
+              0.077,
+              0.034
+            ],
+            [
+              -0.048,
+              -0.038,
+              0.019,
+              0.014,
+              -0.056,
+              0.004,
+              0.022,
+              0.02,
+              0.134,
+              0.037
+            ],
+            [
+              0.002,
+              -0.09,
+              -0.046,
+              -0.015,
+              -0.108,
+              0.044,
+              -0.015,
+              -0.03,
+              0.075,
+              0.037
+            ],
+            [
+              0.056,
+              -0.044,
+              -0.117,
+              -0.116,
+              -0.071,
+              -0.034,
+              0.093,
+              0.034,
+              0.065,
+              0.022
+            ]
+          ],
+          [
+            [
+              -0.042,
+              0.0,
+              -0.04,
+              -0.044,
+              -0.053,
+              -0.028,
+              0.021,
+              -0.035,
+              -0.052,
+              -0.101
+            ],
+            [
+              -0.023,
+              -0.062,
+              -0.144,
+              -0.065,
+              -0.1,
+              -0.095,
+              -0.029,
+              0.009,
+              0.008,
+              -0.059
+            ],
+            [
+              -0.044,
+              -0.051,
+              -0.055,
+              -0.078,
+              -0.031,
+              -0.044,
+              -0.03,
+              0.041,
+              0.056,
+              -0.053
+            ],
+            [
+              -0.005,
+              -0.107,
+              -0.026,
+              -0.078,
+              -0.102,
+              -0.022,
+              -0.085,
+              -0.112,
+              0.067,
+              -0.007
+            ],
+            [
+              -0.032,
+              0.02,
+              -0.043,
+              -0.081,
+              -0.126,
+              0.007,
+              -0.141,
+              0.0,
+              0.064,
+              -0.019
+            ],
+            [
+              -0.067,
+              0.002,
+              0.007,
+              0.008,
+              -0.065,
+              0.026,
+              -0.124,
+              0.051,
+              0.016,
+              0.077
+            ],
+            [
+              -0.112,
+              -0.049,
+              -0.095,
+              0.029,
+              -0.038,
+              -0.082,
+              -0.03,
+              -0.016,
+              0.051,
+              -0.008
+            ],
+            [
+              -0.131,
+              -0.061,
+              -0.134,
+              -0.008,
+              0.011,
+              -0.15,
+              -0.086,
+              0.014,
+              -0.003,
+              0.01
+            ],
+            [
+              -0.04,
+              0.039,
+              -0.009,
+              0.012,
+              -0.057,
+              -0.061,
+              -0.063,
+              0.021,
+              0.01,
+              0.027
+            ],
+            [
+              -0.044,
+              0.042,
+              -0.049,
+              0.074,
+              -0.024,
+              -0.057,
+              0.047,
+              0.003,
+              0.003,
+              0.053
+            ]
+          ],
+          [
+            [
+              -0.085,
+              0.003,
+              0.004,
+              0.001,
+              0.065,
+              0.001,
+              0.02,
+              0.001,
+              0.007,
+              0.034
+            ],
+            [
+              -0.082,
+              0.045,
+              -0.067,
+              -0.115,
+              -0.049,
+              -0.03,
+              0.044,
+              0.048,
+              0.049,
+              0.05
+            ],
+            [
+              -0.028,
+              -0.06,
+              -0.113,
+              -0.119,
+              -0.091,
+              -0.14,
+              0.023,
+              -0.018,
+              0.05,
+              0.087
+            ],
+            [
+              -0.126,
+              -0.058,
+              -0.088,
+              -0.014,
+              -0.066,
+              -0.064,
+              0.021,
+              -0.021,
+              -0.016,
+              -0.01
+            ],
+            [
+              -0.105,
+              -0.111,
+              0.036,
+              0.037,
+              -0.001,
+              0.043,
+              -0.057,
+              -0.106,
+              -0.033,
+              -0.003
+            ],
+            [
+              -0.025,
+              -0.051,
+              -0.022,
+              0.019,
+              0.145,
+              0.018,
+              0.018,
+              -0.162,
+              -0.118,
+              -0.045
+            ],
+            [
+              -0.045,
+              -0.047,
+              0.092,
+              0.031,
+              0.043,
+              0.089,
+              -0.038,
+              -0.077,
+              -0.045,
+              -0.058
+            ],
+            [
+              -0.058,
+              -0.103,
+              0.006,
+              0.042,
+              0.038,
+              0.073,
+              -0.058,
+              0.03,
+              -0.021,
+              -0.026
+            ],
+            [
+              0.035,
+              0.003,
+              -0.005,
+              0.004,
+              -0.005,
+              -0.035,
+              0.02,
+              0.013,
+              0.099,
+              -0.014
+            ],
+            [
+              0.017,
+              0.009,
+              0.079,
+              0.046,
+              0.126,
+              0.012,
+              -0.033,
+              -0.017,
+              0.004,
+              -0.039
+            ]
+          ],
+          [
+            [
+              0.066,
+              0.11,
+              0.024,
+              0.04,
+              -0.051,
+              -0.064,
+              -0.025,
+              0.023,
+              0.095,
+              -0.005
+            ],
+            [
+              0.035,
+              0.022,
+              0.086,
+              0.089,
+              -0.029,
+              -0.056,
+              0.012,
+              -0.049,
+              0.021,
+              0.027
+            ],
+            [
+              -0.018,
+              0.035,
+              0.027,
+              0.055,
+              0.057,
+              0.058,
+              -0.023,
+              -0.007,
+              -0.029,
+              -0.093
+            ],
+            [
+              0.093,
+              0.112,
+              0.015,
+              -0.002,
+              -0.008,
+              -0.041,
+              -0.045,
+              -0.016,
+              -0.056,
+              -0.114
+            ],
+            [
+              0.02,
+              0.082,
+              0.016,
+              0.003,
+              0.002,
+              -0.08,
+              -0.013,
+              -0.007,
+              -0.109,
+              -0.024
+            ],
+            [
+              0.108,
+              0.03,
+              -0.016,
+              -0.001,
+              0.001,
+              0.032,
+              0.055,
+              -0.02,
+              -0.044,
+              -0.026
+            ],
+            [
+              0.027,
+              0.004,
+              0.089,
+              0.027,
+              0.024,
+              -0.048,
+              -0.076,
+              -0.107,
+              -0.051,
+              -0.0
+            ],
+            [
+              -0.009,
+              0.006,
+              0.038,
+              0.085,
+              0.062,
+              -0.039,
+              -0.059,
+              0.008,
+              -0.013,
+              0.002
+            ],
+            [
+              0.017,
+              0.06,
+              0.016,
+              0.038,
+              0.024,
+              -0.002,
+              -0.044,
+              -0.015,
+              -0.029,
+              0.06
+            ],
+            [
+              0.006,
+              0.014,
+              0.035,
+              0.116,
+              0.033,
+              0.032,
+              0.07,
+              -0.001,
+              0.019,
+              0.048
+            ]
+          ],
+          [
+            [
+              -0.032,
+              0.056,
+              0.114,
+              0.089,
+              0.102,
+              0.066,
+              0.015,
+              0.012,
+              0.013,
+              -0.026
+            ],
+            [
+              0.066,
+              0.044,
+              0.028,
+              0.064,
+              0.036,
+              -0.014,
+              -0.038,
+              0.045,
+              0.008,
+              0.088
+            ],
+            [
+              0.038,
+              0.093,
+              0.04,
+              0.104,
+              0.039,
+              -0.065,
+              0.005,
+              -0.039,
+              0.097,
+              0.063
+            ],
+            [
+              0.028,
+              0.036,
+              0.052,
+              0.081,
+              0.084,
+              -0.049,
+              0.025,
+              -0.06,
+              0.021,
+              0.044
+            ],
+            [
+              0.08,
+              0.07,
+              0.141,
+              0.12,
+              0.027,
+              0.075,
+              -0.055,
+              -0.045,
+              0.007,
+              -0.0
+            ],
+            [
+              0.107,
+              0.001,
+              -0.017,
+              0.095,
+              0.148,
+              0.047,
+              -0.002,
+              -0.005,
+              0.068,
+              0.084
+            ],
+            [
+              0.086,
+              -0.012,
+              0.01,
+              0.004,
+              0.008,
+              -0.013,
+              -0.049,
+              -0.056,
+              0.057,
+              0.138
+            ],
+            [
+              0.075,
+              0.024,
+              0.032,
+              -0.02,
+              0.02,
+              -0.03,
+              -0.056,
+              0.027,
+              0.076,
+              0.048
+            ],
+            [
+              0.135,
+              0.033,
+              0.122,
+              0.004,
+              0.092,
+              -0.02,
+              0.02,
+              0.019,
+              0.044,
+              0.094
+            ],
+            [
+              0.064,
+              0.01,
+              0.059,
+              0.089,
+              0.079,
+              0.112,
+              0.103,
+              0.035,
+              0.108,
+              0.097
+            ]
+          ],
+          [
+            [
+              0.007,
+              -0.038,
+              -0.009,
+              0.026,
+              -0.045,
+              -0.021,
+              -0.027,
+              -0.026,
+              -0.016,
+              -0.004
+            ],
+            [
+              0.003,
+              -0.005,
+              0.074,
+              0.087,
+              -0.017,
+              0.01,
+              0.007,
+              0.032,
+              -0.043,
+              -0.029
+            ],
+            [
+              -0.032,
+              0.009,
+              0.05,
+              0.057,
+              0.014,
+              0.007,
+              -0.02,
+              -0.012,
+              0.03,
+              0.004
+            ],
+            [
+              -0.033,
+              0.038,
+              0.064,
+              0.077,
+              0.083,
+              -0.031,
+              -0.047,
+              -0.045,
+              -0.019,
+              0.001
+            ],
+            [
+              0.047,
+              -0.015,
+              0.008,
+              -0.014,
+              -0.008,
+              0.049,
+              0.001,
+              -0.047,
+              -0.071,
+              -0.097
+            ],
+            [
+              -0.086,
+              -0.11,
+              -0.047,
+              -0.042,
+              0.06,
+              -0.028,
+              -0.018,
+              -0.001,
+              -0.067,
+              -0.08
+            ],
+            [
+              -0.064,
+              -0.125,
+              -0.033,
+              -0.058,
+              0.03,
+              0.0,
+              -0.005,
+              -0.028,
+              -0.087,
+              -0.055
+            ],
+            [
+              0.019,
+              -0.1,
+              0.001,
+              0.001,
+              0.055,
+              -0.025,
+              -0.031,
+              -0.028,
+              -0.078,
+              -0.014
+            ],
+            [
+              -0.048,
+              -0.002,
+              0.047,
+              0.032,
+              0.135,
+              -0.038,
+              -0.046,
+              -0.017,
+              -0.057,
+              0.037
+            ],
+            [
+              0.022,
+              0.016,
+              0.105,
+              0.028,
+              0.067,
+              0.055,
+              -0.076,
+              -0.05,
+              -0.021,
+              0.01
+            ]
+          ],
+          [
+            [
+              0.061,
+              0.043,
+              -0.008,
+              -0.05,
+              -0.032,
+              -0.058,
+              0.015,
+              0.024,
+              0.059,
+              0.032
+            ],
+            [
+              0.005,
+              -0.011,
+              0.051,
+              0.019,
+              -0.024,
+              -0.05,
+              -0.068,
+              -0.027,
+              0.058,
+              0.114
+            ],
+            [
+              -0.01,
+              -0.015,
+              -0.031,
+              -0.005,
+              0.008,
+              -0.047,
+              -0.022,
+              0.0,
+              -0.007,
+              -0.02
+            ],
+            [
+              -0.016,
+              0.106,
+              0.015,
+              -0.03,
+              0.04,
+              0.034,
+              0.038,
+              0.001,
+              -0.007,
+              0.02
+            ],
+            [
+              -0.003,
+              0.022,
+              0.054,
+              -0.041,
+              0.083,
+              0.033,
+              -0.019,
+              -0.071,
+              -0.036,
+              0.062
+            ],
+            [
+              0.0,
+              -0.026,
+              0.041,
+              0.067,
+              0.039,
+              0.117,
+              0.095,
+              0.012,
+              0.057,
+              0.067
+            ],
+            [
+              0.039,
+              0.005,
+              -0.05,
+              -0.015,
+              0.092,
+              0.054,
+              -0.035,
+              0.001,
+              -0.039,
+              0.072
+            ],
+            [
+              0.052,
+              0.016,
+              0.012,
+              -0.006,
+              0.103,
+              -0.009,
+              -0.024,
+              -0.001,
+              0.062,
+              0.024
+            ],
+            [
+              -0.009,
+              -0.062,
+              0.006,
+              -0.04,
+              0.054,
+              -0.096,
+              0.007,
+              0.032,
+              0.091,
+              0.027
+            ],
+            [
+              0.032,
+              -0.018,
+              -0.042,
+              0.036,
+              -0.032,
+              0.079,
+              0.003,
+              -0.037,
+              0.034,
+              0.065
+            ]
+          ]
+        ]
+      },
+      "move": {
+        "cell_point": [
+          -0.0023,
+          -0.2597,
+          1.1137
+        ],
+        "goal": [
+          -0.0023,
+          -0.2597,
+          1.2164
+        ],
+        "yaw_deg": 10.0,
+        "obj_tilt_deg": 10.3878,
+        "valid_cells": 100
+      },
+      "end_step": 300,
+      "motion_end": {
+        "type": "move_to",
+        "pos": [
+          -0.0023,
+          -0.2597,
+          1.2164
+        ],
+        "grip": -1.0,
+        "steps": 11,
+        "reached": true,
+        "pos_err_m": 0.0047,
+        "rot_err_rad": 0.0415
+      }
+    },
+    {
+      "type": "HL",
+      "step": 448,
+      "subtask": "pick(white_bowl)",
+      "mode": "target_not_approached",
+      "library_id": "HL-7",
+      "action": "point_approach",
+      "reason": "10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm",
+      "target_world": [
+        0.023,
+        -0.25,
+        1.117
+      ],
+      "travel": {
+        "z": 1.237,
+        "rule_z": 1.237,
+        "obstacle_top_z": 1.144,
+        "obstacle_top_now": 1.143,
+        "obstacle_top_plan": 1.144,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-7",
+          "name": "target_never_approached",
+          "level": "high",
+          "remedy": "early heading check (2-3 frames) -> HALT -> RETREAT -> POINT_APPROACH(target) -> REPROMPT -> WATCH 3 s -> ESCALATE"
+        }
+      ],
+      "end_step": 504,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.0466,
+              -0.2081,
+              1.2375
+            ],
+            "grip": -1.0,
+            "steps": 15,
+            "reached": true,
+            "pos_err_m": 0.0049,
+            "rot_err_rad": 0.0301
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0227,
+              -0.2497,
+              1.2375
+            ],
+            "grip": -1.0,
+            "steps": 18,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.0056
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0227,
+              -0.2497,
+              1.1875
+            ],
+            "grip": -1.0,
+            "steps": 23,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.0136
+          }
+        ]
+      }
+    },
+    {
+      "type": "Q",
+      "trigger": "timeout",
+      "step": 504,
+      "subtask": "pick(white_bowl)",
+      "timer2_s": 10.2,
+      "v_est": null,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "handoff": {
+        "q_initial_position": [
+          0.0403,
+          -0.2425,
+          1.2116
+        ],
+        "object_centre": [
+          0.0403,
+          -0.2425,
+          1.1273
+        ],
+        "object_top_z": 1.1416,
+        "mask_px": 722,
+        "target_mask": "seg"
+      },
+      "approach": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              0.0257,
+              -0.2492,
+              1.2116
+            ],
+            "grip": -1.0,
+            "steps": 14,
+            "reached": true,
+            "pos_err_m": 0.0047,
+            "rot_err_rad": 0.0094
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0403,
+              -0.2425,
+              1.2116
+            ],
+            "grip": -1.0,
+            "steps": 19,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.0344
+          }
+        ]
+      },
+      "approach_end_step": 537,
+      "q": {
+        "action": 290,
+        "k": 2,
+        "row": 9,
+        "col": 0,
+        "yaw_deg": -10.0,
+        "q": 0.1799,
+        "q_max_per_rot": [
+          0.133,
+          0.1556,
+          0.1799,
+          0.0748,
+          0.1322,
+          0.1429,
+          0.1258,
+          0.1069,
+          0.1062
+        ],
+        "qmap": [
+          [
+            [
+              -0.096,
+              -0.067,
+              0.055,
+              0.018,
+              -0.018,
+              -0.019,
+              0.083,
+              0.12,
+              -0.004,
+              0.088
+            ],
+            [
+              -0.125,
+              -0.092,
+              -0.018,
+              -0.004,
+              0.015,
+              0.022,
+              0.056,
+              0.101,
+              -0.053,
+              0.052
+            ],
+            [
+              -0.13,
+              -0.092,
+              -0.022,
+              -0.006,
+              -0.017,
+              -0.0,
+              -0.06,
+              0.058,
+              -0.02,
+              0.047
+            ],
+            [
+              -0.09,
+              -0.069,
+              -0.075,
+              -0.016,
+              0.031,
+              0.001,
+              -0.008,
+              0.024,
+              -0.082,
+              -0.065
+            ],
+            [
+              -0.06,
+              0.002,
+              -0.033,
+              0.015,
+              -0.092,
+              0.113,
+              -0.005,
+              -0.03,
+              0.001,
+              -0.11
+            ],
+            [
+              -0.014,
+              0.018,
+              -0.02,
+              -0.046,
+              -0.082,
+              0.003,
+              -0.039,
+              0.019,
+              0.041,
+              -0.077
+            ],
+            [
+              0.037,
+              -0.018,
+              0.006,
+              -0.022,
+              -0.138,
+              -0.08,
+              -0.034,
+              0.008,
+              0.039,
+              0.007
+            ],
+            [
+              -0.02,
+              -0.075,
+              -0.023,
+              -0.139,
+              -0.192,
+              -0.107,
+              -0.075,
+              -0.062,
+              0.133,
+              0.036
+            ],
+            [
+              0.012,
+              -0.042,
+              -0.028,
+              -0.047,
+              -0.143,
+              -0.095,
+              -0.079,
+              -0.069,
+              -0.029,
+              0.009
+            ],
+            [
+              -0.011,
+              -0.13,
+              -0.104,
+              -0.123,
+              -0.064,
+              -0.079,
+              -0.115,
+              -0.142,
+              -0.098,
+              -0.049
+            ]
+          ],
+          [
+            [
+              0.019,
+              0.004,
+              -0.041,
+              -0.01,
+              -0.007,
+              -0.025,
+              0.051,
+              0.006,
+              -0.016,
+              0.005
+            ],
+            [
+              0.013,
+              -0.05,
+              0.038,
+              -0.017,
+              -0.054,
+              -0.007,
+              -0.038,
+              -0.045,
+              -0.08,
+              0.031
+            ],
+            [
+              -0.038,
+              -0.023,
+              0.026,
+              0.009,
+              -0.051,
+              -0.041,
+              -0.067,
+              -0.074,
+              -0.067,
+              -0.068
+            ],
+            [
+              0.015,
+              0.012,
+              0.051,
+              0.049,
+              0.081,
+              -0.008,
+              -0.018,
+              -0.069,
+              -0.119,
+              -0.088
+            ],
+            [
+              -0.029,
+              0.008,
+              0.083,
+              0.101,
+              0.024,
+              0.119,
+              -0.032,
+              -0.071,
+              -0.052,
+              -0.07
+            ],
+            [
+              -0.043,
+              -0.014,
+              0.067,
+              0.05,
+              0.024,
+              -0.042,
+              -0.032,
+              -0.012,
+              -0.028,
+              -0.044
+            ],
+            [
+              0.011,
+              0.051,
+              -0.025,
+              0.042,
+              -0.033,
+              -0.003,
+              0.068,
+              0.058,
+              0.042,
+              -0.018
+            ],
+            [
+              0.023,
+              0.021,
+              -0.003,
+              -0.027,
+              -0.082,
+              -0.011,
+              0.144,
+              0.032,
+              0.044,
+              0.054
+            ],
+            [
+              0.025,
+              -0.007,
+              -0.042,
+              -0.055,
+              -0.144,
+              -0.082,
+              0.027,
+              0.055,
+              0.025,
+              0.039
+            ],
+            [
+              0.156,
+              0.038,
+              -0.054,
+              -0.104,
+              -0.066,
+              -0.069,
+              -0.019,
+              0.037,
+              -0.004,
+              -0.005
+            ]
+          ],
+          [
+            [
+              0.035,
+              -0.018,
+              -0.052,
+              0.002,
+              0.002,
+              -0.057,
+              -0.011,
+              -0.097,
+              -0.034,
+              0.005
+            ],
+            [
+              -0.011,
+              -0.128,
+              -0.045,
+              -0.097,
+              -0.045,
+              -0.027,
+              -0.059,
+              -0.117,
+              -0.035,
+              0.005
+            ],
+            [
+              -0.003,
+              -0.003,
+              -0.039,
+              -0.047,
+              -0.046,
+              -0.006,
+              -0.024,
+              -0.116,
+              -0.094,
+              -0.109
+            ],
+            [
+              0.055,
+              -0.022,
+              -0.01,
+              -0.019,
+              0.006,
+              0.005,
+              0.015,
+              -0.067,
+              -0.13,
+              -0.07
+            ],
+            [
+              -0.012,
+              0.076,
+              0.025,
+              0.042,
+              0.076,
+              0.042,
+              -0.1,
+              -0.075,
+              -0.078,
+              -0.084
+            ],
+            [
+              0.013,
+              0.063,
+              -0.001,
+              0.048,
+              0.084,
+              0.083,
+              -0.029,
+              -0.055,
+              -0.045,
+              -0.042
+            ],
+            [
+              -0.021,
+              0.083,
+              0.02,
+              0.049,
+              -0.064,
+              0.019,
+              0.041,
+              0.077,
+              0.067,
+              -0.037
+            ],
+            [
+              0.002,
+              0.008,
+              0.006,
+              0.062,
+              -0.07,
+              -0.015,
+              0.033,
+              0.064,
+              0.131,
+              0.054
+            ],
+            [
+              0.033,
+              0.024,
+              0.043,
+              0.036,
+              -0.131,
+              -0.061,
+              0.045,
+              0.036,
+              0.056,
+              -0.003
+            ],
+            [
+              0.18,
+              0.12,
+              -0.033,
+              -0.068,
+              -0.092,
+              -0.079,
+              0.041,
+              0.019,
+              0.051,
+              0.015
+            ]
+          ],
+          [
+            [
+              -0.021,
+              -0.011,
+              -0.034,
+              0.073,
+              -0.074,
+              -0.092,
+              0.037,
+              -0.055,
+              -0.055,
+              -0.12
+            ],
+            [
+              -0.025,
+              -0.045,
+              -0.082,
+              -0.076,
+              -0.095,
+              0.003,
+              0.041,
+              0.016,
+              -0.052,
+              -0.011
+            ],
+            [
+              0.024,
+              0.005,
+              -0.08,
+              -0.035,
+              -0.084,
+              -0.104,
+              0.003,
+              0.018,
+              -0.012,
+              -0.109
+            ],
+            [
+              -0.008,
+              -0.058,
+              -0.104,
+              -0.142,
+              -0.076,
+              -0.095,
+              -0.057,
+              -0.132,
+              -0.024,
+              -0.043
+            ],
+            [
+              -0.026,
+              -0.043,
+              -0.085,
+              -0.182,
+              -0.068,
+              -0.078,
+              -0.142,
+              -0.061,
+              -0.038,
+              -0.031
+            ],
+            [
+              -0.003,
+              0.009,
+              -0.086,
+              -0.071,
+              -0.067,
+              -0.055,
+              -0.077,
+              -0.073,
+              -0.023,
+              -0.018
+            ],
+            [
+              -0.072,
+              -0.094,
+              -0.049,
+              -0.0,
+              -0.048,
+              -0.042,
+              -0.013,
+              0.032,
+              0.064,
+              0.014
+            ],
+            [
+              -0.069,
+              0.018,
+              -0.034,
+              -0.01,
+              0.0,
+              -0.009,
+              -0.019,
+              0.075,
+              0.063,
+              -0.028
+            ],
+            [
+              -0.105,
+              -0.11,
+              -0.106,
+              -0.108,
+              -0.081,
+              -0.107,
+              -0.064,
+              0.002,
+              -0.011,
+              -0.019
+            ],
+            [
+              -0.062,
+              -0.017,
+              -0.081,
+              -0.059,
+              -0.093,
+              -0.036,
+              -0.012,
+              -0.006,
+              0.058,
+              -0.028
+            ]
+          ],
+          [
+            [
+              0.004,
+              -0.009,
+              -0.04,
+              -0.103,
+              0.084,
+              0.047,
+              0.045,
+              0.085,
+              0.035,
+              -0.019
+            ],
+            [
+              -0.007,
+              0.055,
+              -0.112,
+              -0.127,
+              -0.068,
+              -0.009,
+              0.074,
+              0.132,
+              0.045,
+              0.04
+            ],
+            [
+              0.014,
+              0.006,
+              -0.076,
+              -0.157,
+              -0.163,
+              -0.104,
+              0.019,
+              0.088,
+              0.034,
+              0.064
+            ],
+            [
+              0.042,
+              0.028,
+              0.043,
+              0.011,
+              -0.134,
+              -0.068,
+              -0.003,
+              0.03,
+              0.048,
+              0.036
+            ],
+            [
+              -0.058,
+              0.047,
+              -0.04,
+              0.014,
+              0.046,
+              -0.056,
+              -0.036,
+              -0.093,
+              -0.012,
+              0.011
+            ],
+            [
+              -0.026,
+              0.011,
+              0.011,
+              0.017,
+              0.06,
+              0.034,
+              -0.044,
+              -0.162,
+              -0.061,
+              -0.005
+            ],
+            [
+              -0.027,
+              -0.037,
+              0.035,
+              -0.001,
+              0.079,
+              0.039,
+              -0.075,
+              -0.125,
+              -0.141,
+              -0.048
+            ],
+            [
+              0.022,
+              0.015,
+              0.005,
+              0.026,
+              -0.005,
+              -0.011,
+              -0.077,
+              -0.092,
+              0.053,
+              -0.041
+            ],
+            [
+              0.073,
+              0.042,
+              0.06,
+              0.056,
+              0.006,
+              -0.027,
+              -0.023,
+              -0.078,
+              0.043,
+              0.053
+            ],
+            [
+              0.081,
+              0.084,
+              0.076,
+              0.072,
+              0.025,
+              -0.016,
+              -0.04,
+              -0.018,
+              0.029,
+              0.021
+            ]
+          ],
+          [
+            [
+              0.067,
+              0.103,
+              0.002,
+              0.143,
+              0.017,
+              0.012,
+              0.039,
+              0.007,
+              0.006,
+              0.024
+            ],
+            [
+              0.055,
+              0.01,
+              0.118,
+              0.021,
+              0.019,
+              -0.067,
+              -0.004,
+              -0.036,
+              0.015,
+              -0.036
+            ],
+            [
+              0.004,
+              0.04,
+              0.084,
+              0.028,
+              0.004,
+              0.009,
+              0.033,
+              0.004,
+              -0.05,
+              -0.063
+            ],
+            [
+              0.018,
+              0.034,
+              0.106,
+              -0.016,
+              0.066,
+              -0.004,
+              0.037,
+              -0.028,
+              -0.089,
+              -0.117
+            ],
+            [
+              0.002,
+              0.019,
+              0.126,
+              0.115,
+              -0.019,
+              0.042,
+              -0.01,
+              0.021,
+              -0.076,
+              -0.066
+            ],
+            [
+              -0.015,
+              -0.024,
+              0.039,
+              0.044,
+              -0.019,
+              -0.01,
+              -0.056,
+              -0.039,
+              -0.128,
+              -0.023
+            ],
+            [
+              -0.019,
+              0.063,
+              0.058,
+              -0.019,
+              0.025,
+              0.033,
+              -0.069,
+              -0.019,
+              -0.071,
+              -0.081
+            ],
+            [
+              0.021,
+              0.074,
+              0.05,
+              0.069,
+              0.029,
+              -0.009,
+              -0.067,
+              -0.034,
+              -0.037,
+              -0.081
+            ],
+            [
+              -0.007,
+              0.069,
+              0.051,
+              0.041,
+              0.045,
+              -0.005,
+              -0.035,
+              -0.027,
+              0.017,
+              -0.025
+            ],
+            [
+              0.069,
+              0.06,
+              0.082,
+              0.088,
+              0.037,
+              0.026,
+              0.009,
+              0.011,
+              -0.007,
+              -0.009
+            ]
+          ],
+          [
+            [
+              0.011,
+              0.069,
+              0.058,
+              0.036,
+              0.121,
+              0.124,
+              0.037,
+              0.073,
+              0.018,
+              0.026
+            ],
+            [
+              0.02,
+              0.016,
+              0.022,
+              0.019,
+              0.054,
+              0.085,
+              0.036,
+              0.094,
+              0.006,
+              0.036
+            ],
+            [
+              0.08,
+              0.036,
+              0.018,
+              0.019,
+              0.001,
+              -0.013,
+              0.007,
+              0.029,
+              0.067,
+              0.001
+            ],
+            [
+              0.093,
+              0.058,
+              -0.003,
+              0.039,
+              -0.012,
+              -0.047,
+              -0.06,
+              0.023,
+              0.076,
+              -0.019
+            ],
+            [
+              0.091,
+              0.076,
+              0.037,
+              0.089,
+              0.055,
+              -0.019,
+              -0.047,
+              -0.019,
+              -0.008,
+              0.006
+            ],
+            [
+              0.074,
+              0.066,
+              0.035,
+              0.017,
+              0.007,
+              0.036,
+              -0.021,
+              -0.077,
+              0.002,
+              0.033
+            ],
+            [
+              0.089,
+              0.054,
+              0.043,
+              -0.011,
+              -0.006,
+              -0.02,
+              -0.07,
+              -0.067,
+              -0.028,
+              -0.006
+            ],
+            [
+              0.083,
+              0.046,
+              0.012,
+              0.042,
+              -0.004,
+              -0.026,
+              -0.037,
+              -0.095,
+              0.017,
+              0.001
+            ],
+            [
+              0.126,
+              0.024,
+              0.072,
+              0.048,
+              0.062,
+              -0.008,
+              -0.03,
+              -0.062,
+              0.037,
+              0.083
+            ],
+            [
+              0.103,
+              0.051,
+              0.052,
+              0.094,
+              0.069,
+              0.1,
+              0.084,
+              0.021,
+              0.075,
+              0.02
+            ]
+          ],
+          [
+            [
+              -0.016,
+              -0.012,
+              -0.025,
+              -0.013,
+              0.009,
+              0.072,
+              -0.012,
+              -0.038,
+              -0.002,
+              -0.032
+            ],
+            [
+              0.012,
+              -0.011,
+              0.029,
+              0.017,
+              0.002,
+              0.013,
+              -0.023,
+              -0.026,
+              -0.012,
+              -0.036
+            ],
+            [
+              0.015,
+              -0.001,
+              0.026,
+              0.0,
+              0.059,
+              -0.004,
+              0.012,
+              -0.046,
+              0.02,
+              -0.041
+            ],
+            [
+              0.017,
+              0.009,
+              0.043,
+              0.06,
+              -0.002,
+              0.032,
+              -0.037,
+              -0.033,
+              0.034,
+              0.084
+            ],
+            [
+              0.017,
+              -0.017,
+              -0.014,
+              -0.018,
+              -0.03,
+              -0.058,
+              -0.03,
+              -0.058,
+              -0.08,
+              0.023
+            ],
+            [
+              0.071,
+              -0.085,
+              -0.041,
+              -0.017,
+              -0.042,
+              -0.047,
+              0.003,
+              -0.072,
+              -0.059,
+              -0.042
+            ],
+            [
+              -0.034,
+              -0.064,
+              -0.023,
+              0.019,
+              -0.028,
+              -0.012,
+              0.014,
+              -0.063,
+              -0.063,
+              -0.054
+            ],
+            [
+              -0.031,
+              -0.029,
+              0.011,
+              0.041,
+              0.007,
+              -0.001,
+              0.107,
+              0.011,
+              -0.102,
+              -0.014
+            ],
+            [
+              -0.015,
+              -0.039,
+              0.01,
+              0.037,
+              0.028,
+              -0.008,
+              0.07,
+              0.037,
+              -0.035,
+              -0.016
+            ],
+            [
+              -0.067,
+              -0.036,
+              0.035,
+              0.025,
+              -0.024,
+              -0.029,
+              0.008,
+              -0.03,
+              -0.042,
+              -0.114
+            ]
+          ],
+          [
+            [
+              0.028,
+              0.01,
+              -0.05,
+              0.035,
+              -0.042,
+              -0.019,
+              0.022,
+              0.07,
+              0.016,
+              0.018
+            ],
+            [
+              -0.002,
+              0.007,
+              -0.02,
+              -0.067,
+              -0.084,
+              -0.061,
+              0.026,
+              0.046,
+              0.054,
+              0.004
+            ],
+            [
+              -0.019,
+              -0.021,
+              -0.032,
+              -0.055,
+              -0.085,
+              -0.051,
+              0.033,
+              0.013,
+              0.044,
+              0.069
+            ],
+            [
+              -0.037,
+              -0.033,
+              0.019,
+              -0.005,
+              -0.022,
+              -0.02,
+              0.034,
+              0.016,
+              0.015,
+              -0.0
+            ],
+            [
+              -0.01,
+              0.033,
+              0.032,
+              0.082,
+              0.058,
+              0.068,
+              -0.009,
+              0.001,
+              0.011,
+              -0.002
+            ],
+            [
+              0.0,
+              0.009,
+              -0.028,
+              0.028,
+              0.05,
+              0.064,
+              0.014,
+              0.002,
+              -0.026,
+              -0.032
+            ],
+            [
+              -0.008,
+              -0.004,
+              -0.035,
+              -0.037,
+              0.018,
+              0.026,
+              -0.024,
+              -0.038,
+              -0.07,
+              -0.035
+            ],
+            [
+              0.051,
+              0.061,
+              -0.015,
+              -0.014,
+              0.046,
+              0.052,
+              -0.018,
+              -0.041,
+              -0.016,
+              -0.016
+            ],
+            [
+              0.054,
+              0.015,
+              -0.011,
+              -0.049,
+              0.073,
+              0.028,
+              -0.061,
+              -0.045,
+              0.024,
+              0.003
+            ],
+            [
+              0.04,
+              0.029,
+              0.072,
+              0.005,
+              0.053,
+              0.106,
+              -0.031,
+              -0.018,
+              0.027,
+              0.033
+            ]
+          ]
+        ]
+      },
+      "move": {
+        "cell_point": [
+          -0.0017,
+          -0.3425,
+          1.1196
+        ],
+        "goal": [
+          -0.0017,
+          -0.3425,
+          1.2106
+        ],
+        "yaw_deg": -10.0,
+        "obj_tilt_deg": 10.3685,
+        "valid_cells": 100
+      },
+      "end_step": 556,
+      "motion_end": {
+        "type": "move_to",
+        "pos": [
+          -0.0017,
+          -0.3425,
+          1.2106
+        ],
+        "grip": -1.0,
+        "steps": 19,
+        "reached": true,
+        "pos_err_m": 0.0046,
+        "rot_err_rad": 0.014
+      }
+    }
+  ],
+  "calls": [
+    {
+      "step": 10,
+      "t_s": 0.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.7 cm)",
+      "subtask_start": {
+        "idx": 0,
+        "kind": "pick",
+        "object": "white bowl",
+        "timer2": true
+      },
+      "timer2_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.3257,
+        "near": false,
+        "above_top": 0.0612,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 14,
+      "t_s": 0.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.3234,
+        "near": false,
+        "above_top": 0.058,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 18,
+      "t_s": 0.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.3185,
+        "near": false,
+        "above_top": 0.054,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 22,
+      "t_s": 0.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.31,
+        "near": false,
+        "above_top": 0.0497,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 26,
+      "t_s": 0.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2965,
+        "near": false,
+        "above_top": 0.0482,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 30,
+      "t_s": 1.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2806,
+        "near": false,
+        "above_top": 0.0463,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 34,
+      "t_s": 1.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2729,
+        "near": false,
+        "above_top": 0.037,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 38,
+      "t_s": 1.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2706,
+        "near": false,
+        "above_top": 0.0136,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 42,
+      "t_s": 1.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2717,
+        "near": false,
+        "above_top": -0.026,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 46,
+      "t_s": 1.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 1.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2738,
+        "near": false,
+        "above_top": -0.0681,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 50,
+      "t_s": 2.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2753,
+        "near": false,
+        "above_top": -0.1098,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 54,
+      "t_s": 2.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2823,
+        "near": false,
+        "above_top": -0.1431,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 58,
+      "t_s": 2.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2876,
+        "near": false,
+        "above_top": -0.1754,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 62,
+      "t_s": 2.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.00, gripper closed 7.9 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 2.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2923,
+        "near": false,
+        "above_top": -0.2006,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 66,
+      "t_s": 2.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper closed 5.4 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 2.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2979,
+        "near": false,
+        "above_top": -0.2032,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 70,
+      "t_s": 3.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper closed 1.4 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 3.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3008,
+        "near": false,
+        "above_top": -0.2041,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 74,
+      "t_s": 3.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper closed 0.3 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "wrong_grasp",
+      "vlm_library": "HL-3/HL-4",
+      "timer2_s": 3.2,
+      "branch": "hl",
+      "decision": "override: release_and_retreat [z 1.24, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 30 cm from the white bowl"
+    },
+    {
+      "step": 191,
+      "t_s": 9.05,
+      "correction_end": "hl",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 9.05,
+      "close": false,
+      "gate": {
+        "cooldown_s": 0.2
+      },
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 195,
+      "t_s": 9.25,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 9.25,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0113,
+        "near": true,
+        "above_top": 0.0478,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.035,
+      "v_std": 0.0022,
+      "low_count": 1,
+      "branch": "v_low_counting",
+      "decision": "pi0"
+    },
+    {
+      "step": 199,
+      "t_s": 9.45,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 9.45,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.027,
+        "near": true,
+        "above_top": 0.013,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.0042,
+      "v_std": 0.0005,
+      "low_count": 2,
+      "branch": "v_low_counting",
+      "decision": "pi0"
+    },
+    {
+      "step": 203,
+      "t_s": 9.65,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 9.65,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.033,
+        "near": true,
+        "above_top": 0.001,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.0027,
+      "v_std": 0.0004,
+      "low_count": 3,
+      "branch": "v_low",
+      "decision": "override: Q[v_low]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 241,
+      "t_s": 11.55,
+      "branch": "q_select",
+      "q": {
+        "k": 2,
+        "row": 9,
+        "col": 0,
+        "yaw_deg": -10.0,
+        "q": 0.2078
+      },
+      "decision": "override: Q[v_low]: argmax cell (9, 0) yaw -10 deg, Q 0.21"
+    },
+    {
+      "step": 261,
+      "t_s": 12.55,
+      "correction_end": "q_move",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 12.55,
+      "branch": "timeout",
+      "decision": "override: Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 289,
+      "t_s": 13.95,
+      "branch": "q_select",
+      "q": {
+        "k": 6,
+        "row": 5,
+        "col": 4,
+        "yaw_deg": 10.0,
+        "q": 0.1485
+      },
+      "decision": "override: Q[timeout]: argmax cell (5, 4) yaw +10 deg, Q 0.15"
+    },
+    {
+      "step": 300,
+      "t_s": 14.5,
+      "correction_end": "q_move",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 0.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 304,
+      "t_s": 14.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 0.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 308,
+      "t_s": 14.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 0.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 312,
+      "t_s": 15.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 0.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 316,
+      "t_s": 15.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.01, gripper open 8.0 cm)",
+      "timer2_s": 0.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 320,
+      "t_s": 15.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl not detected (nearest box jumped: another object))",
+      "timer2_s": 1.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 324,
+      "t_s": 15.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 1.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 328,
+      "t_s": 15.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 1.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 332,
+      "t_s": 16.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 1.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 336,
+      "t_s": 16.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 1.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 340,
+      "t_s": 16.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 2.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 344,
+      "t_s": 16.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 2.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 348,
+      "t_s": 16.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 2.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 352,
+      "t_s": 17.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl not detected (nearest box jumped: another object))",
+      "timer2_s": 2.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 356,
+      "t_s": 17.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.21 moved 0.46, gripper open 8.0 cm)",
+      "timer2_s": 2.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 360,
+      "t_s": 17.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl not detected (nearest box jumped: another object))",
+      "timer2_s": 3.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 364,
+      "t_s": 17.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.02, gripper open 8.0 cm)",
+      "timer2_s": 3.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 368,
+      "t_s": 17.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper open 8.0 cm)",
+      "timer2_s": 3.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 372,
+      "t_s": 18.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper closed 7.6 cm)",
+      "timer2_s": 3.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 376,
+      "t_s": 18.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.03, gripper open 4.6 cm)",
+      "timer2_s": 3.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 380,
+      "t_s": 18.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.03 moved 0.03, gripper open 6.1 cm)",
+      "timer2_s": 4.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 384,
+      "t_s": 18.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.03 moved 0.03, gripper open 6.8 cm)",
+      "timer2_s": 4.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 388,
+      "t_s": 18.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.6 cm)",
+      "timer2_s": 4.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 392,
+      "t_s": 19.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 4.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 396,
+      "t_s": 19.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper closed 7.8 cm)",
+      "timer2_s": 4.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 400,
+      "t_s": 19.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper closed 5.2 cm)",
+      "timer2_s": 5.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 404,
+      "t_s": 19.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 5.4 cm)",
+      "timer2_s": 5.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 408,
+      "t_s": 19.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.5 cm)",
+      "timer2_s": 5.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 412,
+      "t_s": 20.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 5.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 416,
+      "t_s": 20.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 5.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 420,
+      "t_s": 20.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 6.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 424,
+      "t_s": 20.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.9 cm)",
+      "timer2_s": 6.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 428,
+      "t_s": 20.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.9 cm)",
+      "timer2_s": 6.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 432,
+      "t_s": 21.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.9 cm)",
+      "timer2_s": 6.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 436,
+      "t_s": 21.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 6.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 440,
+      "t_s": 21.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.7 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 7.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 444,
+      "t_s": 21.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.9 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 7.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 448,
+      "t_s": 21.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.9 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "target_not_approached",
+      "vlm_library": "HL-7",
+      "timer2_s": 7.4,
+      "branch": "hl",
+      "decision": "override: point_approach [z 1.24, +0 cm]: target_not_approached (HL-7): 10 cm from the pre-grasp point over the white bowl, -0.3 cm closer in 3 s, EE moved 1.6 cm"
+    },
+    {
+      "step": 504,
+      "t_s": 24.7,
+      "correction_end": "hl",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 8.0 cm)",
+      "timer2_s": 10.2,
+      "branch": "timeout",
+      "decision": "override: Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 537,
+      "t_s": 26.35,
+      "branch": "q_select",
+      "q": {
+        "k": 2,
+        "row": 9,
+        "col": 0,
+        "yaw_deg": -10.0,
+        "q": 0.1799
+      },
+      "decision": "override: Q[timeout]: argmax cell (9, 0) yaw -10 deg, Q 0.18"
+    },
+    {
+      "step": 556,
+      "t_s": 27.3,
+      "correction_end": "q_move",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 8.0 cm)",
+      "timer2_s": 0.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 560,
+      "t_s": 27.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 8.0 cm)",
+      "timer2_s": 0.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 564,
+      "t_s": 27.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 8.0 cm)",
+      "timer2_s": 0.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 568,
+      "t_s": 27.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 8.0 cm)",
+      "timer2_s": 0.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 572,
+      "t_s": 28.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.3 cm)",
+      "timer2_s": 0.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 576,
+      "t_s": 28.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.3 cm)",
+      "timer2_s": 1.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 580,
+      "t_s": 28.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 6.7 cm)",
+      "timer2_s": 1.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 584,
+      "t_s": 28.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.2 cm)",
+      "timer2_s": 1.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 588,
+      "t_s": 28.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.6 cm)",
+      "timer2_s": 1.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 592,
+      "t_s": 29.1,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.03 moved 0.04, gripper open 7.7 cm)",
+      "timer2_s": 1.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 596,
+      "t_s": 29.3,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.5 cm)",
+      "timer2_s": 2.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 600,
+      "t_s": 29.5,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 2.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 604,
+      "t_s": 29.7,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 2.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 608,
+      "t_s": 29.9,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.04 moved 0.04, gripper open 7.8 cm)",
+      "timer2_s": 2.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    }
+  ]
+}

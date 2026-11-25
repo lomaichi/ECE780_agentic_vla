@@ -1,0 +1,3200 @@
+{
+  "success": false,
+  "num_steps": 610,
+  "error": null,
+  "stop_reason": null,
+  "agent": {
+    "name": "framework",
+    "privileged": false,
+    "every_steps": 4
+  },
+  "agent_calls": 114,
+  "interventions": 3,
+  "checks": [
+    {
+      "spec": "pick(akita_black_bowl_2)",
+      "done": true,
+      "done_step": 179
+    },
+    {
+      "spec": "place(akita_black_bowl_2, wooden_cabinet_1_top_side, on)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "goal()",
+      "done": false,
+      "done_step": null
+    }
+  ],
+  "wall_time_s": 20.9,
+  "events": [
+    {
+      "step": 0,
+      "type": "start",
+      "prompt": "put the middle black bowl on top of the cabinet"
+    },
+    {
+      "step": 214,
+      "type": "override_start",
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 255,
+      "type": "override_end",
+      "started": 214,
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              0.11575918968763552,
+              -0.04918992997332437,
+              1.1714916877153394
+            ],
+            "grip": -1.0,
+            "steps": 0,
+            "reached": true,
+            "pos_err_m": 0.0,
+            "rot_err_rad": 0.0
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.008091076940409447,
+              -0.003026233513923846,
+              1.1714916877153394
+            ],
+            "grip": -1.0,
+            "steps": 19,
+            "reached": true,
+            "pos_err_m": 0.004307385731373193,
+            "rot_err_rad": 0.010687482543289661
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.008091076940409447,
+              -0.003026233513923846,
+              1.0203598475006295
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.004694934047519704,
+            "rot_err_rad": 0.012297720648348331
+          }
+        ]
+      }
+    },
+    {
+      "step": 255,
+      "type": "override_start",
+      "reason": "Q[timeout]: argmax cell (5, 9) yaw +15 deg, Q 0.33"
+    },
+    {
+      "step": 278,
+      "type": "override_end",
+      "started": 255,
+      "reason": "Q[timeout]: argmax cell (5, 9) yaw +15 deg, Q 0.33",
+      "motion": {
+        "type": "move_to",
+        "pos": [
+          0.14368455203797675,
+          0.07652089520356013,
+          1.023737948569047
+        ],
+        "grip": -1.0,
+        "steps": 23,
+        "reached": true,
+        "pos_err_m": 0.0048426493121626925,
+        "rot_err_rad": 0.017417022958397865
+      }
+    },
+    {
+      "step": 518,
+      "type": "override_start",
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 610,
+      "type": "override_end",
+      "started": 518,
+      "reason": "Q[timeout]: approach Q_INITIAL_POSITION",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              0.12199832847223915,
+              -0.09197943229125788,
+              1.3016110530243132
+            ],
+            "grip": -1.0,
+            "steps": 60,
+            "reached": false,
+            "pos_err_m": 0.01574337483253486,
+            "rot_err_rad": 0.06062893196940422
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.15300869598252342,
+              -0.13267607992680058,
+              1.3016110530243132
+            ],
+            "grip": -1.0,
+            "steps": 32,
+            "reached": false,
+            "pos_err_m": 0.037366681868597505,
+            "rot_err_rad": 0.13862769305706024
+          }
+        ]
+      },
+      "cut_short": true
+    },
+    {
+      "step": 610,
+      "type": "end",
+      "success": false,
+      "error": null,
+      "stop_reason": null
+    }
+  ],
+  "framework": {
+    "name": "libero_90_task15_init3",
+    "suite": "libero_90",
+    "task_id": 15,
+    "init_state_idx": 3,
+    "language": "put the middle black bowl on top of the cabinet",
+    "split": "held_out",
+    "target_object": "akita_black_bowl_2",
+    "success": false,
+    "num_steps": 610,
+    "sim_s": 30.5,
+    "wall_s": 21.8,
+    "report": {
+      "calls": 114,
+      "v_evals": 3,
+      "v_low_frames": 0,
+      "v_mean": 0.7038,
+      "q_corrections": 2,
+      "q_v_low": 0,
+      "q_timeout": 2,
+      "q_skipped": 0,
+      "hl_corrections": 0,
+      "hl_by_library": {},
+      "errors": 0
+    },
+    "gt": {
+      "pick(akita_black_bowl_2)": 179,
+      "place(akita_black_bowl_2, wooden_cabinet_1_top_side, on)": null,
+      "goal()": null
+    },
+    "pi0_raw": {
+      "success": false,
+      "num_steps": 610,
+      "sim_s": 30.5,
+      "wall_s": 11.8,
+      "gt": {
+        "pick(akita_black_bowl_2)": null,
+        "place(akita_black_bowl_2, wooden_cabinet_1_top_side, on)": null,
+        "goal()": null
+      }
+    }
+  },
+  "config": {
+    "suite": "libero_90",
+    "tasks": [
+      2,
+      12,
+      13,
+      15,
+      16,
+      24,
+      29,
+      30,
+      36,
+      43,
+      60,
+      65,
+      66,
+      68,
+      76,
+      84
+    ],
+    "resummarize": null,
+    "inits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "out": "runs/heldout_bowl_mug",
+    "pi0": "server",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "vlm": "moondream2",
+    "target_mask": "seg",
+    "q_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+    "v_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+    "v_const": null,
+    "threshold": 0.5,
+    "threshold_count": 3,
+    "timeout_s": 10.0,
+    "full_timeout_s": 30.0,
+    "approach_dz": 0.07,
+    "monitor_fps": 5.0,
+    "cooldown_s": 0.2,
+    "held_grace_s": 2.0,
+    "video": true,
+    "raw_pi0": true,
+    "no_plain_video": true,
+    "label_dirs": true,
+    "no_trace": false,
+    "env_seed": 7,
+    "seed": 7,
+    "device": "cpu",
+    "torch_threads": 2,
+    "q_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+      "width": 32
+    },
+    "v_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+      "meta": {
+        "arch": "attn",
+        "width": 32,
+        "heads": 5,
+        "h_max_s": 5.0,
+        "gamma": 0.85,
+        "best_val_mse": 0.07003479450941086,
+        "data": "runs/v4/data"
+      }
+    }
+  },
+  "vlm": {
+    "vlm_calls": 115,
+    "vlm_latency_s": 10.81,
+    "plan": {
+      "object": "middle black bowl",
+      "destination": "cabinet",
+      "relation": "on"
+    },
+    "subtasks": [
+      {
+        "kind": "pick",
+        "label": "pick(middle_black_bowl)",
+        "done_step": null,
+        "history": []
+      },
+      {
+        "kind": "place",
+        "label": "place(middle_black_bowl, cabinet, on)",
+        "done_step": null,
+        "history": []
+      }
+    ],
+    "hl_failures": [],
+    "hl_corrections": []
+  },
+  "corrections": [
+    {
+      "type": "Q",
+      "trigger": "timeout",
+      "step": 214,
+      "subtask": "pick(middle_black_bowl)",
+      "timer2_s": 10.2,
+      "v_est": null,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "handoff": {
+        "q_initial_position": [
+          0.0081,
+          -0.003,
+          1.0204
+        ],
+        "object_centre": [
+          0.0081,
+          -0.003,
+          0.9275
+        ],
+        "object_top_z": 0.9504,
+        "mask_px": 1021,
+        "target_mask": "seg"
+      },
+      "approach": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              0.1158,
+              -0.0492,
+              1.1715
+            ],
+            "grip": -1.0,
+            "steps": 0,
+            "reached": true,
+            "pos_err_m": 0.0,
+            "rot_err_rad": 0.0
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0081,
+              -0.003,
+              1.1715
+            ],
+            "grip": -1.0,
+            "steps": 19,
+            "reached": true,
+            "pos_err_m": 0.0043,
+            "rot_err_rad": 0.0107
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              0.0081,
+              -0.003,
+              1.0204
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.0047,
+            "rot_err_rad": 0.0123
+          }
+        ]
+      },
+      "approach_end_step": 255,
+      "q": {
+        "action": 759,
+        "k": 7,
+        "row": 5,
+        "col": 9,
+        "yaw_deg": 15.0,
+        "q": 0.3329,
+        "q_max_per_rot": [
+          0.2491,
+          0.1394,
+          0.2969,
+          0.2132,
+          0.213,
+          0.2165,
+          0.2983,
+          0.3329,
+          0.2661
+        ],
+        "qmap": [
+          [
+            [
+              0.084,
+              0.176,
+              0.05,
+              -0.004,
+              -0.017,
+              -0.01,
+              0.169,
+              0.171,
+              0.167,
+              0.121
+            ],
+            [
+              0.064,
+              0.088,
+              -0.068,
+              -0.004,
+              -0.013,
+              0.054,
+              0.111,
+              0.063,
+              0.118,
+              0.164
+            ],
+            [
+              0.029,
+              0.131,
+              0.017,
+              0.015,
+              -0.042,
+              -0.041,
+              0.082,
+              0.046,
+              0.082,
+              0.194
+            ],
+            [
+              0.063,
+              0.01,
+              0.078,
+              -0.032,
+              -0.151,
+              -0.017,
+              0.032,
+              0.166,
+              0.193,
+              0.249
+            ],
+            [
+              0.021,
+              0.08,
+              0.005,
+              -0.128,
+              -0.127,
+              0.012,
+              -0.052,
+              -0.05,
+              -0.136,
+              -0.048
+            ],
+            [
+              0.024,
+              0.114,
+              -0.006,
+              0.019,
+              -0.194,
+              0.038,
+              -0.049,
+              -0.041,
+              -0.027,
+              0.042
+            ],
+            [
+              -0.005,
+              0.125,
+              -0.01,
+              -0.046,
+              -0.078,
+              0.021,
+              -0.139,
+              -0.141,
+              -0.123,
+              -0.107
+            ],
+            [
+              -0.058,
+              -0.014,
+              -0.035,
+              -0.009,
+              -0.187,
+              -0.06,
+              -0.23,
+              -0.11,
+              -0.038,
+              -0.155
+            ],
+            [
+              -0.082,
+              0.043,
+              0.088,
+              0.04,
+              -0.149,
+              -0.037,
+              -0.108,
+              -0.046,
+              -0.144,
+              -0.125
+            ],
+            [
+              -0.016,
+              0.098,
+              -0.001,
+              0.073,
+              -0.095,
+              -0.038,
+              -0.12,
+              -0.148,
+              -0.111,
+              -0.165
+            ]
+          ],
+          [
+            [
+              0.133,
+              0.026,
+              0.028,
+              -0.016,
+              -0.096,
+              -0.098,
+              -0.081,
+              -0.006,
+              0.024,
+              -0.005
+            ],
+            [
+              0.023,
+              -0.047,
+              -0.036,
+              -0.069,
+              -0.094,
+              -0.093,
+              -0.095,
+              0.035,
+              -0.033,
+              -0.013
+            ],
+            [
+              0.053,
+              0.016,
+              -0.069,
+              -0.059,
+              -0.063,
+              -0.106,
+              -0.017,
+              0.027,
+              0.048,
+              0.025
+            ],
+            [
+              0.084,
+              0.02,
+              0.053,
+              0.008,
+              -0.148,
+              -0.173,
+              -0.063,
+              -0.013,
+              0.051,
+              0.051
+            ],
+            [
+              0.059,
+              0.07,
+              -0.015,
+              -0.022,
+              -0.074,
+              -0.208,
+              -0.132,
+              -0.097,
+              0.048,
+              0.006
+            ],
+            [
+              0.039,
+              0.122,
+              0.12,
+              0.078,
+              -0.072,
+              -0.127,
+              -0.095,
+              0.092,
+              0.057,
+              0.135
+            ],
+            [
+              0.101,
+              0.021,
+              -0.071,
+              -0.008,
+              -0.068,
+              -0.086,
+              -0.044,
+              -0.051,
+              0.021,
+              0.044
+            ],
+            [
+              -0.02,
+              -0.096,
+              0.058,
+              0.107,
+              -0.045,
+              -0.07,
+              -0.056,
+              0.139,
+              0.097,
+              -0.02
+            ],
+            [
+              -0.031,
+              -0.082,
+              -0.005,
+              0.086,
+              -0.087,
+              -0.083,
+              0.028,
+              0.091,
+              0.019,
+              0.005
+            ],
+            [
+              -0.083,
+              -0.029,
+              -0.037,
+              -0.066,
+              -0.144,
+              -0.07,
+              -0.003,
+              0.09,
+              0.057,
+              -0.055
+            ]
+          ],
+          [
+            [
+              0.131,
+              0.1,
+              0.083,
+              0.055,
+              -0.015,
+              -0.005,
+              -0.076,
+              0.036,
+              0.088,
+              0.005
+            ],
+            [
+              0.016,
+              0.074,
+              0.05,
+              -0.015,
+              -0.001,
+              -0.057,
+              -0.068,
+              0.01,
+              -0.03,
+              -0.009
+            ],
+            [
+              -0.012,
+              0.046,
+              0.026,
+              0.016,
+              0.024,
+              -0.011,
+              0.035,
+              -0.005,
+              -0.015,
+              0.113
+            ],
+            [
+              0.124,
+              0.116,
+              0.103,
+              0.123,
+              0.021,
+              -0.068,
+              -0.043,
+              0.025,
+              0.071,
+              0.111
+            ],
+            [
+              0.051,
+              0.297,
+              0.236,
+              0.173,
+              0.147,
+              -0.019,
+              -0.009,
+              -0.058,
+              -0.002,
+              0.008
+            ],
+            [
+              0.151,
+              0.206,
+              0.258,
+              0.138,
+              0.007,
+              0.01,
+              -0.076,
+              -0.03,
+              0.066,
+              0.218
+            ],
+            [
+              0.1,
+              0.068,
+              -0.001,
+              0.143,
+              0.109,
+              0.056,
+              -0.051,
+              -0.094,
+              -0.009,
+              0.094
+            ],
+            [
+              0.033,
+              -0.015,
+              -0.02,
+              0.138,
+              -0.019,
+              0.027,
+              0.012,
+              -0.041,
+              0.089,
+              0.104
+            ],
+            [
+              -0.018,
+              -0.032,
+              -0.113,
+              0.147,
+              0.01,
+              0.081,
+              0.008,
+              -0.009,
+              0.065,
+              0.054
+            ],
+            [
+              -0.075,
+              -0.005,
+              -0.081,
+              0.037,
+              0.036,
+              0.073,
+              0.004,
+              0.027,
+              0.036,
+              0.006
+            ]
+          ],
+          [
+            [
+              0.0,
+              -0.03,
+              -0.069,
+              -0.083,
+              -0.038,
+              -0.043,
+              -0.108,
+              -0.036,
+              -0.058,
+              -0.017
+            ],
+            [
+              -0.048,
+              -0.077,
+              0.041,
+              -0.014,
+              0.039,
+              -0.033,
+              -0.098,
+              0.026,
+              -0.061,
+              -0.056
+            ],
+            [
+              0.054,
+              -0.063,
+              0.013,
+              0.007,
+              -0.065,
+              -0.026,
+              -0.081,
+              -0.051,
+              0.017,
+              0.097
+            ],
+            [
+              -0.02,
+              -0.045,
+              -0.072,
+              -0.007,
+              -0.089,
+              0.002,
+              -0.035,
+              -0.071,
+              0.03,
+              0.021
+            ],
+            [
+              0.12,
+              -0.021,
+              -0.022,
+              0.213,
+              -0.032,
+              0.086,
+              0.084,
+              0.133,
+              0.124,
+              0.04
+            ],
+            [
+              0.064,
+              0.009,
+              0.002,
+              0.03,
+              -0.024,
+              0.023,
+              -0.042,
+              0.072,
+              -0.031,
+              0.087
+            ],
+            [
+              0.054,
+              -0.135,
+              0.005,
+              0.135,
+              0.079,
+              -0.06,
+              0.118,
+              0.081,
+              0.025,
+              0.089
+            ],
+            [
+              0.025,
+              -0.108,
+              0.004,
+              0.129,
+              0.022,
+              -0.001,
+              0.08,
+              0.12,
+              0.198,
+              0.172
+            ],
+            [
+              0.055,
+              -0.05,
+              -0.039,
+              -0.045,
+              -0.015,
+              -0.032,
+              -0.007,
+              0.108,
+              0.201,
+              0.087
+            ],
+            [
+              -0.042,
+              -0.035,
+              -0.027,
+              -0.007,
+              -0.052,
+              0.039,
+              0.123,
+              0.093,
+              0.104,
+              -0.034
+            ]
+          ],
+          [
+            [
+              0.026,
+              0.036,
+              0.021,
+              0.014,
+              0.076,
+              0.031,
+              0.039,
+              0.038,
+              0.015,
+              0.08
+            ],
+            [
+              0.031,
+              0.158,
+              0.016,
+              -0.037,
+              0.043,
+              -0.066,
+              0.074,
+              0.053,
+              0.081,
+              0.041
+            ],
+            [
+              0.004,
+              0.126,
+              0.068,
+              0.058,
+              -0.023,
+              -0.041,
+              0.117,
+              -0.0,
+              0.016,
+              0.042
+            ],
+            [
+              0.037,
+              0.088,
+              0.213,
+              0.019,
+              0.035,
+              -0.024,
+              0.075,
+              0.033,
+              0.104,
+              0.16
+            ],
+            [
+              -0.049,
+              -0.017,
+              0.102,
+              -0.158,
+              0.014,
+              -0.176,
+              -0.073,
+              0.059,
+              0.01,
+              0.062
+            ],
+            [
+              0.003,
+              -0.041,
+              -0.088,
+              -0.049,
+              0.008,
+              -0.034,
+              -0.004,
+              -0.013,
+              0.128,
+              0.103
+            ],
+            [
+              0.076,
+              0.145,
+              0.054,
+              0.075,
+              0.115,
+              0.081,
+              -0.024,
+              0.023,
+              0.114,
+              0.057
+            ],
+            [
+              -0.077,
+              0.017,
+              0.018,
+              -0.088,
+              -0.192,
+              -0.08,
+              -0.114,
+              -0.098,
+              0.023,
+              -0.012
+            ],
+            [
+              -0.064,
+              0.067,
+              0.101,
+              0.05,
+              -0.03,
+              0.002,
+              -0.047,
+              -0.101,
+              0.034,
+              0.049
+            ],
+            [
+              -0.004,
+              0.057,
+              0.038,
+              0.045,
+              0.025,
+              -0.002,
+              -0.125,
+              -0.018,
+              0.018,
+              0.082
+            ]
+          ],
+          [
+            [
+              0.118,
+              0.192,
+              0.126,
+              0.054,
+              0.117,
+              0.071,
+              -0.029,
+              -0.043,
+              0.003,
+              0.012
+            ],
+            [
+              0.097,
+              0.094,
+              0.049,
+              0.055,
+              -0.043,
+              -0.01,
+              0.013,
+              -0.062,
+              0.018,
+              -0.021
+            ],
+            [
+              0.03,
+              0.217,
+              0.107,
+              0.06,
+              0.042,
+              -0.021,
+              0.074,
+              0.024,
+              0.016,
+              -0.089
+            ],
+            [
+              0.169,
+              0.136,
+              0.091,
+              0.102,
+              0.033,
+              -0.005,
+              -0.05,
+              -0.09,
+              -0.163,
+              -0.094
+            ],
+            [
+              0.027,
+              0.071,
+              0.14,
+              0.097,
+              0.017,
+              -0.098,
+              0.018,
+              -0.071,
+              -0.027,
+              0.029
+            ],
+            [
+              0.016,
+              -0.005,
+              0.041,
+              0.08,
+              -0.046,
+              -0.025,
+              -0.015,
+              0.037,
+              -0.007,
+              0.038
+            ],
+            [
+              0.089,
+              0.024,
+              -0.004,
+              0.044,
+              0.072,
+              0.009,
+              0.03,
+              0.075,
+              0.081,
+              0.007
+            ],
+            [
+              0.058,
+              -0.008,
+              0.051,
+              0.032,
+              0.014,
+              0.009,
+              -0.002,
+              0.125,
+              0.078,
+              0.021
+            ],
+            [
+              0.028,
+              -0.108,
+              -0.033,
+              -0.006,
+              0.052,
+              0.059,
+              0.067,
+              0.19,
+              -0.004,
+              0.039
+            ],
+            [
+              0.023,
+              -0.099,
+              0.051,
+              -0.048,
+              -0.004,
+              0.065,
+              0.065,
+              0.203,
+              0.074,
+              0.097
+            ]
+          ],
+          [
+            [
+              0.097,
+              0.096,
+              0.058,
+              0.049,
+              0.044,
+              -0.092,
+              -0.0,
+              0.034,
+              0.048,
+              0.063
+            ],
+            [
+              0.151,
+              0.231,
+              0.119,
+              0.122,
+              0.003,
+              -0.096,
+              0.046,
+              0.045,
+              0.142,
+              0.044
+            ],
+            [
+              0.141,
+              0.239,
+              -0.012,
+              0.096,
+              0.001,
+              -0.052,
+              0.125,
+              0.093,
+              0.093,
+              0.025
+            ],
+            [
+              0.097,
+              0.18,
+              0.082,
+              0.057,
+              -0.096,
+              -0.064,
+              0.035,
+              0.007,
+              0.046,
+              0.08
+            ],
+            [
+              0.08,
+              0.01,
+              0.08,
+              0.037,
+              0.096,
+              0.003,
+              0.104,
+              0.197,
+              0.095,
+              -0.007
+            ],
+            [
+              0.096,
+              0.085,
+              0.046,
+              -0.044,
+              0.03,
+              -0.005,
+              0.097,
+              0.135,
+              0.063,
+              0.298
+            ],
+            [
+              0.097,
+              0.125,
+              0.062,
+              0.027,
+              0.037,
+              -0.089,
+              0.2,
+              0.053,
+              0.171,
+              0.102
+            ],
+            [
+              0.032,
+              0.081,
+              0.048,
+              0.024,
+              0.051,
+              0.044,
+              0.13,
+              0.111,
+              0.166,
+              0.157
+            ],
+            [
+              0.05,
+              0.135,
+              0.101,
+              0.109,
+              0.103,
+              0.07,
+              0.099,
+              0.049,
+              0.147,
+              0.12
+            ],
+            [
+              0.038,
+              0.139,
+              0.07,
+              0.099,
+              0.188,
+              0.03,
+              0.072,
+              0.206,
+              0.065,
+              0.171
+            ]
+          ],
+          [
+            [
+              0.081,
+              0.041,
+              0.164,
+              0.114,
+              0.03,
+              0.031,
+              -0.11,
+              -0.041,
+              -0.063,
+              -0.035
+            ],
+            [
+              0.065,
+              0.013,
+              0.044,
+              0.018,
+              0.024,
+              0.031,
+              -0.078,
+              0.002,
+              0.042,
+              -0.067
+            ],
+            [
+              0.112,
+              -0.053,
+              0.001,
+              0.025,
+              0.064,
+              0.024,
+              -0.046,
+              0.007,
+              0.022,
+              -0.021
+            ],
+            [
+              0.061,
+              0.085,
+              0.153,
+              0.13,
+              0.04,
+              0.019,
+              0.021,
+              -0.039,
+              -0.033,
+              -0.047
+            ],
+            [
+              0.008,
+              -0.085,
+              -0.004,
+              0.027,
+              0.059,
+              -0.093,
+              -0.011,
+              -0.017,
+              0.066,
+              -0.024
+            ],
+            [
+              0.046,
+              0.074,
+              0.041,
+              -0.064,
+              0.12,
+              -0.029,
+              0.041,
+              0.088,
+              0.113,
+              0.333
+            ],
+            [
+              0.023,
+              0.031,
+              0.016,
+              -0.024,
+              0.008,
+              -0.061,
+              0.053,
+              -0.019,
+              0.025,
+              0.064
+            ],
+            [
+              0.021,
+              0.1,
+              0.099,
+              0.094,
+              0.159,
+              -0.036,
+              0.035,
+              0.153,
+              0.053,
+              0.049
+            ],
+            [
+              0.026,
+              0.1,
+              0.053,
+              -0.004,
+              -0.005,
+              -0.087,
+              0.043,
+              0.092,
+              0.008,
+              -0.034
+            ],
+            [
+              -0.018,
+              0.001,
+              -0.002,
+              0.0,
+              -0.036,
+              -0.03,
+              0.024,
+              0.152,
+              0.05,
+              0.008
+            ]
+          ],
+          [
+            [
+              0.109,
+              0.065,
+              0.068,
+              -0.041,
+              0.063,
+              0.074,
+              0.04,
+              0.037,
+              0.024,
+              0.037
+            ],
+            [
+              0.176,
+              0.044,
+              0.001,
+              -0.103,
+              -0.02,
+              -0.065,
+              0.047,
+              0.06,
+              0.033,
+              0.094
+            ],
+            [
+              0.131,
+              0.195,
+              0.032,
+              -0.019,
+              -0.017,
+              0.014,
+              0.025,
+              0.039,
+              0.032,
+              0.016
+            ],
+            [
+              0.266,
+              0.118,
+              0.065,
+              0.001,
+              0.01,
+              -0.031,
+              -0.012,
+              0.02,
+              0.008,
+              0.028
+            ],
+            [
+              0.112,
+              -0.027,
+              0.077,
+              -0.05,
+              0.053,
+              0.017,
+              -0.036,
+              0.071,
+              0.007,
+              0.054
+            ],
+            [
+              0.134,
+              0.114,
+              0.003,
+              -0.027,
+              -0.0,
+              0.081,
+              0.018,
+              -0.004,
+              -0.002,
+              0.148
+            ],
+            [
+              0.202,
+              0.129,
+              0.049,
+              -0.004,
+              0.03,
+              0.062,
+              0.182,
+              0.142,
+              0.12,
+              0.023
+            ],
+            [
+              0.155,
+              0.126,
+              0.104,
+              -0.021,
+              0.001,
+              0.023,
+              0.059,
+              0.114,
+              0.079,
+              -0.035
+            ],
+            [
+              0.111,
+              0.088,
+              0.12,
+              -0.038,
+              0.016,
+              0.049,
+              0.08,
+              0.125,
+              0.156,
+              0.035
+            ],
+            [
+              0.065,
+              0.098,
+              0.045,
+              -0.062,
+              0.018,
+              0.089,
+              0.081,
+              0.113,
+              0.089,
+              0.038
+            ]
+          ]
+        ]
+      },
+      "move": {
+        "cell_point": [
+          0.1437,
+          0.0765,
+          0.9301
+        ],
+        "goal": [
+          0.1437,
+          0.0765,
+          1.0237
+        ],
+        "yaw_deg": 15.0,
+        "obj_tilt_deg": 0.1503,
+        "valid_cells": 100
+      },
+      "end_step": 278,
+      "motion_end": {
+        "type": "move_to",
+        "pos": [
+          0.1437,
+          0.0765,
+          1.0237
+        ],
+        "grip": -1.0,
+        "steps": 23,
+        "reached": true,
+        "pos_err_m": 0.0048,
+        "rot_err_rad": 0.0174
+      }
+    },
+    {
+      "type": "Q",
+      "trigger": "timeout",
+      "step": 518,
+      "subtask": "pick(middle_black_bowl)",
+      "timer2_s": 12.0,
+      "v_est": null,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "handoff": {
+        "q_initial_position": [
+          0.153,
+          -0.1327,
+          1.3016
+        ],
+        "object_centre": [
+          0.153,
+          -0.1327,
+          1.2088
+        ],
+        "object_top_z": 1.2316,
+        "mask_px": 895,
+        "target_mask": "seg"
+      }
+    }
+  ],
+  "calls": [
+    {
+      "step": 10,
+      "t_s": 0.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.7 cm)",
+      "subtask_start": {
+        "idx": 0,
+        "kind": "pick",
+        "object": "middle black bowl",
+        "timer2": true
+      },
+      "timer2_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2293,
+        "near": false,
+        "above_top": 0.2524,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 14,
+      "t_s": 0.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.2207,
+        "near": false,
+        "above_top": 0.2487,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 18,
+      "t_s": 0.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1959,
+        "near": false,
+        "above_top": 0.2461,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 22,
+      "t_s": 0.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1692,
+        "near": false,
+        "above_top": 0.2336,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 26,
+      "t_s": 0.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1463,
+        "near": false,
+        "above_top": 0.2166,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 30,
+      "t_s": 1.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.132,
+        "near": false,
+        "above_top": 0.1867,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 34,
+      "t_s": 1.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.128,
+        "near": false,
+        "above_top": 0.1478,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 38,
+      "t_s": 1.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1239,
+        "near": false,
+        "above_top": 0.1117,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 42,
+      "t_s": 1.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1122,
+        "near": false,
+        "above_top": 0.0877,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 46,
+      "t_s": 1.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 1.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1028,
+        "near": false,
+        "above_top": 0.0693,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 50,
+      "t_s": 2.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 2.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0961,
+        "near": true,
+        "above_top": 0.0433,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.6397,
+      "v_std": 0.0089,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 54,
+      "t_s": 2.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.02, gripper open 8.0 cm)",
+      "timer2_s": 2.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0688,
+        "near": true,
+        "above_top": 0.0064,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.7277,
+      "v_std": 0.0149,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 58,
+      "t_s": 2.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.01 moved 0.03, gripper open 7.9 cm)",
+      "timer2_s": 2.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0556,
+        "near": true,
+        "above_top": -0.0034,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.7441,
+      "v_std": 0.0147,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 62,
+      "t_s": 2.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.15, gripper closed 6.7 cm)",
+      "timer2_s": 2.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0539,
+        "near": true,
+        "above_top": -0.0069,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 66,
+      "t_s": 2.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 4.7 cm)",
+      "timer2_s": 2.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0523,
+        "near": true,
+        "above_top": -0.0042,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 70,
+      "t_s": 3.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.15, gripper closed 3.8 cm)",
+      "timer2_s": 3.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0519,
+        "near": true,
+        "above_top": -0.0011,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 74,
+      "t_s": 3.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.02, gripper closed 3.6 cm)",
+      "timer2_s": 3.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0515,
+        "near": true,
+        "above_top": 0.0001,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 78,
+      "t_s": 3.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.15, gripper closed 3.5 cm)",
+      "timer2_s": 3.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0528,
+        "near": true,
+        "above_top": 0.005,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 82,
+      "t_s": 3.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.03, gripper closed 3.4 cm)",
+      "timer2_s": 3.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0541,
+        "near": true,
+        "above_top": 0.0098,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 86,
+      "t_s": 3.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.03, gripper closed 3.3 cm)",
+      "timer2_s": 3.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.055,
+        "near": true,
+        "above_top": 0.0142,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 90,
+      "t_s": 4.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.03, gripper closed 3.2 cm)",
+      "timer2_s": 4.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0559,
+        "near": true,
+        "above_top": 0.0185,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 94,
+      "t_s": 4.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.03, gripper closed 3.0 cm)",
+      "timer2_s": 4.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0585,
+        "near": true,
+        "above_top": 0.0228,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 98,
+      "t_s": 4.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.00 moved 0.03, gripper closed 2.9 cm)",
+      "timer2_s": 4.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0595,
+        "near": true,
+        "above_top": 0.0299,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 102,
+      "t_s": 4.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose +0.01 moved 0.04, gripper closed 2.8 cm)",
+      "timer2_s": 4.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0597,
+        "near": true,
+        "above_top": 0.0404,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 106,
+      "t_s": 4.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.15, gripper closed 2.8 cm)",
+      "timer2_s": 4.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0596,
+        "near": true,
+        "above_top": 0.0517,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 110,
+      "t_s": 5.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.6 cm)",
+      "timer2_s": 5.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0587,
+        "near": true,
+        "above_top": 0.0757,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 114,
+      "t_s": 5.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.15, gripper closed 2.6 cm)",
+      "timer2_s": 5.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0537,
+        "near": true,
+        "above_top": 0.1184,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 118,
+      "t_s": 5.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.5 cm)",
+      "timer2_s": 5.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0713,
+        "near": true,
+        "above_top": 0.1585,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 122,
+      "t_s": 5.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.4 cm)",
+      "timer2_s": 5.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1053,
+        "near": false,
+        "above_top": 0.1986,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 126,
+      "t_s": 5.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.3 cm)",
+      "timer2_s": 5.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1415,
+        "near": false,
+        "above_top": 0.2402,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 130,
+      "t_s": 6.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.2 cm)",
+      "timer2_s": 6.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1782,
+        "near": false,
+        "above_top": 0.2794,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 134,
+      "t_s": 6.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.2 cm)",
+      "timer2_s": 6.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2164,
+        "near": false,
+        "above_top": 0.3094,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 138,
+      "t_s": 6.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.1 cm)",
+      "timer2_s": 6.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2539,
+        "near": false,
+        "above_top": 0.3283,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 142,
+      "t_s": 6.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.0 cm)",
+      "timer2_s": 6.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.285,
+        "near": false,
+        "above_top": 0.3362,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 146,
+      "t_s": 6.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 2.0 cm)",
+      "timer2_s": 6.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.306,
+        "near": false,
+        "above_top": 0.3365,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 150,
+      "t_s": 7.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.9 cm)",
+      "timer2_s": 7.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3265,
+        "near": false,
+        "above_top": 0.3296,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 154,
+      "t_s": 7.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.9 cm)",
+      "timer2_s": 7.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3461,
+        "near": false,
+        "above_top": 0.3191,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 158,
+      "t_s": 7.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.8 cm)",
+      "timer2_s": 7.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3598,
+        "near": false,
+        "above_top": 0.2974,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 162,
+      "t_s": 7.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.8 cm)",
+      "timer2_s": 7.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3715,
+        "near": false,
+        "above_top": 0.2685,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 166,
+      "t_s": 7.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.7 cm)",
+      "timer2_s": 7.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3774,
+        "near": false,
+        "above_top": 0.2397,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 170,
+      "t_s": 8.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.7 cm)",
+      "timer2_s": 8.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3878,
+        "near": false,
+        "above_top": 0.2027,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 174,
+      "t_s": 8.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.6 cm)",
+      "timer2_s": 8.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3787,
+        "near": false,
+        "above_top": 0.2145,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 178,
+      "t_s": 8.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.6 cm)",
+      "timer2_s": 8.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3659,
+        "near": false,
+        "above_top": 0.2313,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 182,
+      "t_s": 8.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.5 cm)",
+      "timer2_s": 8.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3574,
+        "near": false,
+        "above_top": 0.2463,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 186,
+      "t_s": 8.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.5 cm)",
+      "timer2_s": 8.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3382,
+        "near": false,
+        "above_top": 0.2652,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 190,
+      "t_s": 9.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.5 cm)",
+      "timer2_s": 9.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3166,
+        "near": false,
+        "above_top": 0.2883,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 194,
+      "t_s": 9.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.5 cm)",
+      "timer2_s": 9.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3234,
+        "near": false,
+        "above_top": 0.2774,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 198,
+      "t_s": 9.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.4 cm)",
+      "timer2_s": 9.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.3094,
+        "near": false,
+        "above_top": 0.2724,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 202,
+      "t_s": 9.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.4 cm)",
+      "timer2_s": 9.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2926,
+        "near": false,
+        "above_top": 0.2789,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 206,
+      "t_s": 9.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 1.4 cm)",
+      "timer2_s": 9.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.306,
+        "near": false,
+        "above_top": 0.2737,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 210,
+      "t_s": 10.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper closed 0.3 cm)",
+      "timer2_s": 10.0,
+      "timeout_deferred_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.2965,
+        "near": false,
+        "above_top": 0.2793,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 214,
+      "t_s": 10.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper open 0.6 cm)",
+      "timer2_s": 10.2,
+      "branch": "timeout",
+      "decision": "override: Q[timeout]: approach Q_INITIAL_POSITION"
+    },
+    {
+      "step": 255,
+      "t_s": 12.25,
+      "branch": "q_select",
+      "q": {
+        "k": 7,
+        "row": 5,
+        "col": 9,
+        "yaw_deg": 15.0,
+        "q": 0.3329
+      },
+      "decision": "override: Q[timeout]: argmax cell (5, 9) yaw +15 deg, Q 0.33"
+    },
+    {
+      "step": 278,
+      "t_s": 13.4,
+      "correction_end": "q_move",
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.16 moved 0.16, gripper open 8.0 cm)",
+      "timer2_s": 0.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 282,
+      "t_s": 13.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.17 moved 0.17, gripper open 8.0 cm)",
+      "timer2_s": 0.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 286,
+      "t_s": 13.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.16 moved 0.16, gripper open 8.0 cm)",
+      "timer2_s": 0.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 290,
+      "t_s": 14.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.15 moved 0.16, gripper open 8.0 cm)",
+      "timer2_s": 0.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 294,
+      "t_s": 14.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.15, gripper open 7.7 cm)",
+      "timer2_s": 0.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 298,
+      "t_s": 14.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.12 moved 0.14, gripper open 7.8 cm)",
+      "timer2_s": 1.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 302,
+      "t_s": 14.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.14, gripper closed 7.8 cm)",
+      "timer2_s": 1.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 306,
+      "t_s": 14.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 6.1 cm)",
+      "timer2_s": 1.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 310,
+      "t_s": 15.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 3.3 cm)",
+      "timer2_s": 1.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 314,
+      "t_s": 15.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.9 cm)",
+      "timer2_s": 1.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 318,
+      "t_s": 15.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.7 cm)",
+      "timer2_s": 2.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 322,
+      "t_s": 15.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.6 cm)",
+      "timer2_s": 2.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 326,
+      "t_s": 15.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.5 cm)",
+      "timer2_s": 2.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 330,
+      "t_s": 16.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.5 cm)",
+      "timer2_s": 2.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 334,
+      "t_s": 16.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.4 cm)",
+      "timer2_s": 2.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 338,
+      "t_s": 16.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.4 cm)",
+      "timer2_s": 3.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 342,
+      "t_s": 16.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.4 cm)",
+      "timer2_s": 3.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 346,
+      "t_s": 16.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.4 cm)",
+      "timer2_s": 3.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 350,
+      "t_s": 17.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.3 cm)",
+      "timer2_s": 3.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 354,
+      "t_s": 17.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.3 cm)",
+      "timer2_s": 3.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 358,
+      "t_s": 17.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.3 cm)",
+      "timer2_s": 4.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 362,
+      "t_s": 17.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.3 cm)",
+      "timer2_s": 4.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 366,
+      "t_s": 17.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.3 cm)",
+      "timer2_s": 4.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 370,
+      "t_s": 18.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.13 moved 0.13, gripper closed 2.3 cm)",
+      "timer2_s": 4.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 374,
+      "t_s": 18.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.3 cm)",
+      "timer2_s": 4.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 378,
+      "t_s": 18.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.3 cm)",
+      "timer2_s": 5.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 382,
+      "t_s": 18.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 5.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 386,
+      "t_s": 18.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 5.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 390,
+      "t_s": 19.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 5.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 394,
+      "t_s": 19.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 5.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 398,
+      "t_s": 19.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 6.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 402,
+      "t_s": 19.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.2 cm)",
+      "timer2_s": 6.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 406,
+      "t_s": 19.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 2.1 cm)",
+      "timer2_s": 6.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 410,
+      "t_s": 20.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.6 cm)",
+      "timer2_s": 6.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 414,
+      "t_s": 20.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 6.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 418,
+      "t_s": 20.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 7.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 422,
+      "t_s": 20.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 7.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 426,
+      "t_s": 20.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 7.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 430,
+      "t_s": 21.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 7.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 434,
+      "t_s": 21.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 7.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 438,
+      "t_s": 21.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 8.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 442,
+      "t_s": 21.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 8.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 446,
+      "t_s": 21.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.8 cm)",
+      "timer2_s": 8.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 450,
+      "t_s": 22.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.8 cm)",
+      "timer2_s": 8.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 454,
+      "t_s": 22.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 8.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 458,
+      "t_s": 22.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 9.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 462,
+      "t_s": 22.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 9.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 466,
+      "t_s": 22.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 9.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 470,
+      "t_s": 23.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 9.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 474,
+      "t_s": 23.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 9.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 478,
+      "t_s": 23.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 10.0,
+      "timeout_deferred_s": 0.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 482,
+      "t_s": 23.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 10.2,
+      "timeout_deferred_s": 0.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 486,
+      "t_s": 23.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 10.4,
+      "timeout_deferred_s": 0.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 490,
+      "t_s": 24.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 10.6,
+      "timeout_deferred_s": 0.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 494,
+      "t_s": 24.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 10.8,
+      "timeout_deferred_s": 0.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 498,
+      "t_s": 24.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 11.0,
+      "timeout_deferred_s": 1.0,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 502,
+      "t_s": 24.6,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 11.2,
+      "timeout_deferred_s": 1.2,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 506,
+      "t_s": 24.8,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 11.4,
+      "timeout_deferred_s": 1.4,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 510,
+      "t_s": 25.0,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 11.6,
+      "timeout_deferred_s": 1.6,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 514,
+      "t_s": 25.2,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 11.8,
+      "timeout_deferred_s": 1.8,
+      "branch": "q_issued",
+      "decision": "pi0"
+    },
+    {
+      "step": 518,
+      "t_s": 25.4,
+      "subtask": "pick(middle_black_bowl)",
+      "vlm_observation": "pick(middle_black_bowl): not yet (black bowl rose -0.14 moved 0.14, gripper closed 0.5 cm)",
+      "timer2_s": 12.0,
+      "branch": "timeout",
+      "decision": "override: Q[timeout]: approach Q_INITIAL_POSITION"
+    }
+  ]
+}

@@ -66,6 +66,21 @@ after a scripted motion (override) ends. Each call is one iteration of the pseud
   place successes. The framework only logged it, but the recovery agent skipped HL detection on those calls.)
 - **Approach path.** V1's three handoff legs are kept. A third leg that repeats the second leg's goal is dropped (same
   end pose). A stalled travel leg otherwise cost another 60 steps.
+- **HL correction travel height** (2026-11-25, `components.ClearanceRecoveryAgent`, constants `HL_*` in `config.py`).
+  The VLM agent's corrections (point_approach, release_and_retreat, carry_to) go straight up, across and straight
+  down. moondreamV2 set the travel height from the start and goal points only (carry_to: destination + 18 cm). That
+  ignored what stands in between, and the carried object hanging below the gripper. In `runs/eval` task 65 (init 0
+  and init 2), carry_to swept the red mug (13.5 cm tall) through the other two mugs. The travel height is now also at
+  least `obstacle top + 5 cm + what hangs below the EE`, capped at robot base + 45 cm for reach:
+  - obstacle top: the highest agentview depth point within 8 cm (11 cm when carrying) of the straight path, taken
+    over the current frame and the plan-time frame. The plan-time frame covers what the arm hides now. Robot pixels
+    are dropped (self-filter dilated by 2 px), and so are non-geom pixels (the hand's site markers).
+  - below the EE: 2 cm for the fingertips. When carrying, the target's height, measured at the plan call from depth
+    in its detect box (within 1 cm of the mesh height in 13 held-out scenes). When carrying, current points around
+    the EE down to the object's bottom are skipped, because they are the carried object.
+  - Replays of the recorded task 65 carry_to states (init 0 and 2): travel raised 11 cm, the other two mugs moved
+    0.0–1.4 cm. With the old height in init 2 they moved 5.1 and 14.1 cm (knocked over). Corrections with nothing
+    taller on the way keep the old height.
 
 ## Privileged stand-ins (as in Q and V training)
 
@@ -111,6 +126,10 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
   while the pi0 server and V4 collection are running, only ~3.5 GB of the GPU is free.
 - Other flags: `--threshold`, `--threshold-count`, `--timeout-s`, `--full-timeout-s`, `--approach-dz`,
   `--monitor-fps`, `--cooldown-s`, `--held-grace-s`, `--target-mask`, `--q-ckpt`, `--no-trace`. See `--help`.
+- `--raw-pi0`: for each episode, also roll out pi0 alone from the same init, with the same budget and stop rule
+  (`<name>_pi0.mp4`, `framework.pi0_raw` in events.json, a summary column with a per-task table).
+  `--no-plain-video` deletes the un-annotated framework video. `--label-dirs` names the episode folders
+  `<name>_success` / `<name>_fail` after the framework rollout's LIBERO success.
 - The default 30 s budget (pseudocode) is longer than the 20 s LIBERO-90 budget used for the pi0 baselines. Pass
   `--full-timeout-s 20` for a like-for-like comparison.
 
@@ -119,8 +138,9 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
 | Path | Content |
 |---|---|
 | `<suite>_task<T>_init<I>/<name>.mp4` | agentview, 20 fps |
-| `<name>/<name>_annotated.mp4` | `--video`: wrist + agentview with VLM subtask, timer2, V_est and the low-V count, gate status, running correction, privileged ground truth |
-| `<name>/events.json` | loop events; `framework` (success, report); `corrections` (Q: trigger, Q_INITIAL_POSITION, approach result, Q-map, cell / yaw, move result, library tag; HL: mode, library entry, action); `calls` (every supervisor call: branch, gate, V, timer2, VLM verdict); `vlm` (plan, subtasks, HL failures); `config` |
+| `<name>/<name>_annotated.mp4` | `--video`: wrist + agentview with VLM subtask, timer2, V_est and the low-V count, gate status, running correction (HL: with its travel z), privileged ground truth |
+| `<name>/<name>_pi0.mp4` | `--raw-pi0`: agentview of pi0 alone from the same init |
+| `<name>/events.json` | loop events; `framework` (success, report); `corrections` (Q: trigger, Q_INITIAL_POSITION, approach result, Q-map, cell / yaw, move result, library tag; HL: mode, library entry, action, `travel`: z, obstacle top, below-EE, cap); `calls` (every supervisor call: branch, gate, V, timer2, VLM verdict); `vlm` (plan, subtasks, HL failures); `config` |
 | `<name>/trace/*.npy` | `fa_core.loop` trace, restorable with `tools/scene_restore.py` |
 | `summary.md`, `summary.json` | one row per episode: success, Q corrections (V-low / timeout / skipped), HL corrections by library entry, V evaluations |
 
@@ -129,7 +149,7 @@ MUJOCO_GL=egl $PY run_pipeline.py --tasks 13 15 24 36 65 76 --inits 0 1 --out ru
 | File | Role |
 |---|---|
 | `supervisor.py` | `FrameworkAgent`: the pseudocode's decision logic (no torch / LIBERO imports) |
-| `components.py` | module loading (V1's `qnet` isolated from V2's), `QModel`, `VModel` / `ConstantV`, `VLMMonitor`, `Perception` (V2 / V1 observers), `SkillLibrary` |
+| `components.py` | module loading (V1's `qnet` isolated from V2's), `QModel`, `VModel` / `ConstantV`, `VLMMonitor`, `ClearanceRecoveryAgent` (obstacle-aware HL travel), `Perception` (V2 / V1 observers), `SkillLibrary` |
 | `run_pipeline.py` | entry point: episodes, outputs, annotated video, summary |
 | `stubs.py` | offline test doubles: `ScriptedPi0`, `OracleDetectVLM` |
 | `config.py` | pseudocode constants, additions, default paths |

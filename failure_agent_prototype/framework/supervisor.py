@@ -232,7 +232,7 @@ class FrameworkAgent(Agent):
         f = self.vlm.failure() or {}
         corr = {"type": "HL", "step": int(view.step), "subtask": rec.get("subtask"), "mode": f.get("failure_mode"),
                 "library_id": f.get("library"), "action": f.get("action"), "reason": f.get("reason"),
-                "target_world": f.get("target_world")}
+                "target_world": f.get("target_world"), "travel": f.get("travel")}
         if self.library is not None:
             corr["library"] = self.library.lookup(f.get("library"))
         self.corrections.append(corr)
