@@ -1,0 +1,1223 @@
+{
+  "success": false,
+  "num_steps": 244,
+  "error": null,
+  "stop_reason": "check pick(white_yellow_mug_1) done",
+  "agent": {
+    "name": "framework",
+    "privileged": false,
+    "every_steps": 4
+  },
+  "agent_calls": 41,
+  "interventions": 1,
+  "checks": [
+    {
+      "spec": "pick(white_yellow_mug_1)",
+      "done": true,
+      "done_step": 244
+    },
+    {
+      "spec": "place(white_yellow_mug_1, study_table_desk_caddy_right_region, on)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "goal()",
+      "done": false,
+      "done_step": null
+    }
+  ],
+  "wall_time_s": 6.3,
+  "events": [
+    {
+      "step": 0,
+      "type": "start",
+      "prompt": "pick up the yellow and white mug and place it to the right of the caddy"
+    },
+    {
+      "step": 98,
+      "type": "override_start",
+      "reason": "release_and_retreat [z 1.12, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 19 cm from the yellow and white mug"
+    },
+    {
+      "step": 175,
+      "type": "override_end",
+      "started": 98,
+      "reason": "release_and_retreat [z 1.12, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 19 cm from the yellow and white mug",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.20292080216622227,
+              0.15933405528573297,
+              1.1187653503868398
+            ],
+            "grip": -1.0,
+            "steps": 21,
+            "reached": true,
+            "pos_err_m": 0.004445320338413609,
+            "rot_err_rad": 0.002396032912656665
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.11340364416948906,
+              -0.0028296693303375524,
+              1.1187653503868398
+            ],
+            "grip": -1.0,
+            "steps": 24,
+            "reached": true,
+            "pos_err_m": 0.0047715966275483825,
+            "rot_err_rad": 0.014719916507601738
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.11340364416948906,
+              -0.0028296693303375524,
+              0.998418551341447
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.004338472788435732,
+            "rot_err_rad": 0.0013407268561422825
+          }
+        ]
+      }
+    },
+    {
+      "step": 244,
+      "type": "stop",
+      "reason": "check pick(white_yellow_mug_1) done"
+    },
+    {
+      "step": 244,
+      "type": "end",
+      "success": false,
+      "error": null,
+      "stop_reason": "check pick(white_yellow_mug_1) done"
+    }
+  ],
+  "framework": {
+    "name": "libero_90_task76_init5",
+    "suite": "libero_90",
+    "task_id": 76,
+    "init_state_idx": 5,
+    "language": "pick up the yellow and white mug and place it to the right of the caddy",
+    "split": "held_out",
+    "target_object": "white_yellow_mug_1",
+    "success": true,
+    "success_criterion": "pick",
+    "task_success": false,
+    "stop_reason": "check pick(white_yellow_mug_1) done",
+    "num_steps": 244,
+    "sim_s": 12.2,
+    "wall_s": 6.9,
+    "report": {
+      "calls": 41,
+      "v_evals": 3,
+      "v_low_frames": 0,
+      "v_mean": 0.6384,
+      "q_corrections": 0,
+      "q_v_low": 0,
+      "q_timeout": 0,
+      "q_skipped": 0,
+      "hl_corrections": 1,
+      "hl_by_library": {
+        "HL-3/HL-4": 1
+      },
+      "errors": 0
+    },
+    "gt": {
+      "pick(white_yellow_mug_1)": 244,
+      "place(white_yellow_mug_1, study_table_desk_caddy_right_region, on)": null,
+      "goal()": null
+    },
+    "pi0_raw": {
+      "success": false,
+      "task_success": false,
+      "stop_reason": null,
+      "num_steps": 610,
+      "sim_s": 30.5,
+      "wall_s": 10.2,
+      "gt": {
+        "pick(white_yellow_mug_1)": null,
+        "place(white_yellow_mug_1, study_table_desk_caddy_right_region, on)": null,
+        "goal()": null
+      }
+    }
+  },
+  "config": {
+    "suite": "libero_90",
+    "tasks": [
+      2,
+      12,
+      13,
+      15,
+      16,
+      24,
+      29,
+      30,
+      36,
+      43,
+      60,
+      65,
+      66,
+      68,
+      76,
+      84
+    ],
+    "resummarize": null,
+    "inits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "out": "runs/heldout_bowl_mug_pick",
+    "pi0": "server",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "vlm": "moondream2",
+    "target_mask": "seg",
+    "q_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+    "v_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+    "v_const": null,
+    "threshold": 0.5,
+    "threshold_count": 3,
+    "timeout_s": 10.0,
+    "full_timeout_s": 30.0,
+    "approach_dz": 0.07,
+    "monitor_fps": 5.0,
+    "cooldown_s": 0.2,
+    "held_grace_s": 2.0,
+    "success": "pick",
+    "video": true,
+    "raw_pi0": true,
+    "no_plain_video": true,
+    "label_dirs": true,
+    "no_trace": false,
+    "env_seed": 7,
+    "seed": 7,
+    "device": "cpu",
+    "torch_threads": 2,
+    "q_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+      "width": 32
+    },
+    "v_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+      "meta": {
+        "arch": "attn",
+        "width": 32,
+        "heads": 5,
+        "h_max_s": 5.0,
+        "gamma": 0.85,
+        "best_val_mse": 0.07003479450941086,
+        "data": "runs/v4/data"
+      }
+    }
+  },
+  "vlm": {
+    "vlm_calls": 43,
+    "vlm_latency_s": 3.15,
+    "plan": {
+      "object": "yellow and white mug",
+      "destination": "caddy",
+      "relation": "to the right of"
+    },
+    "subtasks": [
+      {
+        "kind": "pick",
+        "label": "pick(yellow_and_white_mug)",
+        "done_step": null,
+        "history": []
+      },
+      {
+        "kind": "place",
+        "label": "place(yellow_and_white_mug, caddy, right_of)",
+        "done_step": null,
+        "history": []
+      }
+    ],
+    "hl_failures": [
+      {
+        "step": 98,
+        "last_step": 98,
+        "level": "high_level",
+        "mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 19 cm from the yellow and white mug",
+        "subtask": "pick(yellow_and_white_mug)",
+        "action": "release_and_retreat"
+      }
+    ],
+    "hl_corrections": [
+      {
+        "step": 98,
+        "action": "release_and_retreat",
+        "failure_mode": "wrong_grasp",
+        "library": "HL-3/HL-4",
+        "reason": "gripper closed on something 19 cm from the yellow and white mug",
+        "subtask": "pick(yellow_and_white_mug)",
+        "target_world": [
+          -0.113,
+          -0.003,
+          0.928
+        ],
+        "point_img": [
+          128.50104742651334,
+          188.0549876003816
+        ],
+        "travel": {
+          "z": 1.119,
+          "rule_z": 1.119,
+          "obstacle_top_z": 1.049,
+          "obstacle_top_now": 1.049,
+          "obstacle_top_plan": 1.022,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 175
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "type": "HL",
+      "step": 98,
+      "subtask": "pick(yellow_and_white_mug)",
+      "mode": "wrong_grasp",
+      "library_id": "HL-3/HL-4",
+      "action": "release_and_retreat",
+      "reason": "gripper closed on something 19 cm from the yellow and white mug",
+      "target_world": [
+        -0.113,
+        -0.003,
+        0.928
+      ],
+      "travel": {
+        "z": 1.119,
+        "rule_z": 1.119,
+        "obstacle_top_z": 1.049,
+        "obstacle_top_now": 1.049,
+        "obstacle_top_plan": 1.022,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-3",
+          "name": "wrong_object_category",
+          "level": "high",
+          "remedy": "pre-grasp VERIFY(object between fingers is target) -> HALT -> put wrong object back -> RETREAT 10 cm -> POINT_APPROACH(target) -> REPROMPT pick-place sentence -> VERIFY(grasped); retry -> ESCALATE"
+        },
+        {
+          "id": "HL-4",
+          "name": "referring_expression_instance_error",
+          "level": "high",
+          "remedy": "pre-grasp/pre-pull VERIFY phrased on the qualifier (3x zoom) -> HALT -> RETREAT -> POINT_APPROACH(resolved instance) -> REPROMPT -> VERIFY; retry -> ESCALATE"
+        }
+      ],
+      "end_step": 175,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "hold",
+            "grip": -1.0,
+            "steps": 10
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.2029,
+              0.1593,
+              1.1188
+            ],
+            "grip": -1.0,
+            "steps": 21,
+            "reached": true,
+            "pos_err_m": 0.0044,
+            "rot_err_rad": 0.0024
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.1134,
+              -0.0028,
+              1.1188
+            ],
+            "grip": -1.0,
+            "steps": 24,
+            "reached": true,
+            "pos_err_m": 0.0048,
+            "rot_err_rad": 0.0147
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.1134,
+              -0.0028,
+              0.9984
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.0043,
+            "rot_err_rad": 0.0013
+          }
+        ]
+      }
+    }
+  ],
+  "calls": [
+    {
+      "step": 10,
+      "t_s": 0.0,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.7 cm)",
+      "subtask_start": {
+        "idx": 0,
+        "kind": "pick",
+        "object": "yellow and white mug",
+        "timer2": true
+      },
+      "timer2_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1892,
+        "near": false,
+        "above_top": 0.2459,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 14,
+      "t_s": 0.2,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.183,
+        "near": false,
+        "above_top": 0.2495,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 18,
+      "t_s": 0.4,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1782,
+        "near": false,
+        "above_top": 0.2434,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 22,
+      "t_s": 0.6,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.171,
+        "near": false,
+        "above_top": 0.242,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 26,
+      "t_s": 0.8,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1569,
+        "near": false,
+        "above_top": 0.2408,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 30,
+      "t_s": 1.0,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1455,
+        "near": false,
+        "above_top": 0.2403,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 34,
+      "t_s": 1.2,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1418,
+        "near": false,
+        "above_top": 0.2393,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 38,
+      "t_s": 1.4,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1414,
+        "near": false,
+        "above_top": 0.2374,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 42,
+      "t_s": 1.6,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1438,
+        "near": false,
+        "above_top": 0.2343,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 46,
+      "t_s": 1.8,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 1.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1497,
+        "near": false,
+        "above_top": 0.2286,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 50,
+      "t_s": 2.0,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1563,
+        "near": false,
+        "above_top": 0.2202,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 54,
+      "t_s": 2.2,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1649,
+        "near": false,
+        "above_top": 0.2089,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 58,
+      "t_s": 2.4,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1665,
+        "near": false,
+        "above_top": 0.1933,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 62,
+      "t_s": 2.6,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1655,
+        "near": false,
+        "above_top": 0.1719,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 66,
+      "t_s": 2.8,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 2.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1662,
+        "near": false,
+        "above_top": 0.1502,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 70,
+      "t_s": 3.0,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 3.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1687,
+        "near": false,
+        "above_top": 0.1288,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 74,
+      "t_s": 3.2,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 3.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1743,
+        "near": false,
+        "above_top": 0.111,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 78,
+      "t_s": 3.4,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 3.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.179,
+        "near": false,
+        "above_top": 0.0892,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 82,
+      "t_s": 3.6,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 3.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1829,
+        "near": false,
+        "above_top": 0.0666,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 86,
+      "t_s": 3.8,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper closed 6.0 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 3.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1855,
+        "near": false,
+        "above_top": 0.0606,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 90,
+      "t_s": 4.0,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper closed 3.0 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 4.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1858,
+        "near": false,
+        "above_top": 0.0628,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 94,
+      "t_s": 4.2,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper closed 2.9 cm)",
+      "vlm_failure_suspected": "wrong_grasp",
+      "timer2_s": 4.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.1862,
+        "near": false,
+        "above_top": 0.0712,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 98,
+      "t_s": 4.4,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper closed 2.9 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "wrong_grasp",
+      "vlm_library": "HL-3/HL-4",
+      "timer2_s": 4.4,
+      "branch": "hl",
+      "decision": "override: release_and_retreat [z 1.12, +0 cm]: wrong_grasp (HL-3/HL-4): gripper closed on something 19 cm from the yellow and white mug"
+    },
+    {
+      "step": 175,
+      "t_s": 8.25,
+      "correction_end": "hl",
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 8.25,
+      "close": false,
+      "gate": {
+        "cooldown_s": 0.2
+      },
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 179,
+      "t_s": 8.45,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 8.45,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0047,
+        "near": true,
+        "above_top": 0.0623,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.6459,
+      "v_std": 0.0037,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 183,
+      "t_s": 8.65,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 8.65,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0096,
+        "near": true,
+        "above_top": 0.0543,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.6486,
+      "v_std": 0.0035,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 187,
+      "t_s": 8.85,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 8.85,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0125,
+        "near": true,
+        "above_top": 0.0367,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.6206,
+      "v_std": 0.0035,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 191,
+      "t_s": 9.05,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.00 moved 0.01, gripper closed 7.6 cm)",
+      "timer2_s": 9.05,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0134,
+        "near": true,
+        "above_top": 0.0318,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 195,
+      "t_s": 9.25,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.01 moved 0.01, gripper closed 4.3 cm)",
+      "timer2_s": 9.25,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0134,
+        "near": true,
+        "above_top": 0.0329,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 199,
+      "t_s": 9.45,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose -0.00 moved 0.01, gripper closed 2.1 cm)",
+      "timer2_s": 9.45,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0122,
+        "near": true,
+        "above_top": 0.0371,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 203,
+      "t_s": 9.65,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.03, gripper closed 1.5 cm)",
+      "timer2_s": 9.65,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0104,
+        "near": true,
+        "above_top": 0.0414,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 207,
+      "t_s": 9.85,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.04, gripper closed 1.1 cm)",
+      "timer2_s": 9.85,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0089,
+        "near": true,
+        "above_top": 0.0481,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 211,
+      "t_s": 10.05,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.04, gripper closed 1.1 cm)",
+      "timer2_s": 10.05,
+      "timeout_deferred_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0082,
+        "near": true,
+        "above_top": 0.0568,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 215,
+      "t_s": 10.25,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.01 moved 0.05, gripper closed 1.1 cm)",
+      "timer2_s": 10.25,
+      "timeout_deferred_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0128,
+        "near": true,
+        "above_top": 0.0623,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 219,
+      "t_s": 10.45,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.05, gripper closed 1.1 cm)",
+      "timer2_s": 10.45,
+      "timeout_deferred_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0172,
+        "near": true,
+        "above_top": 0.0652,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 223,
+      "t_s": 10.65,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.06, gripper closed 1.1 cm)",
+      "timer2_s": 10.65,
+      "timeout_deferred_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0215,
+        "near": true,
+        "above_top": 0.0697,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 227,
+      "t_s": 10.85,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.00 moved 0.06, gripper closed 1.1 cm)",
+      "timer2_s": 10.85,
+      "timeout_deferred_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0261,
+        "near": true,
+        "above_top": 0.076,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 231,
+      "t_s": 11.05,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.01 moved 0.06, gripper closed 1.1 cm)",
+      "timer2_s": 11.05,
+      "timeout_deferred_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0304,
+        "near": true,
+        "above_top": 0.0856,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 235,
+      "t_s": 11.25,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.01 moved 0.06, gripper closed 1.1 cm)",
+      "timer2_s": 11.25,
+      "timeout_deferred_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0346,
+        "near": true,
+        "above_top": 0.0925,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 239,
+      "t_s": 11.45,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.01 moved 0.07, gripper closed 1.1 cm)",
+      "timer2_s": 11.45,
+      "timeout_deferred_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0397,
+        "near": true,
+        "above_top": 0.1003,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 243,
+      "t_s": 11.65,
+      "subtask": "pick(yellow_and_white_mug)",
+      "vlm_observation": "pick(yellow_and_white_mug): not yet (yellow and white mug rose +0.02 moved 0.07, gripper closed 1.1 cm)",
+      "timer2_s": 11.65,
+      "timeout_deferred_s": 1.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0435,
+        "near": true,
+        "above_top": 0.1088,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    }
+  ]
+}

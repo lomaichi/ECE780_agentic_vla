@@ -1,0 +1,1820 @@
+{
+  "success": false,
+  "num_steps": 369,
+  "error": null,
+  "stop_reason": "check pick(white_bowl_1) done",
+  "agent": {
+    "name": "framework",
+    "privileged": false,
+    "every_steps": 4
+  },
+  "agent_calls": 77,
+  "interventions": 1,
+  "checks": [
+    {
+      "spec": "pick(white_bowl_1)",
+      "done": true,
+      "done_step": 369
+    },
+    {
+      "spec": "place(white_bowl_1, wooden_two_layer_shelf_1_top_side, on)",
+      "done": false,
+      "done_step": null
+    },
+    {
+      "spec": "goal()",
+      "done": false,
+      "done_step": null
+    }
+  ],
+  "wall_time_s": 11.5,
+  "events": [
+    {
+      "step": 0,
+      "type": "start",
+      "prompt": "put the white bowl on top of the cabinet"
+    },
+    {
+      "step": 258,
+      "type": "override_start",
+      "reason": "point_approach [z 1.11, +0 cm]: target_not_approached (HL-7): 15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm"
+    },
+    {
+      "step": 314,
+      "type": "override_end",
+      "started": 258,
+      "reason": "point_approach [z 1.11, +0 cm]: target_not_approached (HL-7): 15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm",
+      "motion": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.20235629241659409,
+              0.10150459720032179,
+              1.1059642341938891
+            ],
+            "grip": -1.0,
+            "steps": 16,
+            "reached": true,
+            "pos_err_m": 0.004551820955802798,
+            "rot_err_rad": 0.00332981301471591
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.32631326692659457,
+              0.10656265328807964,
+              1.1059642341938891
+            ],
+            "grip": -1.0,
+            "steps": 18,
+            "reached": true,
+            "pos_err_m": 0.004062376842370714,
+            "rot_err_rad": 0.020703250542283058
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.32631326692659457,
+              0.10656265328807964,
+              0.9788646699427253
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.004540979570553638,
+            "rot_err_rad": 0.0020829658024013042
+          }
+        ]
+      }
+    },
+    {
+      "step": 369,
+      "type": "stop",
+      "reason": "check pick(white_bowl_1) done"
+    },
+    {
+      "step": 369,
+      "type": "end",
+      "success": false,
+      "error": null,
+      "stop_reason": "check pick(white_bowl_1) done"
+    }
+  ],
+  "framework": {
+    "name": "libero_90_task43_init3",
+    "suite": "libero_90",
+    "task_id": 43,
+    "init_state_idx": 3,
+    "language": "put the white bowl on top of the cabinet",
+    "split": "held_out",
+    "target_object": "white_bowl_1",
+    "success": true,
+    "success_criterion": "pick",
+    "task_success": false,
+    "stop_reason": "check pick(white_bowl_1) done",
+    "num_steps": 369,
+    "sim_s": 18.45,
+    "wall_s": 12.0,
+    "report": {
+      "calls": 77,
+      "v_evals": 3,
+      "v_low_frames": 2,
+      "v_mean": 0.398,
+      "q_corrections": 0,
+      "q_v_low": 0,
+      "q_timeout": 0,
+      "q_skipped": 1,
+      "hl_corrections": 1,
+      "hl_by_library": {
+        "HL-7": 1
+      },
+      "errors": 0
+    },
+    "gt": {
+      "pick(white_bowl_1)": 369,
+      "place(white_bowl_1, wooden_two_layer_shelf_1_top_side, on)": null,
+      "goal()": null
+    },
+    "pi0_raw": {
+      "success": false,
+      "task_success": false,
+      "stop_reason": null,
+      "num_steps": 610,
+      "sim_s": 30.5,
+      "wall_s": 10.1,
+      "gt": {
+        "pick(white_bowl_1)": null,
+        "place(white_bowl_1, wooden_two_layer_shelf_1_top_side, on)": null,
+        "goal()": null
+      }
+    }
+  },
+  "config": {
+    "suite": "libero_90",
+    "tasks": [
+      2,
+      12,
+      13,
+      15,
+      16,
+      24,
+      29,
+      30,
+      36,
+      43,
+      60,
+      65,
+      66,
+      68,
+      76,
+      84
+    ],
+    "resummarize": null,
+    "inits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "out": "runs/heldout_bowl_mug_pick",
+    "pi0": "server",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "vlm": "moondream2",
+    "target_mask": "seg",
+    "q_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+    "v_ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+    "v_const": null,
+    "threshold": 0.5,
+    "threshold_count": 3,
+    "timeout_s": 10.0,
+    "full_timeout_s": 30.0,
+    "approach_dz": 0.07,
+    "monitor_fps": 5.0,
+    "cooldown_s": 0.2,
+    "held_grace_s": 2.0,
+    "success": "pick",
+    "video": true,
+    "raw_pi0": true,
+    "no_plain_video": true,
+    "label_dirs": true,
+    "no_trace": false,
+    "env_seed": 7,
+    "seed": 7,
+    "device": "cpu",
+    "torch_threads": 2,
+    "q_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V1/runs/pick_v0/ckpt_best.pt",
+      "width": 32
+    },
+    "v_model": {
+      "ckpt": "/home/DockerShared/ECE780/failure_agent_prototype/RL/pixel_Q/V4/runs/v4_train/v_attn.pt",
+      "meta": {
+        "arch": "attn",
+        "width": 32,
+        "heads": 5,
+        "h_max_s": 5.0,
+        "gamma": 0.85,
+        "best_val_mse": 0.07003479450941086,
+        "data": "runs/v4/data"
+      }
+    }
+  },
+  "vlm": {
+    "vlm_calls": 79,
+    "vlm_latency_s": 5.54,
+    "plan": {
+      "object": "white bowl",
+      "destination": "cabinet",
+      "relation": "on"
+    },
+    "subtasks": [
+      {
+        "kind": "pick",
+        "label": "pick(white_bowl)",
+        "done_step": 326,
+        "history": []
+      },
+      {
+        "kind": "place",
+        "label": "place(white_bowl, cabinet, on)",
+        "done_step": null,
+        "history": []
+      }
+    ],
+    "hl_failures": [
+      {
+        "step": 258,
+        "last_step": 258,
+        "level": "high_level",
+        "mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm",
+        "subtask": "pick(white_bowl)",
+        "action": "point_approach"
+      }
+    ],
+    "hl_corrections": [
+      {
+        "step": 258,
+        "action": "point_approach",
+        "failure_mode": "target_not_approached",
+        "library": "HL-7",
+        "reason": "15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm",
+        "subtask": "pick(white_bowl)",
+        "target_world": [
+          -0.326,
+          0.107,
+          0.909
+        ],
+        "point_img": [
+          100.21729236106381,
+          108.79948262505198
+        ],
+        "travel": {
+          "z": 1.106,
+          "rule_z": 1.106,
+          "obstacle_top_z": 0.936,
+          "obstacle_top_now": 0.936,
+          "obstacle_top_plan": 0.936,
+          "below_ee_m": 0.02,
+          "corridor_m": 0.08,
+          "cap_z": 1.362,
+          "capped": false,
+          "raised_m": 0.0
+        },
+        "end_step": 314
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "type": "Q",
+      "trigger": "timeout",
+      "step": 242,
+      "subtask": "pick(white_bowl)",
+      "timer2_s": 11.6,
+      "v_est": null,
+      "library": {
+        "invoke_rl": "rl/pick",
+        "implemented_by": "pixelQ V1 Q-map (V4 V as the trigger)",
+        "covers": [
+          {
+            "id": "LL-4",
+            "name": "unstable_grasp_slip"
+          },
+          {
+            "id": "LL-5",
+            "name": "pregrasp_contact_disturbance"
+          },
+          {
+            "id": "LL-8",
+            "name": "pregrasp_hesitation"
+          }
+        ]
+      },
+      "skipped": "target not located (Q_INITIAL_POSITION unknown)"
+    },
+    {
+      "type": "HL",
+      "step": 258,
+      "subtask": "pick(white_bowl)",
+      "mode": "target_not_approached",
+      "library_id": "HL-7",
+      "action": "point_approach",
+      "reason": "15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm",
+      "target_world": [
+        -0.326,
+        0.107,
+        0.909
+      ],
+      "travel": {
+        "z": 1.106,
+        "rule_z": 1.106,
+        "obstacle_top_z": 0.936,
+        "obstacle_top_now": 0.936,
+        "obstacle_top_plan": 0.936,
+        "below_ee_m": 0.02,
+        "corridor_m": 0.08,
+        "cap_z": 1.362,
+        "capped": false,
+        "raised_m": 0.0
+      },
+      "library": [
+        {
+          "id": "HL-7",
+          "name": "target_never_approached",
+          "level": "high",
+          "remedy": "early heading check (2-3 frames) -> HALT -> RETREAT -> POINT_APPROACH(target) -> REPROMPT -> WATCH 3 s -> ESCALATE"
+        }
+      ],
+      "end_step": 314,
+      "motion_end": {
+        "type": "sequence",
+        "parts": [
+          {
+            "type": "move_to",
+            "pos": [
+              -0.2024,
+              0.1015,
+              1.106
+            ],
+            "grip": -1.0,
+            "steps": 16,
+            "reached": true,
+            "pos_err_m": 0.0046,
+            "rot_err_rad": 0.0033
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.3263,
+              0.1066,
+              1.106
+            ],
+            "grip": -1.0,
+            "steps": 18,
+            "reached": true,
+            "pos_err_m": 0.0041,
+            "rot_err_rad": 0.0207
+          },
+          {
+            "type": "move_to",
+            "pos": [
+              -0.3263,
+              0.1066,
+              0.9789
+            ],
+            "grip": -1.0,
+            "steps": 22,
+            "reached": true,
+            "pos_err_m": 0.0045,
+            "rot_err_rad": 0.0021
+          }
+        ]
+      }
+    }
+  ],
+  "calls": [
+    {
+      "step": 10,
+      "t_s": 0.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.7 cm)",
+      "subtask_start": {
+        "idx": 0,
+        "kind": "pick",
+        "object": "white bowl",
+        "timer2": true
+      },
+      "timer2_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1222,
+        "near": false,
+        "above_top": 0.2715,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 14,
+      "t_s": 0.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.1155,
+        "near": false,
+        "above_top": 0.2699,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 18,
+      "t_s": 0.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.8 cm)",
+      "timer2_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0944,
+        "near": true,
+        "above_top": 0.2646,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 22,
+      "t_s": 0.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0653,
+        "near": true,
+        "above_top": 0.2569,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 26,
+      "t_s": 0.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0482,
+        "near": true,
+        "above_top": 0.2481,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 30,
+      "t_s": 1.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0666,
+        "near": true,
+        "above_top": 0.2306,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 34,
+      "t_s": 1.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0909,
+        "near": true,
+        "above_top": 0.198,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 38,
+      "t_s": 1.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0982,
+        "near": true,
+        "above_top": 0.1555,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 42,
+      "t_s": 1.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.00 moved 0.00, gripper open 7.9 cm)",
+      "timer2_s": 1.6,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.09,
+        "near": true,
+        "above_top": 0.1111,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 46,
+      "t_s": 1.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.00 moved 0.00, gripper open 8.0 cm)",
+      "timer2_s": 1.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0649,
+        "near": true,
+        "above_top": 0.0681,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.5573,
+      "v_std": 0.0097,
+      "branch": "v_ok",
+      "decision": "pi0"
+    },
+    {
+      "step": 50,
+      "t_s": 2.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper closed 7.9 cm)",
+      "timer2_s": 2.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0336,
+        "near": true,
+        "above_top": 0.0294,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 54,
+      "t_s": 2.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper closed 7.6 cm)",
+      "timer2_s": 2.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0277,
+        "near": true,
+        "above_top": 0.0236,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 58,
+      "t_s": 2.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper closed 7.6 cm)",
+      "timer2_s": 2.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0272,
+        "near": true,
+        "above_top": 0.0217,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 62,
+      "t_s": 2.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.01 moved 0.01, gripper closed 7.6 cm)",
+      "timer2_s": 2.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0277,
+        "near": true,
+        "above_top": 0.0196,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 66,
+      "t_s": 2.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper closed 7.4 cm)",
+      "timer2_s": 2.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0293,
+        "near": true,
+        "above_top": 0.0177,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 70,
+      "t_s": 3.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper closed 7.3 cm)",
+      "timer2_s": 3.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0304,
+        "near": true,
+        "above_top": 0.0162,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 74,
+      "t_s": 3.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper closed 7.3 cm)",
+      "timer2_s": 3.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.031,
+        "near": true,
+        "above_top": 0.0145,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 78,
+      "t_s": 3.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.03 moved 0.03, gripper closed 7.3 cm)",
+      "timer2_s": 3.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0301,
+        "near": true,
+        "above_top": 0.013,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 82,
+      "t_s": 3.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.02 moved 0.02, gripper closed 7.3 cm)",
+      "timer2_s": 3.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0296,
+        "near": true,
+        "above_top": 0.0099,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 86,
+      "t_s": 3.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 7.1 cm)",
+      "timer2_s": 3.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.03,
+        "near": true,
+        "above_top": 0.0085,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 90,
+      "t_s": 4.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 7.0 cm)",
+      "timer2_s": 4.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0287,
+        "near": true,
+        "above_top": 0.0098,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 94,
+      "t_s": 4.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 7.0 cm)",
+      "timer2_s": 4.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0247,
+        "near": true,
+        "above_top": 0.0078,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 98,
+      "t_s": 4.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.9 cm)",
+      "timer2_s": 4.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.022,
+        "near": true,
+        "above_top": 0.0065,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 102,
+      "t_s": 4.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.9 cm)",
+      "timer2_s": 4.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.021,
+        "near": true,
+        "above_top": 0.0047,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 106,
+      "t_s": 4.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.8 cm)",
+      "timer2_s": 4.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0201,
+        "near": true,
+        "above_top": 0.0049,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 110,
+      "t_s": 5.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.8 cm)",
+      "timer2_s": 5.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0197,
+        "near": true,
+        "above_top": 0.0053,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 114,
+      "t_s": 5.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.7 cm)",
+      "timer2_s": 5.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0181,
+        "near": true,
+        "above_top": 0.0044,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 118,
+      "t_s": 5.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.7 cm)",
+      "timer2_s": 5.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0135,
+        "near": true,
+        "above_top": 0.0063,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 122,
+      "t_s": 5.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.7 cm)",
+      "timer2_s": 5.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0086,
+        "near": true,
+        "above_top": 0.0048,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 126,
+      "t_s": 5.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.7 cm)",
+      "timer2_s": 5.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.006,
+        "near": true,
+        "above_top": 0.0044,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 130,
+      "t_s": 6.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.6 cm)",
+      "timer2_s": 6.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0092,
+        "near": true,
+        "above_top": 0.004,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 134,
+      "t_s": 6.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.6 cm)",
+      "timer2_s": 6.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0119,
+        "near": true,
+        "above_top": 0.0035,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 138,
+      "t_s": 6.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.6 cm)",
+      "timer2_s": 6.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0136,
+        "near": true,
+        "above_top": 0.0033,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 142,
+      "t_s": 6.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.6 cm)",
+      "timer2_s": 6.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0151,
+        "near": true,
+        "above_top": 0.0031,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 146,
+      "t_s": 6.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.5 cm)",
+      "timer2_s": 6.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0164,
+        "near": true,
+        "above_top": 0.0031,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 150,
+      "t_s": 7.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.5 cm)",
+      "timer2_s": 7.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0168,
+        "near": true,
+        "above_top": 0.0041,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 154,
+      "t_s": 7.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.5 cm)",
+      "timer2_s": 7.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0192,
+        "near": true,
+        "above_top": 0.004,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 158,
+      "t_s": 7.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.5 cm)",
+      "timer2_s": 7.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0205,
+        "near": true,
+        "above_top": 0.0038,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 162,
+      "t_s": 7.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.5 cm)",
+      "timer2_s": 7.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.021,
+        "near": true,
+        "above_top": 0.0039,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 166,
+      "t_s": 7.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.4 cm)",
+      "timer2_s": 7.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.022,
+        "near": true,
+        "above_top": 0.004,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 170,
+      "t_s": 8.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.4 cm)",
+      "timer2_s": 8.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0248,
+        "near": true,
+        "above_top": 0.0064,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 174,
+      "t_s": 8.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.4 cm)",
+      "timer2_s": 8.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.032,
+        "near": true,
+        "above_top": 0.0045,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 178,
+      "t_s": 8.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.4 cm)",
+      "timer2_s": 8.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0365,
+        "near": true,
+        "above_top": 0.0044,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 182,
+      "t_s": 8.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.4 cm)",
+      "timer2_s": 8.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0412,
+        "near": true,
+        "above_top": 0.004,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 186,
+      "t_s": 8.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 6.2 cm)",
+      "timer2_s": 8.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0455,
+        "near": true,
+        "above_top": 0.0052,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 190,
+      "t_s": 9.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 5.8 cm)",
+      "timer2_s": 9.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0457,
+        "near": true,
+        "above_top": 0.0036,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 194,
+      "t_s": 9.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 5.5 cm)",
+      "timer2_s": 9.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0456,
+        "near": true,
+        "above_top": 0.0037,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 198,
+      "t_s": 9.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 5.2 cm)",
+      "timer2_s": 9.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0486,
+        "near": true,
+        "above_top": 0.0034,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 202,
+      "t_s": 9.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 5.0 cm)",
+      "timer2_s": 9.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0528,
+        "near": true,
+        "above_top": 0.0034,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 206,
+      "t_s": 9.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.9 cm)",
+      "timer2_s": 9.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0534,
+        "near": true,
+        "above_top": 0.0037,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 210,
+      "t_s": 10.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.8 cm)",
+      "timer2_s": 10.0,
+      "timeout_deferred_s": 0.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0541,
+        "near": true,
+        "above_top": 0.0041,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 214,
+      "t_s": 10.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.7 cm)",
+      "timer2_s": 10.2,
+      "timeout_deferred_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0546,
+        "near": true,
+        "above_top": 0.0042,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 218,
+      "t_s": 10.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.7 cm)",
+      "timer2_s": 10.4,
+      "timeout_deferred_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0567,
+        "near": true,
+        "above_top": 0.0043,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 222,
+      "t_s": 10.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.6 cm)",
+      "timer2_s": 10.6,
+      "timeout_deferred_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0591,
+        "near": true,
+        "above_top": 0.0044,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 226,
+      "t_s": 10.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.6 cm)",
+      "timer2_s": 10.8,
+      "timeout_deferred_s": 0.8,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0603,
+        "near": true,
+        "above_top": 0.005,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 230,
+      "t_s": 11.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 4.1 cm)",
+      "timer2_s": 11.0,
+      "timeout_deferred_s": 1.0,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.0617,
+        "near": true,
+        "above_top": 0.0068,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 234,
+      "t_s": 11.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 2.5 cm)",
+      "timer2_s": 11.2,
+      "timeout_deferred_s": 1.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.066,
+        "near": true,
+        "above_top": 0.0062,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 238,
+      "t_s": 11.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 0.4 cm)",
+      "timer2_s": 11.4,
+      "timeout_deferred_s": 1.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": false,
+        "target_dxy": 0.067,
+        "near": true,
+        "above_top": 0.011,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 242,
+      "t_s": 11.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 0.2 cm)",
+      "vlm_failure_suspected": "wrong_approach",
+      "timer2_s": 11.6,
+      "branch": "timeout",
+      "q": "target not located (Q_INITIAL_POSITION unknown)",
+      "decision": "pi0"
+    },
+    {
+      "step": 246,
+      "t_s": 11.8,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 0.2 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 0.2,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": true,
+        "target_dxy": 0.2561,
+        "near": false,
+        "above_top": 0.0645,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 250,
+      "t_s": 12.0,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose -0.15 moved 0.15, gripper closed 0.2 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 0.4,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": true,
+        "target_dxy": 0.2508,
+        "near": false,
+        "above_top": 0.0986,
+        "low": true,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 254,
+      "t_s": 12.2,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.12 moved 0.12, gripper closed 0.1 cm)",
+      "vlm_failure_suspected": "target_not_approached",
+      "timer2_s": 0.6,
+      "gate": {
+        "pick": true,
+        "open": false,
+        "empty": true,
+        "target_dxy": 0.1217,
+        "near": false,
+        "above_top": 0.1329,
+        "low": false,
+        "grounded": true
+      },
+      "close": false,
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 258,
+      "t_s": 12.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.12 moved 0.12, gripper closed 0.1 cm)",
+      "vlm_failure": "high_level",
+      "vlm_failure_mode": "target_not_approached",
+      "vlm_library": "HL-7",
+      "timer2_s": 0.8,
+      "branch": "hl",
+      "decision": "override: point_approach [z 1.11, +0 cm]: target_not_approached (HL-7): 15 cm from the pre-grasp point over the white bowl, -6.4 cm closer in 3 s, EE moved 14.7 cm"
+    },
+    {
+      "step": 314,
+      "t_s": 15.2,
+      "correction_end": "hl",
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.12 moved 0.12, gripper open 8.0 cm)",
+      "timer2_s": 3.6,
+      "close": false,
+      "gate": {
+        "cooldown_s": 0.2
+      },
+      "branch": "not_close",
+      "decision": "pi0"
+    },
+    {
+      "step": 318,
+      "t_s": 15.4,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.12 moved 0.12, gripper open 8.0 cm)",
+      "timer2_s": 3.8,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0135,
+        "near": true,
+        "above_top": 0.0551,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.2991,
+      "v_std": 0.0067,
+      "low_count": 1,
+      "branch": "v_low_counting",
+      "decision": "pi0"
+    },
+    {
+      "step": 322,
+      "t_s": 15.6,
+      "subtask": "pick(white_bowl)",
+      "vlm_observation": "pick(white_bowl): not yet (white bowl rose +0.11 moved 0.12, gripper open 8.0 cm)",
+      "timer2_s": 4.0,
+      "gate": {
+        "pick": true,
+        "open": true,
+        "empty": true,
+        "target_dxy": 0.0123,
+        "near": true,
+        "above_top": 0.032,
+        "low": true,
+        "grounded": true
+      },
+      "close": true,
+      "v_est": 0.3377,
+      "v_std": 0.0065,
+      "low_count": 2,
+      "branch": "v_low_counting",
+      "decision": "pi0"
+    },
+    {
+      "step": 326,
+      "t_s": 15.8,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "pick(white_bowl): SUCCESS (white bowl rose +0.11 moved 0.11, gripper closed 8.0 cm)",
+      "subtask_start": {
+        "idx": 1,
+        "kind": "place",
+        "object": "white bowl",
+        "timer2": false
+      },
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 330,
+      "t_s": 16.0,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 6.2 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 334,
+      "t_s": 16.2,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, moving, gripper closed 6.0 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 338,
+      "t_s": 16.4,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 4.9 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 342,
+      "t_s": 16.6,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 2.6 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 346,
+      "t_s": 16.8,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.7 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 350,
+      "t_s": 17.0,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.5 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 354,
+      "t_s": 17.2,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.4 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 358,
+      "t_s": 17.4,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.4 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 362,
+      "t_s": 17.6,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    },
+    {
+      "step": 366,
+      "t_s": 17.8,
+      "subtask": "place(white_bowl, cabinet, on)",
+      "vlm_observation": "place(white_bowl, cabinet, on): not yet (white bowl not at cabinet, still, gripper closed 1.3 cm)",
+      "branch": "other_subtask",
+      "decision": "pi0"
+    }
+  ]
+}
